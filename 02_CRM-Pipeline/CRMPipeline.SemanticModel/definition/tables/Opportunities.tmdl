@@ -1,0 +1,143 @@
+table Opportunities
+	lineageTag: 3786c0eb-ecff-5790-8a8b-7dd73be1ca67
+
+	column OpportunityKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c26402bd-5d13-51b3-9f0b-869cfa66ca6e
+		summarizeBy: none
+		sourceColumn: OpportunityKey
+
+		annotation SummarizationSetBy = User
+
+	column Opportunity
+		dataType: string
+		lineageTag: edf28a42-a710-531a-879d-f95ee188b099
+		summarizeBy: none
+		sourceColumn: Opportunity
+
+		annotation SummarizationSetBy = User
+
+	column AccountKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 18869af8-d37b-53a4-b7e4-4eed2c71ea02
+		summarizeBy: none
+		sourceColumn: AccountKey
+
+		annotation SummarizationSetBy = User
+
+	column RepKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 01160a9a-e7e2-5ae2-b489-77bf859ba398
+		summarizeBy: none
+		sourceColumn: RepKey
+
+		annotation SummarizationSetBy = User
+
+	column LeadKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b0ac5a21-af23-5642-98bf-67387ba466f2
+		summarizeBy: none
+		sourceColumn: LeadKey
+
+		annotation SummarizationSetBy = User
+
+	column 'Lead Source'
+		dataType: string
+		lineageTag: e18bdf69-40ff-5a9a-9fb3-cc2ad9e91625
+		summarizeBy: none
+		sourceColumn: Lead Source
+
+		annotation SummarizationSetBy = User
+
+	column 'Created Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: f9c1a0fd-ca35-5507-a807-0af9eca88b3c
+		summarizeBy: none
+		sourceColumn: Created Date
+
+		annotation SummarizationSetBy = User
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Close Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: 435d48a8-9cfd-5107-84d0-1b85eddbe401
+		summarizeBy: none
+		sourceColumn: Close Date
+
+		annotation SummarizationSetBy = User
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Stage
+		dataType: string
+		isHidden
+		lineageTag: 3877040f-6cb7-59bb-9070-6442630f2dce
+		summarizeBy: none
+		sourceColumn: Stage
+
+		annotation SummarizationSetBy = User
+
+	column Amount
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: f67e3e5b-a502-5809-bbae-268b357a1ff2
+		summarizeBy: none
+		sourceColumn: Amount
+
+		annotation SummarizationSetBy = User
+
+	column Probability
+		dataType: double
+		isHidden
+		formatString: #,##0.00
+		lineageTag: 8d7266ab-9831-5bfb-9ec8-e45608bc5adf
+		summarizeBy: none
+		sourceColumn: Probability
+
+		annotation SummarizationSetBy = User
+
+	column 'Lost Reason'
+		dataType: string
+		lineageTag: 1d0d12ac-02cd-59b2-9527-182d1c281883
+		summarizeBy: none
+		sourceColumn: Lost Reason
+
+		annotation SummarizationSetBy = User
+
+	column 'Last Activity Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: f90cdacf-f356-52d0-8b56-0d08a8d977b9
+		summarizeBy: none
+		sourceColumn: Last Activity Date
+
+		annotation SummarizationSetBy = User
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition Opportunities = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\opportunities.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"OpportunityKey", "Opportunity", "AccountKey", "RepKey", "LeadKey", "LeadSource", "CreatedDate", "CloseDate", "Stage", "Amount", "Probability", "LostReason", "LastActivityDate"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"OpportunityKey", Int64.Type}, {"Opportunity", type text}, {"AccountKey", Int64.Type}, {"RepKey", Int64.Type}, {"LeadKey", Int64.Type}, {"LeadSource", type text}, {"CreatedDate", type date}, {"CloseDate", type date}, {"Stage", type text}, {"Amount", Currency.Type}, {"Probability", type number}, {"LostReason", type text}, {"LastActivityDate", type date}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"LeadSource", "Lead Source"}, {"CreatedDate", "Created Date"}, {"CloseDate", "Close Date"}, {"LostReason", "Lost Reason"}, {"LastActivityDate", "Last Activity Date"}})
+				in
+				    Renamed
+
+	annotation PBI_ResultType = Table
+

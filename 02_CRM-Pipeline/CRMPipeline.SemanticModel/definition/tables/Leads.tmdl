@@ -1,0 +1,74 @@
+table Leads
+	lineageTag: 4f4828c2-fc65-543c-8f01-80a06cda3603
+
+	column LeadKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 79db560a-df83-52ee-9026-7501de65833c
+		summarizeBy: none
+		sourceColumn: LeadKey
+
+		annotation SummarizationSetBy = User
+
+	column 'Created Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: bc15a826-649e-569f-83f3-99538ad4660b
+		summarizeBy: none
+		sourceColumn: Created Date
+
+		annotation SummarizationSetBy = User
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Lead Source'
+		dataType: string
+		lineageTag: a4b4e4a6-8203-5deb-b56d-e0cb6ade350e
+		summarizeBy: none
+		sourceColumn: Lead Source
+
+		annotation SummarizationSetBy = User
+
+	column AccountKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 42b8e3bc-d430-573d-8403-a64b19b0ec16
+		summarizeBy: none
+		sourceColumn: AccountKey
+
+		annotation SummarizationSetBy = User
+
+	column 'First Response Hours'
+		dataType: double
+		isHidden
+		formatString: #,##0.00
+		lineageTag: 4198c980-9644-5da5-9648-7882fbe7fcaf
+		summarizeBy: none
+		sourceColumn: First Response Hours
+
+		annotation SummarizationSetBy = User
+
+	column Status
+		dataType: string
+		lineageTag: c175a41d-8e5a-57ee-8c9c-6ce02853ded6
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = User
+
+	partition Leads = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\leads.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"LeadKey", "CreatedDate", "LeadSource", "AccountKey", "FirstResponseHours", "Status"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"LeadKey", Int64.Type}, {"CreatedDate", type date}, {"LeadSource", type text}, {"AccountKey", Int64.Type}, {"FirstResponseHours", type number}, {"Status", type text}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"CreatedDate", "Created Date"}, {"LeadSource", "Lead Source"}, {"FirstResponseHours", "First Response Hours"}})
+				in
+				    Renamed
+
+	annotation PBI_ResultType = Table
+

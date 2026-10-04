@@ -1,0 +1,54 @@
+table Stages
+	lineageTag: 23177049-854c-59ba-a471-04f00c697ba2
+
+	column Stage
+		dataType: string
+		lineageTag: d922addb-7471-5c5a-803e-1862e0dfe8b3
+		summarizeBy: none
+		sourceColumn: Stage
+		sortByColumn: 'Stage Order'
+
+		annotation SummarizationSetBy = User
+
+	column 'Stage Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 71a2871d-cdc7-5acb-902c-0b920d8e2473
+		summarizeBy: none
+		sourceColumn: Stage Order
+
+		annotation SummarizationSetBy = User
+
+	column 'Stage Group'
+		dataType: string
+		lineageTag: c0c095af-460f-55d8-ba19-70724f239418
+		summarizeBy: none
+		sourceColumn: Stage Group
+
+		annotation SummarizationSetBy = User
+
+	column 'Default Probability'
+		dataType: double
+		isHidden
+		formatString: #,##0.00
+		lineageTag: aeb35dbe-6ff4-597d-b58f-950851324b13
+		summarizeBy: none
+		sourceColumn: Default Probability
+
+		annotation SummarizationSetBy = User
+
+	partition Stages = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\stages.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"Stage", "StageOrder", "StageGroup", "DefaultProbability"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"Stage", type text}, {"StageOrder", Int64.Type}, {"StageGroup", type text}, {"DefaultProbability", type number}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"StageOrder", "Stage Order"}, {"StageGroup", "Stage Group"}, {"DefaultProbability", "Default Probability"}})
+				in
+				    Renamed
+
+	annotation PBI_ResultType = Table
+

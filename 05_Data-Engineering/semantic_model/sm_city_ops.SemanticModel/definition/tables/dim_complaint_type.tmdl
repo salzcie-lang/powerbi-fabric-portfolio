@@ -1,0 +1,34 @@
+table dim_complaint_type
+	lineageTag: 896f8489-9203-5830-b598-3bf5d6df06dd
+
+	column complaint_key
+		dataType: int64
+		isHidden
+		lineageTag: a96813a0-9a54-5c3e-a633-5ff235ccf0d8
+		summarizeBy: none
+		sourceColumn: complaint_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column complaint_type
+		dataType: string
+		lineageTag: 9da1cfaa-7396-522c-84d9-7f81819b93f8
+		summarizeBy: none
+		sourceColumn: complaint_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column complaint_category
+		dataType: string
+		lineageTag: b0927fdc-1b42-5809-8147-4e7e13597234
+		summarizeBy: none
+		sourceColumn: complaint_category
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_complaint_type = entity
+		mode: directLake
+		source
+			entityName: dim_complaint_type
+			schemaName: gold
+			expressionSource: DatabaseQuery

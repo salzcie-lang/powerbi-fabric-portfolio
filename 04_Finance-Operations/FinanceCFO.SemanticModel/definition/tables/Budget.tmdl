@@ -1,0 +1,55 @@
+table Budget
+	lineageTag: 5c412729-8443-5504-9d25-1e04b8931cfe
+
+	column Month
+		dataType: dateTime
+		isHidden
+		formatString: dd mmm yyyy
+		lineageTag: bdf07be9-c0a2-571e-93dd-dc67902113a8
+		summarizeBy: none
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = User
+
+	column AccountCode
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: bd97af24-76aa-51b5-b2a2-4eddff32290b
+		summarizeBy: none
+		sourceColumn: AccountCode
+
+		annotation SummarizationSetBy = User
+
+	column DepartmentKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a93dfe0c-1475-5ac6-93c5-73d18dbd6282
+		summarizeBy: none
+		sourceColumn: DepartmentKey
+
+		annotation SummarizationSetBy = User
+
+	column 'Budget Amount'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: e0cff85e-5561-55f5-ad33-d9ec81003aa8
+		summarizeBy: none
+		sourceColumn: Budget Amount
+
+		annotation SummarizationSetBy = User
+
+	partition Budget = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\budget.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"Month", "AccountCode", "DepartmentKey", "BudgetAmount"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"Month", type date}, {"AccountCode", Int64.Type}, {"DepartmentKey", Int64.Type}, {"BudgetAmount", Currency.Type}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"BudgetAmount", "Budget Amount"}})
+				in
+				    Renamed
+

@@ -1,0 +1,421 @@
+CustomerKey,Customer,Segment,Industry,Country,RegionKey,FirstOrderDate
+1,Everest Solutions,Mid-Market,Manufacturing,Australia,3,2024-10-16
+2,Alder Holdings,Enterprise,Logistics,India,3,2024-01-18
+3,Harbor Solutions,Small Business,Financial Services,Japan,3,2024-05-20
+4,Brightline Solutions,Enterprise,Healthcare,United States,1,2024-10-22
+5,Tidal Works,Small Business,Education,Canada,1,2024-02-06
+6,Tidal Group,Small Business,Logistics,Netherlands,2,2025-03-28
+7,Dune Works,Mid-Market,Healthcare,Spain,2,2025-08-29
+8,Nimbus Labs,Small Business,Education,Canada,1,2024-01-19
+9,Orchard Works,Mid-Market,Retail,Netherlands,2,2024-03-20
+10,Willow Works,Enterprise,Retail,Canada,1,2025-05-16
+11,Yonder Systems,Small Business,Logistics,India,3,2024-01-18
+12,Quartz Co,Small Business,Logistics,United States,1,2025-06-22
+13,Zephyr Holdings,Mid-Market,Retail,France,2,2025-01-04
+14,Everest Systems,Small Business,Education,India,3,2025-01-13
+15,Umbra Partners,Small Business,Manufacturing,Germany,2,2024-04-10
+16,Ion Works,Mid-Market,Retail,Netherlands,2,2024-03-22
+17,Xenon Works,Mid-Market,Healthcare,Netherlands,2,2024-07-13
+18,Xenon Group,Small Business,Manufacturing,Mexico,4,2024-10-08
+19,Lattice Partners,Enterprise,Education,Netherlands,2,2024-02-10
+20,Zephyr Labs,Small Business,Education,Canada,1,2024-10-01
+21,Xenon Labs,Enterprise,Education,Saudi Arabia,5,2024-12-12
+22,Everest Group,Small Business,Education,United States,1,2024-09-05
+23,Summit Partners,Enterprise,Financial Services,Canada,1,2024-04-06
+24,Juniper Co,Small Business,Healthcare,Singapore,3,2024-01-08
+25,Alder Industries,Small Business,Logistics,United States,1,2024-08-08
+26,Orchard Partners,Mid-Market,Healthcare,India,3,2024-05-29
+27,Ridge Holdings,Small Business,Retail,Australia,3,2025-08-10
+28,Ion Partners,Small Business,Financial Services,United States,1,2024-10-25
+29,Fathom Labs,Small Business,Retail,Canada,1,2024-11-09
+30,Brightline Global,Small Business,Healthcare,United States,1,2024-04-25
+31,Lattice Co,Mid-Market,Technology,Brazil,4,2024-08-17
+32,Orchard Works Digital,Mid-Market,Financial Services,Singapore,3,2024-12-06
+33,Yonder Holdings,Mid-Market,Technology,Japan,3,2024-07-03
+34,Orchard Group,Enterprise,Education,Spain,2,2024-11-09
+35,Fathom Global,Mid-Market,Healthcare,Mexico,4,2025-08-22
+36,Everest Solutions Health,Mid-Market,Financial Services,Spain,2,2024-06-15
+37,Harbor Systems,Mid-Market,Retail,Canada,1,2024-06-19
+38,Ridge Systems,Mid-Market,Retail,United States,1,2025-12-09
+39,Tidal Holdings,Mid-Market,Financial Services,India,3,2024-04-06
+40,Umbra Industries,Mid-Market,Technology,Canada,1,2025-07-31
+41,Summit Global,Small Business,Logistics,South Africa,5,2024-05-18
+42,Juniper Labs,Enterprise,Healthcare,Mexico,4,2024-07-22
+43,Granite Holdings,Mid-Market,Education,United Kingdom,2,2025-05-16
+44,Nimbus Global,Mid-Market,Healthcare,United Kingdom,2,2024-02-01
+45,Everest Works,Mid-Market,Technology,Mexico,4,2024-01-17
+46,Fathom Partners,Small Business,Financial Services,Japan,3,2024-04-08
+47,Xenon Partners,Enterprise,Logistics,Canada,1,2024-05-13
+48,Umbra Labs,Mid-Market,Education,Australia,3,2025-08-21
+49,Dune Global,Mid-Market,Technology,United States,1,2025-04-26
+50,Meridian Global,Small Business,Manufacturing,United States,1,2025-12-21
+51,Ion Labs,Small Business,Retail,Japan,3,2024-12-03
+52,Granite Partners,Mid-Market,Healthcare,Germany,2,2024-02-01
+53,Xenon Partners Digital,Small Business,Education,India,3,2024-05-03
+54,Ridge Works,Small Business,Technology,Saudi Arabia,5,2024-08-01
+55,Cobalt Works,Mid-Market,Technology,Brazil,4,2025-02-15
+56,Brightline Solutions Retail,Small Business,Logistics,Canada,1,2024-01-11
+57,Pinnacle Group,Mid-Market,Education,France,2,2025-12-25
+58,Granite Solutions,Mid-Market,Technology,United Arab Emirates,5,2025-01-25
+59,Keystone Labs,Mid-Market,Logistics,Germany,2,2024-04-24
+60,Brightline Holdings,Enterprise,Education,Brazil,4,2025-11-13
+61,Dune Industries,Mid-Market,Logistics,Brazil,4,2024-01-26
+62,Willow Systems,Mid-Market,Healthcare,Japan,3,2024-11-21
+63,Dune Partners,Small Business,Retail,Canada,1,2024-11-20
+64,Meridian Holdings,Small Business,Logistics,Canada,1,2024-05-29
+65,Umbra Labs Health,Mid-Market,Retail,United States,1,2024-01-13
+66,Cobalt Systems,Mid-Market,Logistics,Netherlands,2,2024-10-06
+67,Dune Systems,Mid-Market,Education,Spain,2,2024-02-21
+68,Granite Solutions Retail,Mid-Market,Financial Services,Australia,3,2024-01-08
+69,Granite Global,Mid-Market,Retail,Japan,3,2024-10-15
+70,Yonder Works,Small Business,Technology,Chile,4,2025-08-23
+71,Vantage Labs,Small Business,Education,South Africa,5,2026-02-26
+72,Cobalt Holdings,Mid-Market,Logistics,South Africa,5,2025-01-15
+73,Tidal Co,Mid-Market,Technology,Canada,1,2024-11-14
+74,Alder Solutions,Mid-Market,Healthcare,United Kingdom,2,2024-09-27
+75,Fathom Industries,Mid-Market,Education,Canada,1,2024-09-02
+76,Nimbus Partners,Enterprise,Education,Netherlands,2,2024-07-22
+77,Brightline Global International,Mid-Market,Financial Services,Canada,1,2024-06-18
+78,Nimbus Labs Retail,Mid-Market,Education,Canada,1,2024-02-17
+79,Willow Co,Small Business,Healthcare,Canada,1,2025-10-29
+80,Vantage Labs Health,Mid-Market,Manufacturing,Canada,1,2024-01-20
+81,Juniper Co Retail,Small Business,Manufacturing,Germany,2,2024-10-24
+82,Ion Labs International,Small Business,Manufacturing,United Kingdom,2,2024-08-02
+83,Pinnacle Group Digital,Enterprise,Education,France,2,2024-01-27
+84,Xenon Group Energy,Small Business,Education,Mexico,4,2024-05-24
+85,Umbra Works,Small Business,Education,United States,1,2024-03-22
+86,Orchard Solutions,Enterprise,Retail,Spain,2,2024-03-01
+87,Granite Group,Small Business,Education,Canada,1,2024-03-19
+88,Ion Co,Enterprise,Manufacturing,France,2,2024-02-26
+89,Vantage Global,Enterprise,Technology,Australia,3,2024-04-02
+90,Dune Industries International,Enterprise,Healthcare,Australia,3,2024-07-24
+91,Meridian Partners,Small Business,Healthcare,Spain,2,2024-07-25
+92,Dune Group,Mid-Market,Retail,Germany,2,2024-08-04
+93,Ion Holdings,Mid-Market,Retail,Singapore,3,2024-03-13
+94,Quartz Systems,Small Business,Financial Services,Canada,1,2025-01-28
+95,Orchard Systems,Small Business,Financial Services,United Arab Emirates,5,2024-11-05
+96,Brightline Solutions International,Small Business,Technology,Australia,3,2024-08-07
+97,Juniper Works,Small Business,Financial Services,India,3,2024-03-04
+98,Nimbus Holdings,Small Business,Healthcare,Japan,3,2024-05-22
+99,Brightline Group,Mid-Market,Logistics,United States,1,2024-09-19
+100,Granite Group Digital,Small Business,Healthcare,Mexico,4,2024-07-28
+101,Ion Works Digital,Mid-Market,Healthcare,Chile,4,2024-04-14
+102,Nimbus Holdings Energy,Mid-Market,Technology,Canada,1,2024-03-23
+103,Meridian Global Health,Mid-Market,Manufacturing,India,3,2025-05-05
+104,Alder Partners,Mid-Market,Manufacturing,Australia,3,2025-04-28
+105,Keystone Systems,Enterprise,Logistics,United States,1,2024-01-21
+106,Ridge Works Health,Mid-Market,Financial Services,Netherlands,2,2024-06-05
+107,Fathom Holdings,Small Business,Technology,Germany,2,2024-01-29
+108,Nimbus Global International,Small Business,Manufacturing,South Africa,5,2024-10-19
+109,Zephyr Group,Small Business,Retail,Germany,2,2024-03-22
+110,Orchard Labs,Small Business,Financial Services,Spain,2,2024-06-09
+111,Xenon Industries,Mid-Market,Education,Germany,2,2024-01-10
+112,Zephyr Holdings Digital,Small Business,Technology,United States,1,2025-03-20
+113,Harbor Partners,Small Business,Logistics,United States,1,2025-04-05
+114,Xenon Works Health,Mid-Market,Healthcare,Netherlands,2,2024-08-02
+115,Summit Partners Retail,Small Business,Education,Canada,1,2024-08-18
+116,Granite Labs,Small Business,Manufacturing,India,3,2024-11-13
+117,Ion Holdings Digital,Mid-Market,Technology,Spain,2,2024-02-28
+118,Nimbus Systems,Enterprise,Technology,France,2,2024-03-22
+119,Lattice Industries,Mid-Market,Retail,Singapore,3,2024-05-14
+120,Vantage Global Digital,Mid-Market,Technology,Germany,2,2024-04-10
+121,Umbra Partners Health,Mid-Market,Logistics,United Kingdom,2,2024-03-25
+122,Zephyr Labs Digital,Mid-Market,Retail,India,3,2024-01-07
+123,Tidal Co Digital,Enterprise,Retail,Canada,1,2024-12-02
+124,Xenon Holdings,Small Business,Manufacturing,Singapore,3,2025-01-24
+125,Fathom Global Retail,Small Business,Manufacturing,India,3,2025-08-11
+126,Quartz Works,Small Business,Retail,Germany,2,2024-11-29
+127,Summit Systems,Mid-Market,Education,India,3,2025-09-08
+128,Cobalt Works Energy,Small Business,Retail,France,2,2024-06-19
+129,Juniper Global,Mid-Market,Technology,Canada,1,2024-01-08
+130,Granite Works,Small Business,Logistics,Canada,1,2024-03-06
+131,Zephyr Systems,Enterprise,Logistics,India,3,2025-08-02
+132,Dune Solutions,Mid-Market,Financial Services,United States,1,2024-11-28
+133,Yonder Co,Enterprise,Healthcare,South Africa,5,2024-09-03
+134,Cobalt Partners,Enterprise,Healthcare,United States,1,2024-07-09
+135,Alder Works,Small Business,Technology,United States,1,2024-11-19
+136,Ridge Labs,Small Business,Retail,Australia,3,2024-06-11
+137,Fathom Solutions,Small Business,Healthcare,Chile,4,2024-12-13
+138,Willow Co Retail,Mid-Market,Retail,Japan,3,2024-02-17
+139,Alder Group,Enterprise,Technology,Canada,1,2024-12-20
+140,Granite Global Energy,Small Business,Logistics,Spain,2,2024-10-30
+141,Tidal Co International,Mid-Market,Healthcare,India,3,2024-03-08
+142,Juniper Group,Enterprise,Retail,Canada,1,2024-01-23
+143,Fathom Industries International,Small Business,Manufacturing,United States,1,2025-01-22
+144,Nimbus Labs Energy,Enterprise,Healthcare,Canada,1,2024-03-24
+145,Granite Co,Small Business,Retail,Canada,1,2024-04-12
+146,Umbra Co,Mid-Market,Financial Services,Canada,1,2024-04-29
+147,Tidal Labs,Small Business,Technology,Canada,1,2024-07-19
+148,Fathom Co,Mid-Market,Logistics,United Arab Emirates,5,2024-03-04
+149,Fathom Systems,Small Business,Retail,India,3,2024-10-18
+150,Ridge Labs International,Small Business,Financial Services,Japan,3,2024-05-30
+151,Everest Co,Mid-Market,Retail,Germany,2,2024-07-06
+152,Summit Works,Small Business,Healthcare,India,3,2024-01-13
+153,Brightline Group Digital,Mid-Market,Healthcare,Mexico,4,2024-10-21
+154,Dune Group Energy,Small Business,Healthcare,France,2,2024-06-10
+155,Ridge Industries,Small Business,Education,United States,1,2024-12-09
+156,Nimbus Global Energy,Small Business,Logistics,South Africa,5,2025-03-30
+157,Cobalt Labs,Mid-Market,Technology,Netherlands,2,2024-01-21
+158,Summit Systems Health,Small Business,Technology,United States,1,2024-05-14
+159,Tidal Systems,Small Business,Healthcare,United States,1,2024-03-03
+160,Orchard Solutions Health,Small Business,Logistics,Canada,1,2025-02-18
+161,Everest Systems Energy,Small Business,Healthcare,Mexico,4,2024-06-23
+162,Cobalt Solutions,Small Business,Retail,United Kingdom,2,2024-12-10
+163,Willow Partners,Mid-Market,Logistics,Singapore,3,2025-04-29
+164,Orchard Partners Retail,Mid-Market,Retail,Germany,2,2025-04-12
+165,Pinnacle Global,Small Business,Technology,Mexico,4,2024-02-27
+166,Harbor Systems Health,Mid-Market,Healthcare,Brazil,4,2024-01-13
+167,Everest Industries,Small Business,Healthcare,Australia,3,2025-04-25
+168,Willow Industries,Mid-Market,Healthcare,Canada,1,2024-01-23
+169,Fathom Holdings Retail,Mid-Market,Logistics,United Kingdom,2,2025-10-24
+170,Xenon Solutions,Mid-Market,Technology,United States,1,2024-07-21
+171,Nimbus Co,Small Business,Retail,Canada,1,2024-02-11
+172,Fathom Solutions Energy,Enterprise,Healthcare,India,3,2024-06-23
+173,Quartz Partners,Small Business,Retail,Australia,3,2025-07-05
+174,Tidal Works International,Small Business,Healthcare,Germany,2,2024-01-12
+175,Nimbus Solutions,Mid-Market,Manufacturing,South Africa,5,2024-01-19
+176,Alder Co,Small Business,Financial Services,Canada,1,2024-12-26
+177,Dune Group Retail,Small Business,Financial Services,Netherlands,2,2024-09-07
+178,Orchard Works Health,Mid-Market,Retail,Germany,2,2024-09-17
+179,Alder Works Digital,Mid-Market,Retail,South Africa,5,2024-02-23
+180,Summit Global Retail,Enterprise,Retail,United Kingdom,2,2026-01-17
+181,Fathom Co Energy,Small Business,Logistics,Japan,3,2024-05-02
+182,Meridian Partners Digital,Small Business,Healthcare,Netherlands,2,2024-01-17
+183,Keystone Group,Small Business,Retail,Japan,3,2024-07-14
+184,Ridge Labs Retail,Small Business,Healthcare,Canada,1,2024-02-11
+185,Umbra Systems,Small Business,Technology,Singapore,3,2025-08-13
+186,Everest Global,Enterprise,Financial Services,Japan,3,2024-02-03
+187,Quartz Industries,Small Business,Healthcare,Australia,3,2024-11-03
+188,Ion Systems,Mid-Market,Manufacturing,Brazil,4,2024-12-05
+189,Xenon Partners Energy,Enterprise,Financial Services,Chile,4,2024-09-20
+190,Quartz Holdings,Small Business,Education,South Africa,5,2024-11-10
+191,Keystone Global,Enterprise,Technology,Mexico,4,2024-04-21
+192,Tidal Industries,Mid-Market,Education,United Arab Emirates,5,2024-04-03
+193,Vantage Solutions,Enterprise,Education,Saudi Arabia,5,2025-01-24
+194,Umbra Holdings,Small Business,Education,Germany,2,2024-08-28
+195,Brightline Co,Mid-Market,Manufacturing,Australia,3,2024-07-01
+196,Ridge Holdings Digital,Mid-Market,Logistics,United Arab Emirates,5,2024-05-29
+197,Ion Works Energy,Mid-Market,Manufacturing,Germany,2,2024-01-24
+198,Fathom Holdings International,Small Business,Manufacturing,United States,1,2024-08-30
+199,Harbor Industries,Small Business,Technology,United States,1,2024-03-06
+200,Orchard Holdings,Enterprise,Financial Services,United States,1,2024-02-16
+201,Lattice Works,Small Business,Technology,Singapore,3,2024-06-03
+202,Alder Global,Enterprise,Healthcare,Spain,2,2024-07-29
+203,Dune Partners Retail,Small Business,Healthcare,India,3,2024-04-30
+204,Summit Co,Mid-Market,Financial Services,India,3,2024-09-04
+205,Fathom Holdings Health,Mid-Market,Education,Singapore,3,2025-02-12
+206,Summit Systems Digital,Small Business,Logistics,Canada,1,2024-11-04
+207,Tidal Global,Mid-Market,Financial Services,United States,1,2024-02-06
+208,Granite Co Retail,Small Business,Technology,Saudi Arabia,5,2024-04-12
+209,Tidal Co Energy,Mid-Market,Logistics,Mexico,4,2024-12-24
+210,Cobalt Works Digital,Small Business,Healthcare,France,2,2024-12-20
+211,Umbra Partners Energy,Small Business,Education,Australia,3,2024-11-23
+212,Fathom Labs Retail,Small Business,Manufacturing,Chile,4,2025-10-26
+213,Keystone Holdings,Small Business,Education,Australia,3,2024-01-17
+214,Alder Global Digital,Small Business,Financial Services,Canada,1,2024-02-20
+215,Fathom Partners International,Small Business,Retail,Chile,4,2025-03-17
+216,Yonder Global,Mid-Market,Retail,Canada,1,2024-04-03
+217,Nimbus Solutions Retail,Enterprise,Education,Chile,4,2024-04-27
+218,Ion Co Health,Small Business,Technology,Canada,1,2025-03-27
+219,Granite Works Health,Small Business,Logistics,Singapore,3,2024-01-19
+220,Xenon Co,Small Business,Healthcare,Brazil,4,2024-11-14
+221,Willow Solutions,Mid-Market,Logistics,United States,1,2025-04-17
+222,Tidal Solutions,Mid-Market,Healthcare,Canada,1,2025-07-16
+223,Ion Works International,Small Business,Healthcare,Australia,3,2024-05-11
+224,Orchard Group Health,Small Business,Manufacturing,Spain,2,2024-06-01
+225,Xenon Group Health,Small Business,Technology,United States,1,2024-01-30
+226,Willow Co Health,Small Business,Technology,Germany,2,2024-03-28
+227,Umbra Group,Mid-Market,Education,South Africa,5,2024-02-02
+228,Nimbus Industries,Small Business,Retail,Australia,3,2025-03-10
+229,Nimbus Industries Digital,Mid-Market,Education,Spain,2,2024-02-21
+230,Fathom Systems Energy,Mid-Market,Healthcare,United States,1,2024-03-13
+231,Brightline Partners,Mid-Market,Retail,Canada,1,2024-02-19
+232,Willow Solutions Health,Small Business,Retail,India,3,2024-09-07
+233,Quartz Co Retail,Enterprise,Financial Services,Australia,3,2025-08-01
+234,Pinnacle Labs,Enterprise,Education,United States,1,2024-12-17
+235,Harbor Co,Small Business,Healthcare,United States,1,2024-07-05
+236,Nimbus Works,Small Business,Healthcare,United States,1,2024-01-16
+237,Lattice Partners International,Enterprise,Education,Japan,3,2024-09-18
+238,Yonder Holdings Digital,Mid-Market,Financial Services,Netherlands,2,2024-05-30
+239,Pinnacle Works,Enterprise,Technology,Mexico,4,2024-12-12
+240,Tidal Global International,Small Business,Logistics,Canada,1,2026-03-01
+241,Willow Works Energy,Small Business,Education,Canada,1,2024-01-22
+242,Umbra Holdings Health,Enterprise,Education,Canada,1,2024-06-10
+243,Xenon Labs International,Small Business,Retail,Saudi Arabia,5,2024-07-18
+244,Cobalt Group,Enterprise,Technology,France,2,2024-08-23
+245,Pinnacle Industries,Small Business,Technology,India,3,2024-06-05
+246,Umbra Global,Mid-Market,Healthcare,Brazil,4,2024-10-21
+247,Ridge Labs Digital,Small Business,Financial Services,Brazil,4,2024-07-28
+248,Zephyr Solutions,Mid-Market,Manufacturing,United Kingdom,2,2024-10-26
+249,Meridian Group,Small Business,Retail,Australia,3,2024-08-16
+250,Summit Industries,Enterprise,Financial Services,India,3,2024-01-11
+251,Nimbus Holdings International,Small Business,Education,United States,1,2025-03-12
+252,Pinnacle Industries International,Small Business,Technology,Canada,1,2024-08-05
+253,Summit Solutions,Enterprise,Retail,South Africa,5,2024-04-20
+254,Vantage Solutions Digital,Mid-Market,Healthcare,Netherlands,2,2024-05-14
+255,Harbor Systems Retail,Mid-Market,Manufacturing,France,2,2024-04-25
+256,Alder Global Health,Mid-Market,Manufacturing,United States,1,2024-04-23
+257,Juniper Systems,Small Business,Manufacturing,Japan,3,2024-03-09
+258,Alder Holdings Digital,Small Business,Financial Services,Chile,4,2025-02-21
+259,Harbor Group,Mid-Market,Manufacturing,Spain,2,2024-09-07
+260,Everest Works International,Small Business,Logistics,Spain,2,2025-02-17
+261,Willow Partners Energy,Enterprise,Logistics,Canada,1,2024-04-25
+262,Alder Group International,Mid-Market,Logistics,United States,1,2024-08-26
+263,Ion Co Retail,Mid-Market,Retail,United States,1,2024-06-18
+264,Everest Partners,Small Business,Education,Canada,1,2024-03-06
+265,Summit Industries International,Small Business,Education,Spain,2,2024-11-15
+266,Fathom Co Digital,Small Business,Logistics,Germany,2,2025-08-08
+267,Cobalt Global,Enterprise,Logistics,United States,1,2025-06-12
+268,Cobalt Holdings International,Mid-Market,Healthcare,Brazil,4,2025-04-02
+269,Lattice Holdings,Mid-Market,Education,Saudi Arabia,5,2025-03-10
+270,Harbor Group Retail,Small Business,Financial Services,United States,1,2024-08-29
+271,Orchard Industries,Enterprise,Manufacturing,United Arab Emirates,5,2025-06-07
+272,Umbra Partners Retail,Mid-Market,Manufacturing,Chile,4,2025-07-22
+273,Everest Co Health,Mid-Market,Manufacturing,United States,1,2024-06-03
+274,Brightline Group Health,Mid-Market,Logistics,Singapore,3,2024-08-18
+275,Harbor Industries Retail,Enterprise,Healthcare,United States,1,2024-07-07
+276,Orchard Partners Health,Small Business,Manufacturing,United States,1,2024-09-07
+277,Nimbus Industries International,Enterprise,Financial Services,Spain,2,2025-12-03
+278,Pinnacle Labs Energy,Mid-Market,Healthcare,United States,1,2025-04-15
+279,Cobalt Co,Small Business,Retail,United States,1,2025-03-02
+280,Brightline Works,Small Business,Education,Brazil,4,2024-06-28
+281,Granite Group Energy,Small Business,Manufacturing,Germany,2,2025-07-11
+282,Alder Co Health,Mid-Market,Financial Services,United States,1,2024-05-14
+283,Zephyr Partners,Enterprise,Healthcare,United States,1,2024-05-30
+284,Xenon Global,Enterprise,Manufacturing,Australia,3,2024-02-18
+285,Nimbus Partners Digital,Mid-Market,Logistics,Singapore,3,2024-01-28
+286,Juniper Labs Retail,Enterprise,Retail,Spain,2,2024-06-10
+287,Zephyr Group Health,Mid-Market,Healthcare,Germany,2,2024-03-12
+288,Dune Systems Retail,Small Business,Manufacturing,Canada,1,2025-05-09
+289,Orchard Labs Health,Small Business,Retail,Germany,2,2024-12-28
+290,Pinnacle Industries Energy,Small Business,Financial Services,Brazil,4,2024-11-17
+291,Keystone Group Retail,Mid-Market,Healthcare,Netherlands,2,2025-04-03
+292,Summit Labs,Small Business,Logistics,United States,1,2025-01-24
+293,Granite Holdings Retail,Mid-Market,Financial Services,Japan,3,2024-12-10
+294,Tidal Systems Digital,Small Business,Education,Germany,2,2024-09-09
+295,Tidal Partners,Small Business,Manufacturing,Brazil,4,2024-03-11
+296,Fathom Co International,Small Business,Education,United States,1,2024-07-20
+297,Zephyr Group Energy,Small Business,Retail,Australia,3,2024-01-23
+298,Pinnacle Holdings,Small Business,Healthcare,Chile,4,2024-09-11
+299,Keystone Partners,Mid-Market,Logistics,Canada,1,2024-07-28
+300,Umbra Systems Retail,Mid-Market,Education,France,2,2024-01-03
+301,Orchard Industries International,Enterprise,Healthcare,Canada,1,2024-11-24
+302,Cobalt Co Energy,Small Business,Logistics,Netherlands,2,2024-06-10
+303,Dune Partners Digital,Small Business,Logistics,Germany,2,2024-12-07
+304,Alder Systems,Small Business,Logistics,Canada,1,2024-07-26
+305,Quartz Works International,Small Business,Retail,Spain,2,2024-11-26
+306,Everest Group Health,Small Business,Logistics,Japan,3,2024-07-04
+307,Lattice Works Energy,Mid-Market,Retail,South Africa,5,2024-10-18
+308,Willow Global,Small Business,Financial Services,United States,1,2024-06-24
+309,Yonder Co Energy,Mid-Market,Technology,India,3,2024-07-06
+310,Willow Global Energy,Mid-Market,Logistics,Japan,3,2025-09-14
+311,Vantage Industries,Mid-Market,Financial Services,Germany,2,2024-02-24
+312,Vantage Co,Mid-Market,Healthcare,United Arab Emirates,5,2024-08-13
+313,Zephyr Works,Small Business,Healthcare,Canada,1,2024-11-12
+314,Harbor Industries Energy,Small Business,Manufacturing,India,3,2024-04-03
+315,Everest Industries International,Small Business,Logistics,Chile,4,2024-04-15
+316,Zephyr Industries,Small Business,Education,Singapore,3,2024-02-27
+317,Pinnacle Labs Digital,Small Business,Logistics,United Kingdom,2,2025-05-21
+318,Juniper Holdings,Mid-Market,Logistics,United States,1,2024-12-20
+319,Juniper Industries,Enterprise,Logistics,Canada,1,2024-04-26
+320,Everest Global Retail,Mid-Market,Manufacturing,Australia,3,2024-01-04
+321,Cobalt Co International,Enterprise,Technology,United Kingdom,2,2024-10-20
+322,Ion Industries,Small Business,Retail,France,2,2024-04-30
+323,Umbra Industries Digital,Mid-Market,Logistics,Germany,2,2024-02-07
+324,Nimbus Solutions Digital,Enterprise,Logistics,France,2,2025-02-28
+325,Keystone Partners Retail,Small Business,Education,Saudi Arabia,5,2024-01-24
+326,Lattice Systems,Small Business,Technology,France,2,2025-07-28
+327,Ridge Global,Small Business,Manufacturing,United Kingdom,2,2024-11-16
+328,Yonder Global Digital,Mid-Market,Logistics,Australia,3,2025-04-28
+329,Ion Solutions,Mid-Market,Technology,Canada,1,2025-08-27
+330,Cobalt Global Health,Mid-Market,Healthcare,Canada,1,2025-07-22
+331,Ion Industries International,Mid-Market,Manufacturing,Netherlands,2,2024-06-24
+332,Nimbus Global Digital,Small Business,Healthcare,Australia,3,2024-02-12
+333,Quartz Group,Mid-Market,Education,Spain,2,2024-03-01
+334,Harbor Holdings,Small Business,Logistics,South Africa,5,2025-01-29
+335,Umbra Solutions,Mid-Market,Education,Spain,2,2025-08-12
+336,Brightline Labs,Small Business,Technology,Canada,1,2024-04-17
+337,Harbor Co Retail,Mid-Market,Education,Japan,3,2025-05-01
+338,Ridge Holdings International,Small Business,Healthcare,Netherlands,2,2025-01-22
+339,Vantage Labs Digital,Enterprise,Education,India,3,2024-09-30
+340,Ridge Industries Retail,Small Business,Technology,Netherlands,2,2024-06-28
+341,Xenon Global Digital,Small Business,Manufacturing,United Kingdom,2,2024-10-13
+342,Summit Works Energy,Small Business,Healthcare,United States,1,2025-11-20
+343,Zephyr Partners Digital,Mid-Market,Manufacturing,United States,1,2025-06-12
+344,Tidal Labs Digital,Small Business,Retail,Canada,1,2025-04-17
+345,Yonder Solutions,Mid-Market,Logistics,France,2,2025-05-20
+346,Cobalt Holdings Energy,Mid-Market,Education,Chile,4,2024-06-16
+347,Quartz Holdings Energy,Mid-Market,Healthcare,United States,1,2024-02-06
+348,Orchard Global,Small Business,Logistics,Spain,2,2024-04-29
+349,Brightline Solutions Digital,Enterprise,Logistics,United Arab Emirates,5,2024-09-12
+350,Orchard Systems Health,Mid-Market,Financial Services,Canada,1,2024-11-19
+351,Juniper Co Digital,Small Business,Technology,United States,1,2024-04-12
+352,Harbor Group Health,Enterprise,Manufacturing,Canada,1,2024-01-19
+353,Dune Co,Mid-Market,Manufacturing,Singapore,3,2024-03-08
+354,Meridian Works,Small Business,Education,Canada,1,2025-06-08
+355,Juniper Group International,Enterprise,Manufacturing,Netherlands,2,2024-09-30
+356,Everest Systems Retail,Mid-Market,Logistics,Japan,3,2025-05-25
+357,Quartz Industries Digital,Small Business,Technology,Canada,1,2025-01-22
+358,Tidal Holdings International,Enterprise,Technology,Singapore,3,2025-02-04
+359,Keystone Group Health,Small Business,Financial Services,Chile,4,2024-03-20
+360,Willow Works International,Small Business,Healthcare,Brazil,4,2024-05-07
+361,Pinnacle Industries Health,Small Business,Technology,Canada,1,2024-07-22
+362,Zephyr Holdings Health,Mid-Market,Manufacturing,France,2,2025-01-03
+363,Alder Systems International,Enterprise,Technology,United States,1,2024-02-20
+364,Meridian Solutions,Small Business,Retail,India,3,2024-03-29
+365,Vantage Industries Digital,Small Business,Manufacturing,United States,1,2024-09-19
+366,Everest Partners Retail,Small Business,Retail,Netherlands,2,2025-02-13
+367,Summit Holdings,Small Business,Education,Chile,4,2024-03-10
+368,Meridian Co,Small Business,Manufacturing,Singapore,3,2024-02-22
+369,Tidal Holdings Retail,Enterprise,Education,Germany,2,2024-11-03
+370,Fathom Global Energy,Small Business,Technology,France,2,2025-06-25
+371,Meridian Labs,Small Business,Technology,Brazil,4,2025-07-23
+372,Ridge Solutions,Mid-Market,Technology,Canada,1,2024-09-02
+373,Summit Holdings Digital,Small Business,Retail,Japan,3,2025-03-09
+374,Ridge Partners,Mid-Market,Financial Services,Canada,1,2024-04-26
+375,Nimbus Solutions Energy,Small Business,Technology,Germany,2,2024-12-29
+376,Xenon Systems,Small Business,Healthcare,Netherlands,2,2025-02-10
+377,Umbra Solutions Health,Small Business,Retail,Germany,2,2025-11-27
+378,Umbra Partners Digital,Enterprise,Education,Netherlands,2,2025-10-10
+379,Granite Partners Digital,Small Business,Logistics,Canada,1,2024-04-28
+380,Tidal Group Energy,Mid-Market,Healthcare,Singapore,3,2024-11-22
+381,Willow Systems International,Small Business,Education,Canada,1,2025-04-07
+382,Summit Partners Health,Small Business,Financial Services,Japan,3,2025-02-24
+383,Meridian Holdings International,Small Business,Technology,Australia,3,2024-12-23
+384,Fathom Systems Retail,Small Business,Healthcare,Canada,1,2025-01-23
+385,Vantage Systems,Enterprise,Retail,Spain,2,2025-09-04
+386,Ion Labs Energy,Enterprise,Retail,France,2,2024-09-15
+387,Umbra Partners International,Mid-Market,Education,United Kingdom,2,2024-06-14
+388,Lattice Systems Energy,Enterprise,Manufacturing,United Arab Emirates,5,2024-11-05
+389,Umbra Works Retail,Small Business,Logistics,Germany,2,2025-01-28
+390,Nimbus Industries Health,Mid-Market,Retail,Canada,1,2025-04-12
+391,Alder Labs,Mid-Market,Education,Germany,2,2024-05-12
+392,Pinnacle Partners,Small Business,Technology,United States,1,2025-08-06
+393,Juniper Holdings Retail,Mid-Market,Healthcare,Netherlands,2,2025-03-02
+394,Alder Group Energy,Mid-Market,Technology,Canada,1,2025-09-03
+395,Quartz Partners International,Mid-Market,Education,United Kingdom,2,2025-07-06
+396,Yonder Industries,Mid-Market,Retail,United States,1,2024-03-27
+397,Dune Labs,Small Business,Financial Services,Canada,1,2025-04-03
+398,Pinnacle Labs Health,Small Business,Education,Saudi Arabia,5,2024-08-31
+399,Willow Global Retail,Small Business,Healthcare,Singapore,3,2024-10-28
+400,Xenon Labs Energy,Small Business,Logistics,South Africa,5,2024-05-12
+401,Xenon Partners Health,Small Business,Logistics,Canada,1,2024-06-24
+402,Summit Global International,Small Business,Retail,United States,1,2025-02-01
+403,Keystone Systems Energy,Small Business,Manufacturing,Brazil,4,2024-01-07
+404,Ridge Systems Energy,Small Business,Retail,Canada,1,2024-09-27
+405,Xenon Systems Health,Mid-Market,Manufacturing,Netherlands,2,2024-04-24
+406,Juniper Works Retail,Mid-Market,Manufacturing,Australia,3,2024-12-19
+407,Ridge Partners International,Mid-Market,Manufacturing,United States,1,2025-07-19
+408,Quartz Solutions,Enterprise,Healthcare,United States,1,2025-07-08
+409,Fathom Industries Retail,Mid-Market,Retail,United Kingdom,2,2024-10-26
+410,Tidal Global Digital,Mid-Market,Financial Services,Spain,2,2025-07-13
+411,Meridian Group International,Mid-Market,Healthcare,Spain,2,2024-07-16
+412,Keystone Works,Small Business,Logistics,United States,1,2024-06-25
+413,Harbor Partners International,Mid-Market,Education,Spain,2,2024-03-12
+414,Keystone Partners Digital,Small Business,Education,Canada,1,2025-05-20
+415,Xenon Solutions Retail,Mid-Market,Manufacturing,Germany,2,2024-11-29
+416,Nimbus Co International,Small Business,Financial Services,United States,1,2025-09-26
+417,Xenon Works Digital,Mid-Market,Technology,Canada,1,2024-09-25
+418,Yonder Labs,Mid-Market,Retail,Canada,1,2024-08-23
+419,Keystone Works Health,Mid-Market,Manufacturing,Canada,1,2024-11-24
+420,Tidal Global Health,Mid-Market,Manufacturing,Japan,3,2024-07-08

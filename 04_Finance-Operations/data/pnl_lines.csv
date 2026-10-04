@@ -1,0 +1,22 @@
+LineOrder,Line,LineType,AccountCode,LineName,BridgeOrder,BridgeLabel,LineGroup
+1,Revenue,total,0,Revenue,1,Revenue,
+2,    Product revenue,detail,4000,Product revenue,0,,
+3,    Service revenue,detail,4100,Service revenue,0,,
+4,    Subscription revenue,detail,4200,Subscription revenue,0,,
+5,Cost of goods sold,total,0,Cost of goods sold,2,COGS,
+6,Gross profit,subtotal,0,Gross profit,3,Gross profit,
+7,Gross margin %,ratio,0,Gross margin %,0,,
+8,Operating expenses,total,0,Operating expenses,4,OpEx,
+9,    Salaries & benefits,detail,6000,Salaries & benefits,0,,OpEx
+10,    Marketing,detail,6100,Marketing,0,,OpEx
+11,    Software & IT,detail,6200,Software & IT,0,,OpEx
+12,    Rent & facilities,detail,6300,Rent & facilities,0,,OpEx
+13,    Travel,detail,6400,Travel,0,,OpEx
+14,    Professional fees,detail,6500,Professional fees,0,,OpEx
+15,EBITDA,subtotal,0,EBITDA,5,EBITDA,
+16,EBITDA margin %,ratio,0,EBITDA margin %,0,,
+17,    Depreciation,detail,7000,Depreciation,6,D&A,
+18,    Interest expense,detail,7100,Interest expense,7,Interest,
+19,    Income tax,detail,7200,Income tax,8,Tax,
+20,Net income,subtotal,0,Net income,9,Net income,
+21,Net margin %,ratio,0,Net margin %,0,,

@@ -1,0 +1,146 @@
+table Properties
+	lineageTag: 1945f5be-6378-5847-bc81-1d7cc23ad4a1
+
+	column PropertyKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c529a915-636f-525a-a93f-fc64252511b4
+		summarizeBy: none
+		sourceColumn: PropertyKey
+
+		annotation SummarizationSetBy = User
+
+	column Property
+		dataType: string
+		lineageTag: b4e8dd69-8d36-53b1-a675-66da52a6d185
+		summarizeBy: none
+		sourceColumn: Property
+
+		annotation SummarizationSetBy = User
+
+	column 'Property Type'
+		dataType: string
+		isHidden
+		lineageTag: a5493218-6535-543e-b27e-5cd02413721f
+		summarizeBy: none
+		sourceColumn: Property Type
+
+		annotation SummarizationSetBy = User
+
+	column City
+		dataType: string
+		lineageTag: 2be87dfd-5f9d-5bd3-817d-3a4d38d4447b
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = User
+
+	column State
+		dataType: string
+		lineageTag: 97dcaa68-9212-5d13-a322-ae8c69a27117
+		summarizeBy: none
+		sourceColumn: State
+
+		annotation SummarizationSetBy = User
+
+	column 'Year Built'
+		dataType: int64
+		formatString: 0
+		lineageTag: bc551f1b-f8ed-59f6-8fb3-d638cf9821a4
+		summarizeBy: none
+		sourceColumn: Year Built
+
+		annotation SummarizationSetBy = User
+
+	column 'Acquired Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: ec9da75f-3219-5aa5-8f8a-67d4fc2c9c9d
+		summarizeBy: none
+		sourceColumn: Acquired Date
+
+		annotation SummarizationSetBy = User
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Property Manager'
+		dataType: string
+		lineageTag: 62262a49-4584-5200-b31b-1170cbd97e94
+		summarizeBy: none
+		sourceColumn: Property Manager
+
+		annotation SummarizationSetBy = User
+
+	column 'Current Value'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: 18e5982d-47a8-5ba5-89ef-fa2c9725931b
+		summarizeBy: none
+		sourceColumn: Current Value
+
+		annotation SummarizationSetBy = User
+
+	column 'Purchase Price'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: 3bec6e49-0910-56d6-9d2b-2b27eb1ebd0c
+		summarizeBy: none
+		sourceColumn: Purchase Price
+
+		annotation SummarizationSetBy = User
+
+	column Latitude
+		dataType: double
+		formatString: 0.0000
+		lineageTag: af055dd5-942a-5f78-8ed9-0b0995e2aa1b
+		dataCategory: Latitude
+		summarizeBy: none
+		sourceColumn: Latitude
+
+		annotation SummarizationSetBy = User
+
+	column Longitude
+		dataType: double
+		formatString: 0.0000
+		lineageTag: 721f9d1e-cfa6-5a10-b119-9c4440edfd26
+		dataCategory: Longitude
+		summarizeBy: none
+		sourceColumn: Longitude
+
+		annotation SummarizationSetBy = User
+
+	column Photo
+		dataType: string
+		lineageTag: b9c464a6-605c-597f-8366-4257334a2a80
+		dataCategory: ImageUrl
+		summarizeBy: none
+		sourceColumn: Photo
+
+		annotation SummarizationSetBy = User
+
+	column 'Photo Large'
+		dataType: string
+		isHidden
+		lineageTag: d78e5afd-f34f-53aa-8b87-33433a2da86a
+		dataCategory: ImageUrl
+		summarizeBy: none
+		sourceColumn: Photo Large
+
+		annotation SummarizationSetBy = User
+
+	partition Properties = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\properties.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"PropertyKey", "Property", "PropertyType", "City", "State", "YearBuilt", "AcquiredDate", "PropertyManager", "CurrentValue", "PurchasePrice", "Latitude", "Longitude", "Photo", "PhotoLarge"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"PropertyKey", Int64.Type}, {"Property", type text}, {"PropertyType", type text}, {"City", type text}, {"State", type text}, {"YearBuilt", Int64.Type}, {"AcquiredDate", type date}, {"PropertyManager", type text}, {"CurrentValue", Currency.Type}, {"PurchasePrice", Currency.Type}, {"Latitude", type number}, {"Longitude", type number}, {"Photo", type text}, {"PhotoLarge", type text}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"PropertyType", "Property Type"}, {"YearBuilt", "Year Built"}, {"AcquiredDate", "Acquired Date"}, {"PropertyManager", "Property Manager"}, {"CurrentValue", "Current Value"}, {"PurchasePrice", "Purchase Price"}, {"PhotoLarge", "Photo Large"}})
+				in
+				    Renamed
+

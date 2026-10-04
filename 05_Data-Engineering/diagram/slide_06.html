@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Every bad row is counted and kept</title>
+<link rel="stylesheet" href="base.css"><style>
+.canvas { width: 1920px; height: 1080px; padding: 52px 60px 44px; display: flex; flex-direction: column; }
+.top { display: flex; align-items: flex-start; justify-content: space-between; }
+.kicker { font-size: 14px; font-weight: 700; letter-spacing: 0.16em; color: var(--accent); text-transform: uppercase; }
+h1 { font-size: 46px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; margin-top: 10px; max-width: 1300px; }
+.lead { font-size: 20px; color: var(--ink-2); margin-top: 12px; max-width: 1150px; line-height: 1.4; }
+.pageno { font-size: 14px; color: var(--ink-3); font-weight: 600; letter-spacing: 0.08em; white-space: nowrap; padding-top: 4px; }
+.body { display: grid; grid-template-columns: 470px minmax(0, 1fr); gap: 44px; margin-top: 30px; flex: 1; min-height: 0; }
+.points { display: flex; flex-direction: column; gap: 16px; }
+.point { padding: 18px 20px; }
+.point h3 { font-size: 19px; font-weight: 700; display: flex; gap: 10px; align-items: baseline; }
+.point h3 b { color: var(--accent); font-size: 14px; font-weight: 800; }
+.point p { font-size: 15.5px; line-height: 1.5; color: var(--ink-2); margin-top: 7px; }
+code { font-family: 'JetBrains Mono', Consolas, monospace; font-size: 0.88em; color: var(--teal); }
+.stats { display: flex; gap: 14px; margin-top: auto; }
+.statbox { flex: 1; padding: 14px 18px; border-radius: 14px; background: rgba(255, 210, 31, 0.08); border: 1px solid rgba(255, 210, 31, 0.35); }
+.statbox .v { font-size: 30px; font-weight: 800; letter-spacing: -0.01em; }
+.statbox .l { font-size: 13px; color: var(--ink-2); margin-top: 3px; line-height: 1.35; }
+.shots { display: flex; flex-direction: column; gap: 18px; min-height: 0; }
+.frame { border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,0.18); box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 0 6px rgba(255,255,255,0.03); background: #fff; position: relative; }
+.frame img { display: block; width: 100%; }
+.cap { font-size: 13.5px; color: var(--ink-3); margin-top: -8px; }
+.cap b { color: var(--ink-2); font-weight: 600; }
+table.dq { width: 100%; border-collapse: collapse; font-size: 15px; }
+table.dq th { text-align: left; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); padding: 0 14px 9px; font-weight: 700; }
+table.dq td { padding: 9px 14px; border-top: 1px solid var(--line); color: var(--ink-2); }
+table.dq td.n { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; }
+table.dq td.id { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--teal); }
+table.dq th.n { text-align: right; }
+.pill { font-size: 12px; font-weight: 700; border-radius: 999px; padding: 3px 10px; }
+.pill.ok { background: rgba(63,224,197,0.14); color: var(--teal); }
+.pill.fix { background: rgba(255,210,31,0.14); color: var(--accent); }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 30px; }
+.std { padding: 20px 22px; }
+.std .tick { width: 30px; height: 30px; border-radius: 9px; background: rgba(63,224,197,0.15); color: var(--teal); display: grid; place-items: center; font-weight: 800; font-size: 17px; }
+.std h3 { font-size: 18px; font-weight: 700; margin-top: 12px; }
+.std p { font-size: 14.5px; color: var(--ink-2); line-height: 1.5; margin-top: 6px; }
+.band { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; margin-top: 24px; }
+.stack { margin-top: auto; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.stack span { font-size: 14px; font-weight: 600; color: var(--ink-2); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; }
+.stack .lbl { border: 0; padding-left: 0; color: var(--ink-3); letter-spacing: 0.1em; text-transform: uppercase; font-size: 12px; }
+</style></head><body><div class="canvas">
+<div class="top"><div><div class="kicker">Data quality · Bronze to Silver</div><h1>Every bad row is counted and kept</h1><div class="lead">Real public data is messy. The backfill contained requests closed before they were opened, and thousands with no borough. Each problem is handled by a named rule.</div></div>
+<div class="pageno">CITY OPERATIONS DATA PLATFORM &nbsp;·&nbsp; 06 / 09</div></div>
+<div class="body"><div class="points"><div class="panel point"><h3><b>01</b>Rules run on every load</h3><p>Ten rules check keys, dates, locations and duplicates each time data moves from Bronze to Silver.</p></div><div class="panel point"><h3><b>02</b>Rejected rows go to quarantine</h3><p>Rows that cannot be trusted go to a quarantine table with the reason. Rows with one bad field are repaired and flagged, so analysts can include or exclude them.</p></div><div class="panel point"><h3><b>03</b>Rule results are stored</h3><p>Every rule writes how many rows it checked and how many failed to <code>meta.dq_results</code>, so quality can be trended and alerted on like any other metric.</p></div><div class="stats"><div class="statbox"><div class="v">4,223</div><div class="l">rows repaired and flagged in the backfill</div></div><div class="statbox"><div class="v">0</div><div class="l">rows lost between layers</div></div></div></div><div class="shots"><div class="panel" style="padding:20px 10px 8px"><table class="dq"><tr><th>Rule</th><th>Check</th><th>When it fails</th><th class="n">Rows checked</th><th class="n">Rows failed</th><th></th></tr><tr><td class="id">SR01</td><td>Request id is present and numeric</td><td>Quarantine</td><td class="n">3,014,623</td><td class="n">0</td><td><span class="pill ok">clean</span></td></tr><tr><td class="id">SR02</td><td>Created date is present, not in the future</td><td>Quarantine</td><td class="n">3,014,623</td><td class="n">0</td><td><span class="pill ok">clean</span></td></tr><tr><td class="id">SR03</td><td>One row per request id</td><td>Keep latest</td><td class="n">3,014,623</td><td class="n">0</td><td><span class="pill ok">clean</span></td></tr><tr><td class="id">SR04</td><td>Closed date is not before created date</td><td>Clear and flag</td><td class="n">3,014,623</td><td class="n">935</td><td><span class="pill fix">repaired</span></td></tr><tr><td class="id">SR05</td><td>Closed date is not in the future</td><td>Clear and flag</td><td class="n">3,014,623</td><td class="n">1</td><td><span class="pill fix">repaired</span></td></tr><tr><td class="id">SR06</td><td>ZIP code is five digits</td><td>Clear and flag</td><td class="n">3,014,623</td><td class="n">1</td><td><span class="pill fix">repaired</span></td></tr><tr><td class="id">SR07</td><td>Coordinates fall inside New York City</td><td>Clear and flag</td><td class="n">3,014,623</td><td class="n">0</td><td><span class="pill ok">clean</span></td></tr><tr><td class="id">SR08</td><td>Borough is one of the five boroughs</td><td>Set to Unknown, flag</td><td class="n">3,014,623</td><td class="n">3,286</td><td><span class="pill fix">repaired</span></td></tr></table></div><div class="cap" style="margin-top:-6px"><b>Results of the backfill run</b>, read from <code>meta.dq_results</code>. Two more rules cover the weather feed.</div><div class="frame" style=""><img src="../screenshots/06_notebook_silver.png"></div><div class="cap" style=""><b>Silver notebook.</b> The rules are documented where they are implemented.</div></div></div></div></body></html>

@@ -1,0 +1,28 @@
+relationship 3002cc1c-b00e-516f-b4c8-092f8a0a8031
+	fromColumn: Orders.'Order Date'
+	toColumn: Date.Date
+
+relationship b127dc78-3d33-540e-9b42-a60d13d26dbb
+	fromColumn: Orders.CustomerKey
+	toColumn: Customers.CustomerKey
+
+relationship 1e32f3d6-d7f7-5325-8b1f-f9d8dfbe04af
+	fromColumn: Orders.ProductKey
+	toColumn: Products.ProductKey
+
+relationship ac436a1a-064b-53b3-8976-80e0cfb93529
+	fromColumn: Orders.RepKey
+	toColumn: 'Sales Reps'.RepKey
+
+relationship 66f94a27-ad8f-51b4-b05d-f282c881417b
+	fromColumn: Customers.RegionKey
+	toColumn: Regions.RegionKey
+
+relationship a1204df9-1b6c-5294-ae50-d819da20dcfa
+	fromColumn: Targets.RegionKey
+	toColumn: Regions.RegionKey
+
+relationship 6874e1dc-d688-58ba-8a83-c887d7910d64
+	fromColumn: Targets.Month
+	toColumn: Date.Date
+

@@ -1,0 +1,449 @@
+table _Measures
+	lineageTag: b582f3ce-9fd6-5634-b599-dc61df992f28
+
+	/// Latest activity date in the data; used as today.
+	measure 'As Of Date' = CALCULATE ( MAX ( Activities[Activity Date] ), REMOVEFILTERS () )
+		formatString: dd mmm yyyy
+		displayFolder: 0. Base
+		lineageTag: 1fbe3912-fd5b-5ffc-ae89-ed8ccb4326c4
+
+	measure 'Won Revenue' = CALCULATE ( SUM ( Opportunities[Amount] ), Stages[Stage Group] = "Won" )
+		formatString: $#,##0
+		displayFolder: 1. Closed
+		lineageTag: 22368387-b8cb-5d01-8c71-a2233ca39ee7
+
+	measure 'Won Deals' = CALCULATE ( COUNTROWS ( Opportunities ), Stages[Stage Group] = "Won" )
+		formatString: #,##0
+		displayFolder: 1. Closed
+		lineageTag: f0924d13-bd8e-5f40-9838-04fab75f2285
+
+	measure 'Lost Deals' = CALCULATE ( COUNTROWS ( Opportunities ), Stages[Stage Group] = "Lost" )
+		formatString: #,##0
+		displayFolder: 1. Closed
+		lineageTag: fcababbc-6c60-58a9-9648-9eb6e49dd876
+
+	measure 'Win Rate' = DIVIDE ( [Won Deals], [Won Deals] + [Lost Deals] )
+		formatString: 0.0%
+		displayFolder: 1. Closed
+		lineageTag: 6ab737b9-6d79-5af8-b4d4-7e665db8f98f
+
+	measure 'Avg Deal Size' = DIVIDE ( [Won Revenue], [Won Deals] )
+		formatString: $#,##0
+		displayFolder: 1. Closed
+		lineageTag: 127997bc-1be8-5c92-9ad2-36bdd5ca352c
+
+	/// Average days from creation to close for won deals.
+	measure 'Avg Sales Cycle' =
+			CALCULATE (
+			    AVERAGEX ( Opportunities, DATEDIFF ( Opportunities[Created Date], Opportunities[Close Date], DAY ) ),
+			    Stages[Stage Group] = "Won"
+			)
+		formatString: 0
+		displayFolder: 1. Closed
+		lineageTag: e49741d5-6ac9-591c-9d4c-5b63b63dd730
+
+	/// Value of all open deals. Ignores the date filter because open deals close in the future.
+	measure 'Open Pipeline' = CALCULATE ( SUM ( Opportunities[Amount] ), Stages[Stage Group] = "Open", REMOVEFILTERS ( 'Date' ) )
+		formatString: $#,##0
+		displayFolder: 2. Pipeline
+		lineageTag: 76532559-2394-52db-9dee-8deade781059
+
+	measure 'Weighted Pipeline' = CALCULATE ( SUMX ( Opportunities, Opportunities[Amount] * Opportunities[Probability] ), Stages[Stage Group] = "Open", REMOVEFILTERS ( 'Date' ) )
+		formatString: $#,##0
+		displayFolder: 2. Pipeline
+		lineageTag: bcf5b672-b0ea-5758-90ca-6aed8487548b
+
+	measure 'Open Deals' = CALCULATE ( COUNTROWS ( Opportunities ), Stages[Stage Group] = "Open", REMOVEFILTERS ( 'Date' ) )
+		formatString: #,##0
+		displayFolder: 2. Pipeline
+		lineageTag: dec4542b-5e52-50df-8926-e03491556263
+
+	/// Open deals with no activity in the last 21 days.
+	measure 'Stalled Deals' =
+			VAR _Cut = [As Of Date] - 21
+			RETURN
+			    CALCULATE ( COUNTROWS ( FILTER ( Opportunities, Opportunities[Last Activity Date] < _Cut ) ), Stages[Stage Group] = "Open", REMOVEFILTERS ( 'Date' ) ) + 0
+		formatString: #,##0
+		displayFolder: 2. Pipeline
+		lineageTag: 4887a532-1fa3-5a28-86f9-add15a8937cb
+
+	measure 'Days Since Activity' =
+			VAR _Last = CALCULATE ( MAX ( Opportunities[Last Activity Date] ), Stages[Stage Group] = "Open", REMOVEFILTERS ( 'Date' ) )
+			RETURN
+			    IF ( NOT ISBLANK ( _Last ), MAX ( 0, DATEDIFF ( _Last, [As Of Date], DAY ) ) )
+		formatString: 0
+		displayFolder: 2. Pipeline
+		lineageTag: 87cd2c25-1df7-5081-93f0-930a9624868f
+
+	measure Leads = COUNTROWS ( Leads )
+		formatString: #,##0
+		displayFolder: 3. Leads
+		lineageTag: 1a50c614-9af9-5376-9ad4-ded4e3b71431
+
+	measure 'Qualified Leads' = CALCULATE ( COUNTROWS ( Leads ), Leads[Status] = "Qualified" )
+		formatString: #,##0
+		displayFolder: 3. Leads
+		lineageTag: 0bdd263f-3a3d-54ae-8f56-64667dfdb418
+
+	measure 'Qualification Rate' = DIVIDE ( [Qualified Leads], [Leads] )
+		formatString: 0.0%
+		displayFolder: 3. Leads
+		lineageTag: 4a74269b-e7d1-5279-8c92-729aeb618a58
+
+	/// Won deals closed in the period divided by leads created in the period.
+	measure 'Lead to Win Rate' = DIVIDE ( [Won Deals], [Leads] )
+		formatString: 0.0%
+		displayFolder: 3. Leads
+		lineageTag: a6e58d80-c6d4-5bd9-898e-cf0b8ff2d793
+
+	measure 'Deals Reaching Stage' = DISTINCTCOUNT ( 'Stage History'[OpportunityKey] )
+		formatString: #,##0
+		displayFolder: 3. Leads
+		lineageTag: 96606342-af15-5a7a-aaa1-85c0e926f5e2
+
+	/// Quarterly quota multiplied by the quarters in the selection that have started.
+	measure Quota =
+			VAR _AsOf = [As Of Date]
+			VAR _Quarters = COUNTROWS ( FILTER ( VALUES ( 'Date'[Year Quarter] ), CALCULATE ( MIN ( 'Date'[Date] ) ) <= _AsOf ) )
+			RETURN
+			    SUM ( Reps[Quarterly Quota] ) * _Quarters
+		formatString: $#,##0
+		displayFolder: 4. Quota
+		lineageTag: 0588c90c-06b7-54dc-a943-54b7875fafa1
+
+	measure 'Quota Attainment' = DIVIDE ( [Won Revenue], [Quota] )
+		formatString: 0.0%
+		displayFolder: 4. Quota
+		lineageTag: 97edc18c-5576-5f2a-8630-2049c226a88b
+
+	measure 'Reps at Quota' = COUNTROWS ( FILTER ( Reps, [Quota Attainment] >= 1 ) ) + 0
+		formatString: #,##0
+		displayFolder: 4. Quota
+		lineageTag: f90e22e1-8b2f-5ef8-b46e-926c43755a0c
+
+	measure Activities = COUNTROWS ( Activities )
+		formatString: #,##0
+		displayFolder: 5. Activity
+		lineageTag: 4e1451ac-19ad-5a88-91e7-d9e7141f2dde
+
+	measure 'Deal Amount' = SUM ( Opportunities[Amount] )
+		formatString: $#,##0
+		displayFolder: 1. Closed
+		lineageTag: 37152ed0-7fa3-585f-b24b-0f336708bdff
+
+	measure 'Activities per Rep' = DIVIDE ( [Activities], COUNTROWS ( Reps ) )
+		formatString: #,##0
+		displayFolder: 5. Activity
+		lineageTag: 0f5ba4c4-b2eb-53d7-8333-8132746d4898
+
+	measure 'Won Revenue PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Won Revenue],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 1. Closed
+		lineageTag: 35aedb70-82ab-5e5e-9e05-6adaed4a58a8
+
+	measure 'Won Revenue Label' =
+			VAR _d = DIVIDE ( [Won Revenue] - [Won Revenue PY], [Won Revenue PY] )
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" ) & " vs PY"
+		displayFolder: 8. Labels
+		lineageTag: 1e52b604-2c3e-50b5-a575-56206c1c9fc5
+
+	measure 'Won Revenue Color' =
+			VAR _d = DIVIDE ( [Won Revenue] - [Won Revenue PY], [Won Revenue PY] )
+			RETURN
+			    IF ( _d >= 0, "#6EE7B7", "#FB8FA4" )
+		displayFolder: 9. Formatting
+		lineageTag: 4376a97f-4426-560e-8bea-eb7b4cd5c58f
+
+	measure 'Win Rate PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Win Rate],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: 0.0%
+		displayFolder: 1. Closed
+		lineageTag: fe6af239-f3de-525f-809d-073d354aabbe
+
+	measure 'Win Rate Label' =
+			VAR _d = ( [Win Rate] - [Win Rate PY] ) * 100
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0" ) & " pts vs PY"
+		displayFolder: 8. Labels
+		lineageTag: c53bf50b-de54-5a7a-8449-c9f4ec2e55bb
+
+	measure 'Win Rate Color' =
+			VAR _d = ( [Win Rate] - [Win Rate PY] ) * 100
+			RETURN
+			    IF ( _d >= 0, "#6EE7B7", "#FB8FA4" )
+		displayFolder: 9. Formatting
+		lineageTag: eeffff20-80f9-5231-87ca-79bcb23b4607
+
+	measure 'Avg Deal Size PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Avg Deal Size],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 1. Closed
+		lineageTag: 047bf594-cfdc-5227-915d-23a624b723df
+
+	measure 'Avg Deal Size Label' =
+			VAR _d = DIVIDE ( [Avg Deal Size] - [Avg Deal Size PY], [Avg Deal Size PY] )
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" ) & " vs PY"
+		displayFolder: 8. Labels
+		lineageTag: e5e08fb6-dc36-56ad-be14-61ceaf1623d3
+
+	measure 'Avg Deal Size Color' =
+			VAR _d = DIVIDE ( [Avg Deal Size] - [Avg Deal Size PY], [Avg Deal Size PY] )
+			RETURN
+			    IF ( _d >= 0, "#6EE7B7", "#FB8FA4" )
+		displayFolder: 9. Formatting
+		lineageTag: 5af37701-b4fb-5edb-b45f-2ff210cd458e
+
+	measure 'Avg Sales Cycle PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Avg Sales Cycle],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: 0
+		displayFolder: 1. Closed
+		lineageTag: f7c547ef-86bd-581f-9f9e-b8712f1fa037
+
+	measure 'Avg Sales Cycle Label' =
+			VAR _d = DIVIDE ( [Avg Sales Cycle] - [Avg Sales Cycle PY], [Avg Sales Cycle PY] )
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" ) & " vs PY"
+		displayFolder: 8. Labels
+		lineageTag: 7dd6f47d-b459-5f92-a422-91e3b5c5f793
+
+	measure 'Avg Sales Cycle Color' =
+			VAR _d = DIVIDE ( [Avg Sales Cycle] - [Avg Sales Cycle PY], [Avg Sales Cycle PY] )
+			RETURN
+			    IF ( _d >= 0, "#FB8FA4", "#6EE7B7" )
+		displayFolder: 9. Formatting
+		lineageTag: 0a9ee7e9-2c27-534b-b548-11e94767852d
+
+	measure 'Won Deals PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Won Deals],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: #,##0
+		displayFolder: 1. Closed
+		lineageTag: 16533678-7485-5448-94aa-72380f29d04e
+
+	measure 'Won Deals Label' =
+			VAR _d = DIVIDE ( [Won Deals] - [Won Deals PY], [Won Deals PY] )
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" ) & " vs PY"
+		displayFolder: 8. Labels
+		lineageTag: 2c859b78-5cc6-5e2c-b8a5-841a170f4fa7
+
+	measure 'Won Deals Color' =
+			VAR _d = DIVIDE ( [Won Deals] - [Won Deals PY], [Won Deals PY] )
+			RETURN
+			    IF ( _d >= 0, "#6EE7B7", "#FB8FA4" )
+		displayFolder: 9. Formatting
+		lineageTag: a7957c3b-64f0-5c4b-87ad-577aa2134ef3
+
+	measure 'Leads PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Leads],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: #,##0
+		displayFolder: 3. Leads
+		lineageTag: ed8b7f5c-150c-5ec4-ad96-a09c93a394b6
+
+	measure 'Leads Label' =
+			VAR _d = DIVIDE ( [Leads] - [Leads PY], [Leads PY] )
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" ) & " vs PY"
+		displayFolder: 8. Labels
+		lineageTag: e3082346-9657-52ab-af2d-9a73c6126a79
+
+	measure 'Leads Color' =
+			VAR _d = DIVIDE ( [Leads] - [Leads PY], [Leads PY] )
+			RETURN
+			    IF ( _d >= 0, "#6EE7B7", "#FB8FA4" )
+		displayFolder: 9. Formatting
+		lineageTag: 1a8fec9f-36ae-5db3-b00f-04573afba0e9
+
+	measure 'Qualification Rate PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Qualification Rate],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: 0.0%
+		displayFolder: 3. Leads
+		lineageTag: 0df582b5-8fc9-524f-9eec-dd00c3459e03
+
+	measure 'Qualification Rate Label' =
+			VAR _d = ( [Qualification Rate] - [Qualification Rate PY] ) * 100
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0" ) & " pts vs PY"
+		displayFolder: 8. Labels
+		lineageTag: f8cc2a25-b47d-53c7-b49b-09c72d741ca9
+
+	measure 'Qualification Rate Color' =
+			VAR _d = ( [Qualification Rate] - [Qualification Rate PY] ) * 100
+			RETURN
+			    IF ( _d >= 0, "#6EE7B7", "#FB8FA4" )
+		displayFolder: 9. Formatting
+		lineageTag: a02a7d46-06af-5aba-ac75-b1cf859b9c4f
+
+	measure 'Lead to Win Rate PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Lead to Win Rate],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: 0.0%
+		displayFolder: 3. Leads
+		lineageTag: ad83dc06-3ce8-57e5-aef8-9fde8ab37dea
+
+	measure 'Lead to Win Rate Label' =
+			VAR _d = ( [Lead to Win Rate] - [Lead to Win Rate PY] ) * 100
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0" ) & " pts vs PY"
+		displayFolder: 8. Labels
+		lineageTag: f13b6be7-4f3a-5304-81d7-a91a72c4060b
+
+	measure 'Lead to Win Rate Color' =
+			VAR _d = ( [Lead to Win Rate] - [Lead to Win Rate PY] ) * 100
+			RETURN
+			    IF ( _d >= 0, "#6EE7B7", "#FB8FA4" )
+		displayFolder: 9. Formatting
+		lineageTag: 6920023b-0bae-5b40-804b-e565cd1f8a87
+
+	measure 'Activities PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Activities],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: #,##0
+		displayFolder: 5. Activity
+		lineageTag: 9ac35140-37e8-5968-ab74-94c3b1f28259
+
+	measure 'Activities Label' =
+			VAR _d = DIVIDE ( [Activities] - [Activities PY], [Activities PY] )
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" ) & " vs PY"
+		displayFolder: 8. Labels
+		lineageTag: 2ac41981-47c1-5fed-88bf-6a10815c02a2
+
+	measure 'Activities Color' =
+			VAR _d = DIVIDE ( [Activities] - [Activities PY], [Activities PY] )
+			RETURN
+			    IF ( _d >= 0, "#6EE7B7", "#FB8FA4" )
+		displayFolder: 9. Formatting
+		lineageTag: f47de40d-a694-50f8-9ceb-7b63d5c795c1
+
+	measure 'Open Pipeline Label' = [Open Deals] & " open deals"
+		displayFolder: 8. Labels
+		lineageTag: d63ce99f-24c5-5e2b-abaa-9e2eca79252b
+
+	measure 'Weighted Pipeline Label' = "expected from open deals"
+		displayFolder: 8. Labels
+		lineageTag: 19e669b8-6227-53af-afa1-d1d9c3ffe282
+
+	measure 'Open Deals Label' = FORMAT ( [Open Pipeline], "$#,##0" ) & " in pipeline"
+		displayFolder: 8. Labels
+		lineageTag: c7af883e-181c-5955-9458-4115db9f5154
+
+	measure 'Stalled Deals Label' = "no activity in 21+ days"
+		displayFolder: 8. Labels
+		lineageTag: c359f5e7-0e19-5e88-bc92-5cdda0e681cf
+
+	measure 'Quota Label' = "of " & FORMAT ( [Quota], "$#,##0" ) & " quota"
+		displayFolder: 8. Labels
+		lineageTag: 42e113bf-4fd0-5f02-bb34-50c931812b3b
+
+	measure 'Reps at Quota Label' = "of " & COUNTROWS ( Reps ) & " reps at or above quota"
+		displayFolder: 8. Labels
+		lineageTag: 05403720-04cd-5785-bbb4-dc4b1515621c
+
+	measure 'Won YoY' =
+			IF (
+			    ISBLANK ( [Won Revenue PY] ) || ISBLANK ( [Won Revenue] ),
+			    BLANK (),
+			    VAR _d = DIVIDE ( [Won Revenue] - [Won Revenue PY], [Won Revenue PY] )
+			    RETURN
+			        IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" )
+			)
+		displayFolder: 8. Labels
+		lineageTag: 5331e61a-44bb-5246-89bd-f4f9d4860449
+
+	measure 'Neutral Color' = "#8B95A7"
+		displayFolder: 9. Formatting
+		lineageTag: 079864c9-ace8-5a37-8512-279f5418beb7
+
+	measure 'Warning Color' = "#FB8FA4"
+		displayFolder: 9. Formatting
+		lineageTag: aa4c5076-9944-506f-a341-21092b08fd8a
+
+	measure 'Attainment Color' = IF ( [Quota Attainment] >= 1, "#6EE7B7", IF ( [Quota Attainment] >= 0.8, "#D7DCE5", "#FB8FA4" ) )
+		displayFolder: 9. Formatting
+		lineageTag: ae0bddca-9113-5f41-abd2-35e3dc31c1cd
+
+	measure 'Win Rate Bar Color' =
+			VAR _All = CALCULATE ( [Win Rate], ALLSELECTED ( Opportunities[Lead Source] ) )
+			RETURN
+			    IF ( [Win Rate] < _All, "#3B4654", "#2DD4BF" )
+		displayFolder: 9. Formatting
+		lineageTag: 06140bc2-b2ff-5a87-a1ee-97d25ebca0b4
+
+	measure 'Stale Color' = IF ( [Days Since Activity] > 21, "#FB8FA4", "#D7DCE5" )
+		displayFolder: 9. Formatting
+		lineageTag: 0f109454-044d-54d1-8a67-24e38c29a563
+
+	column Placeholder
+		dataType: string
+		isHidden
+		lineageTag: db3abf1d-e323-550b-8bfa-c432b3746259
+		summarizeBy: none
+		sourceColumn: Placeholder
+
+		annotation SummarizationSetBy = User
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = #table(type table [Placeholder = text], {})
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+

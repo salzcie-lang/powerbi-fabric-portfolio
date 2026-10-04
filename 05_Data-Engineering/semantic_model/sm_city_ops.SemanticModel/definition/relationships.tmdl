@@ -1,0 +1,27 @@
+relationship bb7ddab5-d7ba-5e5c-b78c-26c79185e9f2
+	fromColumn: fact_service_request.created_date_key
+	toColumn: dim_date.date_key
+
+relationship aa5b34fe-2238-50e5-ac1f-d1de3d2781dd
+	fromColumn: fact_service_request.agency_key
+	toColumn: dim_agency.agency_key
+
+relationship 58ce568f-556e-536a-a391-78e4605f3ef1
+	fromColumn: fact_service_request.complaint_key
+	toColumn: dim_complaint_type.complaint_key
+
+relationship 626934b9-32fd-5dc9-930b-8da925c11140
+	fromColumn: fact_service_request.borough_key
+	toColumn: dim_borough.borough_key
+
+relationship 119c2256-1e35-5bed-9687-80d6d9a2e537
+	fromColumn: fact_service_request.channel_key
+	toColumn: dim_channel.channel_key
+
+relationship e935f355-a55d-597a-be76-cfcbc7a11f4c
+	fromColumn: fact_weather_daily.date_key
+	toColumn: dim_date.date_key
+
+relationship c5da6c0d-4ce7-5905-bf4f-cabcbc6cd446
+	fromColumn: fact_weather_daily.borough_key
+	toColumn: dim_borough.borough_key

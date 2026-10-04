@@ -1,0 +1,29 @@
+# Power BI Desktop local state and data cache
+**/.pbi/
+**/.pbir/
+
+# Browser profile used for portal screenshots (holds a signed-in session)
+05_Data-Engineering/_build/chrome-profile/
+
+# Machine-specific environment (workspace ids, local paths); see env.example.sh
+05_Data-Engineering/_build/env.sh
+05_Data-Engineering/_build/ids.local.json
+
+# Generated build output and working captures
+05_Data-Engineering/_build/out/
+05_Data-Engineering/screenshots/raw_*.png
+05_Data-Engineering/screenshots/_preview.png
+
+# Build logs and discarded fragments
+*.log
+_scripts/_removed/
+
+# Internal working notes
+00_Design-Research/
+
+# Duplicates of 05_Data-Engineering/exports/*.pdf
+PDFs/Data Engineering.pdf
+PDFs/Data Engineering - Fabric Data Platform.pdf
+
+__pycache__/
+*.pyc

@@ -1,0 +1,41 @@
+table Regions
+	lineageTag: c3286687-f388-5f39-bb61-1d45cd8f36d2
+
+	column RegionKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: d07f9414-ab98-51d9-b5f4-d06f598eb8a3
+		summarizeBy: none
+		sourceColumn: RegionKey
+
+		annotation SummarizationSetBy = User
+
+	column Region
+		dataType: string
+		lineageTag: bbd50601-2db8-5ffc-9274-413ef4db0452
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = User
+
+	column 'Region Manager'
+		dataType: string
+		lineageTag: 86bea59e-160c-5b4b-b08c-bd053c8c7402
+		summarizeBy: none
+		sourceColumn: Region Manager
+
+		annotation SummarizationSetBy = User
+
+	partition Regions = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\regions.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"RegionKey", "Region", "RegionManager"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"RegionKey", Int64.Type}, {"Region", type text}, {"RegionManager", type text}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"RegionManager", "Region Manager"}})
+				in
+				    Renamed
+

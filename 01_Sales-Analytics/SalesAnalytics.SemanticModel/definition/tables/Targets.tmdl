@@ -1,0 +1,47 @@
+table Targets
+	lineageTag: 05edea31-3918-59b8-a16a-169503d0ce45
+
+	column Month
+		dataType: dateTime
+		isHidden
+		formatString: dd mmm yyyy
+		lineageTag: 7b7cccbb-999e-5ef2-8720-ffa69cb4441b
+		summarizeBy: none
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = User
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column RegionKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 1d71d66f-a758-577e-9aaf-aaf86175d625
+		summarizeBy: none
+		sourceColumn: RegionKey
+
+		annotation SummarizationSetBy = User
+
+	column 'Target Amount'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: fdd7ebc4-6e5b-5c09-9ee6-73176ccbb5a7
+		summarizeBy: none
+		sourceColumn: Target Amount
+
+		annotation SummarizationSetBy = User
+
+	partition Targets = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\targets.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"Month", "RegionKey", "TargetRevenue"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"Month", type date}, {"RegionKey", Int64.Type}, {"TargetRevenue", Currency.Type}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"TargetRevenue", "Target Amount"}})
+				in
+				    Renamed
+

@@ -1,0 +1,358 @@
+{
+  "properties": {
+    "description": "Daily load: NYC 311 + weather APIs -> Bronze -> Silver (lakehouse) -> Gold star schema (warehouse), with reconciliation and failure logging.",
+    "activities": [
+      {
+        "name": "Ingest NYC 311",
+        "description": "REST API -> landing files -> Bronze (incremental by watermark)",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.03:00:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 120
+        },
+        "typeProperties": {
+          "notebookId": "<nb_01_ingest_nyc311-id>",
+          "workspaceId": "<workspace-id>",
+          "parameters": {
+            "load_mode": {
+              "value": {
+                "value": "@pipeline().parameters.load_mode",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "pipeline_run_id": {
+              "value": {
+                "value": "@pipeline().RunId",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "Ingest Weather",
+        "description": "REST API -> landing files -> Bronze",
+        "type": "TridentNotebook",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.00:30:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 120
+        },
+        "typeProperties": {
+          "notebookId": "<nb_02_ingest_weather-id>",
+          "workspaceId": "<workspace-id>",
+          "parameters": {
+            "load_mode": {
+              "value": {
+                "value": "@pipeline().parameters.load_mode",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "pipeline_run_id": {
+              "value": {
+                "value": "@pipeline().RunId",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "Transform to Silver",
+        "description": "Data-quality rules, de-duplication, merge into Silver",
+        "type": "TridentNotebook",
+        "dependsOn": [
+          {
+            "activity": "Ingest NYC 311",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Ingest Weather",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.02:00:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 120
+        },
+        "typeProperties": {
+          "notebookId": "<nb_03_transform_silver-id>",
+          "workspaceId": "<workspace-id>",
+          "parameters": {
+            "load_mode": {
+              "value": {
+                "value": "@pipeline().parameters.load_mode",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "pipeline_run_id": {
+              "value": {
+                "value": "@pipeline().RunId",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "Load Dimensions",
+        "description": "New dimension members into the Gold star schema",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [
+          {
+            "activity": "Transform to Silver",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.01:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 60
+        },
+        "typeProperties": {
+          "storedProcedureName": "[etl].[usp_load_dimensions]",
+          "storedProcedureParameters": {
+            "pipeline_run_id": {
+              "value": {
+                "value": "@pipeline().RunId",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "wh_city_ops",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "your-warehouse-endpoint.datawarehouse.fabric.microsoft.com",
+              "artifactId": "<wh_city_ops-id>",
+              "workspaceId": "<workspace-id>"
+            }
+          }
+        }
+      },
+      {
+        "name": "Load Fact Service Request",
+        "description": "Incremental fact load (transactional)",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [
+          {
+            "activity": "Load Dimensions",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.01:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 60
+        },
+        "typeProperties": {
+          "storedProcedureName": "[etl].[usp_load_fact_service_request]",
+          "storedProcedureParameters": {
+            "pipeline_run_id": {
+              "value": {
+                "value": "@pipeline().RunId",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "wh_city_ops",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "your-warehouse-endpoint.datawarehouse.fabric.microsoft.com",
+              "artifactId": "<wh_city_ops-id>",
+              "workspaceId": "<workspace-id>"
+            }
+          }
+        }
+      },
+      {
+        "name": "Load Fact Weather Daily",
+        "description": "Hourly weather rolled up to borough-day",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [
+          {
+            "activity": "Load Fact Service Request",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.01:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 60
+        },
+        "typeProperties": {
+          "storedProcedureName": "[etl].[usp_load_fact_weather_daily]",
+          "storedProcedureParameters": {
+            "pipeline_run_id": {
+              "value": {
+                "value": "@pipeline().RunId",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "wh_city_ops",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "your-warehouse-endpoint.datawarehouse.fabric.microsoft.com",
+              "artifactId": "<wh_city_ops-id>",
+              "workspaceId": "<workspace-id>"
+            }
+          }
+        }
+      },
+      {
+        "name": "Reconcile Silver vs Gold",
+        "description": "Fails the run if the layers do not agree",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [
+          {
+            "activity": "Load Fact Weather Daily",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.01:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 60
+        },
+        "typeProperties": {
+          "storedProcedureName": "[etl].[usp_reconcile]",
+          "storedProcedureParameters": {
+            "pipeline_run_id": {
+              "value": {
+                "value": "@pipeline().RunId",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "wh_city_ops",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "your-warehouse-endpoint.datawarehouse.fabric.microsoft.com",
+              "artifactId": "<wh_city_ops-id>",
+              "workspaceId": "<workspace-id>"
+            }
+          }
+        }
+      },
+      {
+        "name": "Log Failure",
+        "description": "Runs when any upstream activity failed (upstream failure leaves the last step Failed or Skipped)",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [
+          {
+            "activity": "Reconcile Silver vs Gold",
+            "dependencyConditions": [
+              "Failed",
+              "Skipped"
+            ]
+          }
+        ],
+        "policy": {
+          "timeout": "0.01:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30
+        },
+        "typeProperties": {
+          "storedProcedureName": "[etl].[usp_log_pipeline_failure]",
+          "storedProcedureParameters": {
+            "pipeline_run_id": {
+              "value": {
+                "value": "@pipeline().RunId",
+                "type": "Expression"
+              },
+              "type": "String"
+            },
+            "pipeline_name": {
+              "value": {
+                "value": "@pipeline().PipelineName",
+                "type": "Expression"
+              },
+              "type": "String"
+            }
+          }
+        },
+        "linkedService": {
+          "name": "wh_city_ops",
+          "properties": {
+            "annotations": [],
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "endpoint": "your-warehouse-endpoint.datawarehouse.fabric.microsoft.com",
+              "artifactId": "<wh_city_ops-id>",
+              "workspaceId": "<workspace-id>"
+            }
+          }
+        }
+      },
+      {
+        "name": "Fail Pipeline",
+        "description": "Marks the run as Failed after the failure has been logged",
+        "type": "Fail",
+        "dependsOn": [
+          {
+            "activity": "Log Failure",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "message": {
+            "value": "@concat('pl_city_ops_daily failed. Run id: ', pipeline().RunId)",
+            "type": "Expression"
+          },
+          "errorCode": "CITY_OPS_LOAD_FAILED"
+        }
+      }
+    ],
+    "parameters": {
+      "load_mode": {
+        "type": "string",
+        "defaultValue": "incremental"
+      }
+    },
+    "annotations": []
+  }
+}

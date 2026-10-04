@@ -1,0 +1,5 @@
+expression DataFolder = "D:\Portfolio\02_CRM-Pipeline\data" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 611ceaae-4f5c-5507-a0a6-d4732ae1b79f
+
+	annotation PBI_ResultType = Text
+

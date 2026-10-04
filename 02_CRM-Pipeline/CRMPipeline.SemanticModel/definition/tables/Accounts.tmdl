@@ -1,0 +1,69 @@
+table Accounts
+	lineageTag: 622268c0-bd41-5fad-9fc7-42f8f7287979
+
+	column AccountKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a92f5a1d-1feb-541c-9bf9-04bcab4842b8
+		summarizeBy: none
+		sourceColumn: AccountKey
+
+		annotation SummarizationSetBy = User
+
+	column Account
+		dataType: string
+		lineageTag: d88ab738-d421-51b9-9696-8ac24ee4551f
+		summarizeBy: none
+		sourceColumn: Account
+
+		annotation SummarizationSetBy = User
+
+	column Segment
+		dataType: string
+		lineageTag: a062eb67-337a-524c-aee6-39c9bae6d143
+		summarizeBy: none
+		sourceColumn: Segment
+
+		annotation SummarizationSetBy = User
+
+	column Industry
+		dataType: string
+		lineageTag: f0ea2087-027c-51c0-9bdd-730f614551a4
+		summarizeBy: none
+		sourceColumn: Industry
+
+		annotation SummarizationSetBy = User
+
+	column Country
+		dataType: string
+		lineageTag: c8f0961d-e911-5c4a-b205-0d66623c319c
+		dataCategory: Country
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = User
+
+	column Employees
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: d614c839-cbec-5e90-ae80-3e92e7be58ea
+		summarizeBy: none
+		sourceColumn: Employees
+
+		annotation SummarizationSetBy = User
+
+	partition Accounts = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\accounts.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"AccountKey", "Account", "Segment", "Industry", "Country", "Employees"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"AccountKey", Int64.Type}, {"Account", type text}, {"Segment", type text}, {"Industry", type text}, {"Country", type text}, {"Employees", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
+

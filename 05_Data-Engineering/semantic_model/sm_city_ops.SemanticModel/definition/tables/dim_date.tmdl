@@ -1,0 +1,99 @@
+table dim_date
+	lineageTag: e6e0a93c-9650-5ee3-b43d-9692362c56a3
+
+	column date_key
+		dataType: int64
+		isHidden
+		lineageTag: 66aac1ff-7c60-57e2-b3ab-5bd1f867de9f
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column full_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 51de59a0-ebb6-57a8-a23a-5c93a9bda93b
+		summarizeBy: none
+		sourceColumn: full_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_number
+		dataType: int64
+		lineageTag: 7dd820c9-7e18-5fe6-837d-e20969425789
+		summarizeBy: none
+		sourceColumn: year_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter_number
+		dataType: int64
+		lineageTag: 703b0992-f953-5306-85d7-c8b6ac11b851
+		summarizeBy: none
+		sourceColumn: quarter_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_number
+		dataType: int64
+		lineageTag: 443eec19-21aa-5a94-b68e-2d977b06beaf
+		summarizeBy: none
+		sourceColumn: month_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		lineageTag: 584ff5c8-2f0a-585d-8add-1b218886db94
+		summarizeBy: none
+		sourceColumn: month_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_month
+		dataType: string
+		lineageTag: 20df17ff-b6c2-576f-91b7-86f1c08482e3
+		summarizeBy: none
+		sourceColumn: year_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_month
+		dataType: int64
+		lineageTag: c88603c7-40b8-5e58-a5b9-a41f0362d564
+		summarizeBy: none
+		sourceColumn: day_of_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_week
+		dataType: int64
+		lineageTag: d7658a61-c38d-54a9-96ba-226c49a45ee6
+		summarizeBy: none
+		sourceColumn: day_of_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_name
+		dataType: string
+		lineageTag: ffa58738-5020-5294-a478-c069bb959b77
+		summarizeBy: none
+		sourceColumn: day_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekend
+		dataType: boolean
+		lineageTag: fb58df56-dfed-51f8-8eda-30ff8c474bd9
+		summarizeBy: none
+		sourceColumn: is_weekend
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_date = entity
+		mode: directLake
+		source
+			entityName: dim_date
+			schemaName: gold
+			expressionSource: DatabaseQuery

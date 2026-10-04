@@ -1,0 +1,77 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "b7c006c479f6abc7",
+  "displayName": "Income Statement",
+  "width": 1280,
+  "height": 720,
+  "displayOption": "FitToPage",
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'bg_statement.png'"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "ResourcePackageItem": {
+                    "PackageName": "RegisteredResources",
+                    "PackageType": 1,
+                    "ItemName": "bg_statement_17911190845864708.png"
+                  }
+                }
+              },
+              "scaling": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Fit'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "deptTable",
+      "target": "ebitdaTrend",
+      "type": "NoFilter"
+    },
+    {
+      "source": "deptTable",
+      "target": "header",
+      "type": "NoFilter"
+    },
+    {
+      "source": "deptTable",
+      "target": "navOverview",
+      "type": "NoFilter"
+    },
+    {
+      "source": "deptTable",
+      "target": "slQuarter",
+      "type": "NoFilter"
+    },
+    {
+      "source": "deptTable",
+      "target": "statement",
+      "type": "NoFilter"
+    }
+  ]
+}

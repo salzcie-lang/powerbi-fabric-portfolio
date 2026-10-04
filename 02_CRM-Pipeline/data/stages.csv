@@ -1,0 +1,7 @@
+Stage,StageOrder,StageGroup,DefaultProbability
+Discovery,1,Open,0.1
+Qualification,2,Open,0.25
+Proposal,3,Open,0.5
+Negotiation,4,Open,0.75
+Closed Won,5,Won,1.0
+Closed Lost,6,Lost,0.0

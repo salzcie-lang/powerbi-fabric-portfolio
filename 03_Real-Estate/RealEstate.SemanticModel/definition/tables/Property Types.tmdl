@@ -1,0 +1,43 @@
+table 'Property Types'
+	lineageTag: 5b135f73-5ef7-53e3-8ce8-40bbd153a3bc
+
+	column 'Property Type'
+		dataType: string
+		lineageTag: 08af703a-830b-56ed-a7df-429ce64bebf2
+		summarizeBy: none
+		sourceColumn: Property Type
+		sortByColumn: 'Type Order'
+
+		annotation SummarizationSetBy = User
+
+	column Picture
+		dataType: string
+		lineageTag: b57adcfe-a4c3-546b-89da-14b2b960e19f
+		dataCategory: ImageUrl
+		summarizeBy: none
+		sourceColumn: Picture
+
+		annotation SummarizationSetBy = User
+
+	column 'Type Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: e374707b-336d-57a7-8e6f-39410e522fe0
+		summarizeBy: none
+		sourceColumn: Type Order
+
+		annotation SummarizationSetBy = User
+
+	partition 'Property Types' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\property_types.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"PropertyType", "Picture", "TypeOrder"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"PropertyType", type text}, {"Picture", type text}, {"TypeOrder", Int64.Type}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"PropertyType", "Property Type"}, {"TypeOrder", "Type Order"}})
+				in
+				    Renamed
+

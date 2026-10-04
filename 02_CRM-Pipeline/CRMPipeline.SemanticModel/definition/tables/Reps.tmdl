@@ -1,0 +1,53 @@
+table Reps
+	lineageTag: 31b4a01f-f65a-5893-9d9e-d9bb0ca1e78e
+
+	column RepKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 1c08b1fc-4105-5009-ae2c-417bc23fd799
+		summarizeBy: none
+		sourceColumn: RepKey
+
+		annotation SummarizationSetBy = User
+
+	column Rep
+		dataType: string
+		lineageTag: 4f5a07e2-814b-5a10-b073-03bc37e96ecd
+		summarizeBy: none
+		sourceColumn: Rep
+
+		annotation SummarizationSetBy = User
+
+	column Team
+		dataType: string
+		lineageTag: aa2db27a-934f-5ef7-9644-cef915f2779a
+		summarizeBy: none
+		sourceColumn: Team
+
+		annotation SummarizationSetBy = User
+
+	column 'Quarterly Quota'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: 0085c6a6-5151-532e-9f7e-5c99fd077b70
+		summarizeBy: none
+		sourceColumn: Quarterly Quota
+
+		annotation SummarizationSetBy = User
+
+	partition Reps = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\reps.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"RepKey", "Rep", "Team", "QuarterlyQuota"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"RepKey", Int64.Type}, {"Rep", type text}, {"Team", type text}, {"QuarterlyQuota", Currency.Type}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"QuarterlyQuota", "Quarterly Quota"}})
+				in
+				    Renamed
+
+	annotation PBI_ResultType = Table
+

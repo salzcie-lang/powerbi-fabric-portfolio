@@ -1,0 +1,123 @@
+table Orders
+	lineageTag: 375cc8be-4b91-5eb7-826c-f3de61a9c651
+
+	column 'Order ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 63521bc6-a9b9-5d2b-8dd7-7ef9cc75173c
+		summarizeBy: none
+		sourceColumn: Order ID
+
+		annotation SummarizationSetBy = User
+
+	column 'Order Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: 0592561e-0bc9-516b-b187-78dff1a6543b
+		summarizeBy: none
+		sourceColumn: Order Date
+
+		annotation SummarizationSetBy = User
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column CustomerKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: d878e752-2791-51b0-beaa-aa39b71a4d34
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		annotation SummarizationSetBy = User
+
+	column ProductKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0421be6f-2393-5cf6-bd1b-3e452db45d43
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = User
+
+	column RepKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 84d200bd-5cf2-5212-902e-f290c3d61e93
+		summarizeBy: none
+		sourceColumn: RepKey
+
+		annotation SummarizationSetBy = User
+
+	column Channel
+		dataType: string
+		lineageTag: d8d73d36-b307-5708-9105-a5eedb72ca16
+		summarizeBy: none
+		sourceColumn: Channel
+
+		annotation SummarizationSetBy = User
+
+	column Quantity
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4d65c670-af34-5d4a-89db-05d8ccd0923f
+		summarizeBy: none
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = User
+
+	column 'Unit Price'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: 0c869b54-e264-50d4-aa36-214608c990a8
+		summarizeBy: none
+		sourceColumn: Unit Price
+
+		annotation SummarizationSetBy = User
+
+	column 'Discount Pct'
+		dataType: double
+		isHidden
+		formatString: #,##0.00
+		lineageTag: 1ba06cea-d75e-54a3-8899-c61e165da88b
+		summarizeBy: none
+		sourceColumn: Discount Pct
+
+		annotation SummarizationSetBy = User
+
+	column 'Revenue Amount'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: db49550e-0137-5b58-ab22-a2d404ea95b1
+		summarizeBy: none
+		sourceColumn: Revenue Amount
+
+		annotation SummarizationSetBy = User
+
+	column 'Cost Amount'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: 46581445-38dc-5b40-9dca-404be32eed58
+		summarizeBy: none
+		sourceColumn: Cost Amount
+
+		annotation SummarizationSetBy = User
+
+	partition Orders = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\orders.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"OrderID", "OrderDate", "CustomerKey", "ProductKey", "RepKey", "Channel", "Quantity", "UnitPrice", "DiscountPct", "Revenue", "Cost"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"OrderID", Int64.Type}, {"OrderDate", type date}, {"CustomerKey", Int64.Type}, {"ProductKey", Int64.Type}, {"RepKey", Int64.Type}, {"Channel", type text}, {"Quantity", Int64.Type}, {"UnitPrice", Currency.Type}, {"DiscountPct", type number}, {"Revenue", Currency.Type}, {"Cost", Currency.Type}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"OrderID", "Order ID"}, {"OrderDate", "Order Date"}, {"UnitPrice", "Unit Price"}, {"DiscountPct", "Discount Pct"}, {"Revenue", "Revenue Amount"}, {"Cost", "Cost Amount"}})
+				in
+				    Renamed
+

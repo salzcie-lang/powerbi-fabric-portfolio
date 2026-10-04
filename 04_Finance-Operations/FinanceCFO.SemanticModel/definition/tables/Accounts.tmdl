@@ -1,0 +1,61 @@
+table Accounts
+	lineageTag: 622268c0-bd41-5fad-9fc7-42f8f7287979
+
+	column AccountCode
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: db8107e9-1d76-5979-81ba-98d67d849783
+		summarizeBy: none
+		sourceColumn: AccountCode
+
+		annotation SummarizationSetBy = User
+
+	column Account
+		dataType: string
+		lineageTag: d88ab738-d421-51b9-9696-8ac24ee4551f
+		summarizeBy: none
+		sourceColumn: Account
+
+		annotation SummarizationSetBy = User
+
+	column 'Account Group'
+		dataType: string
+		lineageTag: ddcc5316-811c-51ce-93d9-df97cff67fe0
+		summarizeBy: none
+		sourceColumn: Account Group
+		sortByColumn: 'Section Order'
+
+		annotation SummarizationSetBy = User
+
+	column 'PnL Section'
+		dataType: string
+		lineageTag: f12f69f1-3f74-5fbd-998d-1542f561293b
+		summarizeBy: none
+		sourceColumn: PnL Section
+		sortByColumn: 'Section Order'
+
+		annotation SummarizationSetBy = User
+
+	column 'Section Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 82eace2c-3ff2-5094-9619-4c21cbe0558b
+		summarizeBy: none
+		sourceColumn: Section Order
+
+		annotation SummarizationSetBy = User
+
+	partition Accounts = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\chart_of_accounts.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"AccountCode", "Account", "AccountGroup", "PnLSection", "SectionOrder"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"AccountCode", Int64.Type}, {"Account", type text}, {"AccountGroup", type text}, {"PnLSection", type text}, {"SectionOrder", Int64.Type}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"AccountGroup", "Account Group"}, {"PnLSection", "PnL Section"}, {"SectionOrder", "Section Order"}})
+				in
+				    Renamed
+

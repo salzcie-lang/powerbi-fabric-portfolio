@@ -1,0 +1,72 @@
+table 'Rent Payments'
+	lineageTag: f15ec773-48d7-5b2e-8e91-7fff741495db
+
+	column PaymentKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 756a5a5a-df13-593b-999f-467abea4cd6d
+		summarizeBy: none
+		sourceColumn: PaymentKey
+
+		annotation SummarizationSetBy = User
+
+	column UnitKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c063cb24-8119-599e-92e0-e378274cd62c
+		summarizeBy: none
+		sourceColumn: UnitKey
+
+		annotation SummarizationSetBy = User
+
+	column 'Due Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: 0291d7d9-6d91-5385-a029-aefaedaf7947
+		summarizeBy: none
+		sourceColumn: Due Date
+
+		annotation SummarizationSetBy = User
+
+	column 'Amount Due'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: 1bca74d6-56fb-52d5-a656-21bac798f2f9
+		summarizeBy: none
+		sourceColumn: Amount Due
+
+		annotation SummarizationSetBy = User
+
+	column 'Amount Paid'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: 027063be-afaf-5a27-a0b3-77049795db6a
+		summarizeBy: none
+		sourceColumn: Amount Paid
+
+		annotation SummarizationSetBy = User
+
+	column 'Payment Status'
+		dataType: string
+		lineageTag: 30942c7b-607c-5cf9-844e-6ecfebe2d68b
+		summarizeBy: none
+		sourceColumn: Payment Status
+
+		annotation SummarizationSetBy = User
+
+	partition 'Rent Payments' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\rent_payments.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"PaymentKey", "UnitKey", "DueDate", "AmountDue", "AmountPaid", "PaymentStatus"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"PaymentKey", Int64.Type}, {"UnitKey", Int64.Type}, {"DueDate", type date}, {"AmountDue", Currency.Type}, {"AmountPaid", Currency.Type}, {"PaymentStatus", type text}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"DueDate", "Due Date"}, {"AmountDue", "Amount Due"}, {"AmountPaid", "Amount Paid"}, {"PaymentStatus", "Payment Status"}})
+				in
+				    Renamed
+

@@ -1,0 +1,43 @@
+table Inventory
+	lineageTag: 33fe8c7b-9c3b-577f-986f-6e92fe15b1bb
+
+	column Month
+		dataType: dateTime
+		isHidden
+		formatString: dd mmm yyyy
+		lineageTag: 22290227-5657-5ba7-b0c6-79cd353b8b61
+		summarizeBy: none
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = User
+
+	column 'Product Category'
+		dataType: string
+		lineageTag: c11e98b9-4e5d-5b3f-90f3-dd74cc7df300
+		summarizeBy: none
+		sourceColumn: Product Category
+
+		annotation SummarizationSetBy = User
+
+	column 'Inventory Value'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: 70fa34e3-d295-5f06-96d6-c7fdce9bea51
+		summarizeBy: none
+		sourceColumn: Inventory Value
+
+		annotation SummarizationSetBy = User
+
+	partition Inventory = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\inventory_snapshots.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"Month", "ProductCategory", "InventoryValue"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"Month", type date}, {"ProductCategory", type text}, {"InventoryValue", Currency.Type}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"ProductCategory", "Product Category"}, {"InventoryValue", "Inventory Value"}})
+				in
+				    Renamed
+

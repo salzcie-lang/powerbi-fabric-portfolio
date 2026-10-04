@@ -1,0 +1,26 @@
+table dim_channel
+	lineageTag: 161e4153-4f6e-5da0-adf3-b6e6315b4e80
+
+	column channel_key
+		dataType: int64
+		isHidden
+		lineageTag: 1efd3b88-88ef-5411-8838-e65ff4df3233
+		summarizeBy: none
+		sourceColumn: channel_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column channel_name
+		dataType: string
+		lineageTag: f0caa6d3-b6b7-54e3-9f6e-ad145d7b1a84
+		summarizeBy: none
+		sourceColumn: channel_name
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_channel = entity
+		mode: directLake
+		source
+			entityName: dim_channel
+			schemaName: gold
+			expressionSource: DatabaseQuery

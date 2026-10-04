@@ -1,0 +1,274 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Revenue to net income bridge. Blue bars are totals, orange bars are deductions. Click a bar to focus the headline card on that line.",
+  "data": {
+    "name": "dataset"
+  },
+  "padding": {
+    "left": 18,
+    "right": 18,
+    "top": 38,
+    "bottom": 4
+  },
+  "transform": [
+    {
+      "calculate": "indexof([2, 4, 6, 7, 8], datum['Bridge Order']) >= 0",
+      "as": "cut"
+    },
+    {
+      "calculate": "(datum.cut ? '-$' : '$') + (abs(datum['PnL Value']) >= 1e6 ? format(datum['PnL Value'] / 1e6, '.1f') + 'M' : format(datum['PnL Value'] / 1e3, '.0f') + 'K')",
+      "as": "valueLabel"
+    },
+    {
+      "calculate": "format(datum['Pct of Revenue'], '.1%')",
+      "as": "shareLabel"
+    },
+    {
+      "calculate": "datum.cut ? datum['Bridge Low'] : datum['Bridge High']",
+      "as": "endLevel"
+    },
+    {
+      "window": [
+        {
+          "op": "lead",
+          "field": "Bridge Label",
+          "as": "nextLabel"
+        }
+      ],
+      "sort": [
+        {
+          "field": "Bridge Order"
+        }
+      ]
+    },
+    {
+      "joinaggregate": [
+        {
+          "op": "max",
+          "field": "Bridge High",
+          "as": "top"
+        }
+      ]
+    },
+    {
+      "calculate": "datum['Bridge Low'] / datum.top",
+      "as": "lo"
+    },
+    {
+      "calculate": "datum['Bridge High'] / datum.top",
+      "as": "hi"
+    },
+    {
+      "calculate": "datum.endLevel / datum.top",
+      "as": "end"
+    }
+  ],
+  "encoding": {
+    "x": {
+      "field": "Bridge Label",
+      "type": "nominal",
+      "sort": {
+        "field": "Bridge Order"
+      },
+      "axis": null,
+      "scale": {
+        "paddingInner": 0.38,
+        "paddingOuter": 0.2
+      }
+    }
+  },
+  "layer": [
+    {
+      "transform": [
+        {
+          "filter": "isValid(datum.nextLabel)"
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "color": "#FFFFFF",
+        "opacity": 0.3,
+        "strokeDash": [
+          2,
+          3
+        ]
+      },
+      "encoding": {
+        "x2": {
+          "field": "nextLabel"
+        },
+        "y": {
+          "field": "end",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              1
+            ],
+            "nice": false
+          }
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "bar",
+        "cornerRadius": 7,
+        "cursor": "pointer"
+      },
+      "encoding": {
+        "y": {
+          "field": "lo",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              0,
+              1
+            ],
+            "nice": false
+          },
+          "stack": null
+        },
+        "y2": {
+          "field": "hi"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.cut",
+            "value": {
+              "gradient": "linear",
+              "x1": 1,
+              "y1": 0,
+              "x2": 1,
+              "y2": 1,
+              "stops": [
+                {
+                  "offset": 0,
+                  "color": "#FFB86B"
+                },
+                {
+                  "offset": 1,
+                  "color": "#FF7A3D"
+                }
+              ]
+            }
+          },
+          "value": {
+            "gradient": "linear",
+            "x1": 1,
+            "y1": 0,
+            "x2": 1,
+            "y2": 1,
+            "stops": [
+              {
+                "offset": 0,
+                "color": "#7AB0FF"
+              },
+              {
+                "offset": 1,
+                "color": "#3D6BF5"
+              }
+            ]
+          }
+        },
+        "opacity": {
+          "condition": {
+            "test": "datum.__selected__ == 'off'",
+            "value": 0.25
+          },
+          "value": 1
+        },
+        "tooltip": [
+          {
+            "field": "Line Name",
+            "title": "Line"
+          },
+          {
+            "field": "PnL Value",
+            "title": "Actual",
+            "format": "$,.0f"
+          },
+          {
+            "field": "PnL Budget",
+            "title": "Budget",
+            "format": "$,.0f"
+          },
+          {
+            "field": "PnL Variance %",
+            "title": "vs budget",
+            "format": "+.1%"
+          },
+          {
+            "field": "Pct of Revenue",
+            "title": "Share of revenue",
+            "format": ".1%"
+          }
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "dy": -8,
+        "fontSize": 10,
+        "fontWeight": 600
+      },
+      "encoding": {
+        "y": {
+          "field": "hi",
+          "type": "quantitative",
+          "axis": null,
+          "stack": null
+        },
+        "text": {
+          "field": "valueLabel"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.cut",
+            "value": "#FFB86B"
+          },
+          "value": "#F3F5FA"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "dy": 15,
+        "fontSize": 9.5,
+        "color": "#C9D0DE"
+      },
+      "encoding": {
+        "y": {
+          "datum": 0,
+          "type": "quantitative",
+          "axis": null
+        },
+        "text": {
+          "field": "Bridge Label"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "dy": 28,
+        "fontSize": 8.5,
+        "color": "#5F6880"
+      },
+      "encoding": {
+        "y": {
+          "datum": 0,
+          "type": "quantitative",
+          "axis": null
+        },
+        "text": {
+          "field": "shareLabel"
+        }
+      }
+    }
+  ]
+}

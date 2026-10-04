@@ -1,0 +1,71 @@
+table Leases
+	lineageTag: 50eabdfe-5c10-582b-a9f8-c4cfa253af35
+
+	column LeaseKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 2c6599d2-2e1b-5293-b9bb-0f1d2c88b959
+		summarizeBy: none
+		sourceColumn: LeaseKey
+
+		annotation SummarizationSetBy = User
+
+	column UnitKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b8622562-b7cd-5b89-b3a4-ef2d0a7adc74
+		summarizeBy: none
+		sourceColumn: UnitKey
+
+		annotation SummarizationSetBy = User
+
+	column Tenant
+		dataType: string
+		lineageTag: 5beeb7e9-f7df-515d-8af7-6d0ba4083675
+		summarizeBy: none
+		sourceColumn: Tenant
+
+		annotation SummarizationSetBy = User
+
+	column 'Start Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: 335fecfe-c8c4-55ba-87ee-5d0a2fd73d31
+		summarizeBy: none
+		sourceColumn: Start Date
+
+		annotation SummarizationSetBy = User
+
+	column 'End Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: 128e0ece-6ed3-5387-9ee2-6f72594b6c99
+		summarizeBy: none
+		sourceColumn: End Date
+
+		annotation SummarizationSetBy = User
+
+	column 'Monthly Rent'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: 48f169f5-7043-5d24-9957-69fd1982ee5a
+		summarizeBy: none
+		sourceColumn: Monthly Rent
+
+		annotation SummarizationSetBy = User
+
+	partition Leases = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\leases.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"LeaseKey", "UnitKey", "Tenant", "StartDate", "EndDate", "MonthlyRent"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"LeaseKey", Int64.Type}, {"UnitKey", Int64.Type}, {"Tenant", type text}, {"StartDate", type date}, {"EndDate", type date}, {"MonthlyRent", Currency.Type}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"StartDate", "Start Date"}, {"EndDate", "End Date"}, {"MonthlyRent", "Monthly Rent"}})
+				in
+				    Renamed
+

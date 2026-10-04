@@ -1,0 +1,5 @@
+WarehouseKey,Warehouse,Region,CapacityPallets
+1,Dallas DC,South,5200
+2,Chicago DC,Midwest,4400
+3,Atlanta DC,Southeast,3800
+4,Reno DC,West,3000

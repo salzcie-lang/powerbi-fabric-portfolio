@@ -1,0 +1,54 @@
+table GL
+	lineageTag: 7717f2f5-c980-5477-a886-788d6ac2cb10
+
+	column Month
+		dataType: dateTime
+		isHidden
+		formatString: dd mmm yyyy
+		lineageTag: 1a8b59c8-42c5-5707-93d4-2dc22f69c887
+		summarizeBy: none
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = User
+
+	column AccountCode
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: d8f22b39-4b00-5922-9e60-51e1fb4fd51e
+		summarizeBy: none
+		sourceColumn: AccountCode
+
+		annotation SummarizationSetBy = User
+
+	column DepartmentKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: bd841f72-d8e7-5a4b-8d1f-597bb46b5d18
+		summarizeBy: none
+		sourceColumn: DepartmentKey
+
+		annotation SummarizationSetBy = User
+
+	column Amount
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: 9c07dada-a5dd-574b-9a8f-8e0171b46f3c
+		summarizeBy: none
+		sourceColumn: Amount
+
+		annotation SummarizationSetBy = User
+
+	partition GL = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\gl_actuals.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"Month", "AccountCode", "DepartmentKey", "Amount"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"Month", type date}, {"AccountCode", Int64.Type}, {"DepartmentKey", Int64.Type}, {"Amount", Currency.Type}}, "en-US")
+				in
+				    Typed
+

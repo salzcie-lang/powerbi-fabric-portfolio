@@ -1,0 +1,75 @@
+table Products
+	lineageTag: e30d7507-371e-58e6-b14a-5659a46c660e
+
+	column ProductKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 73daea50-88c6-5449-9fa5-53f7226ce8fb
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = User
+
+	column SKU
+		dataType: string
+		lineageTag: 02965a22-1180-5fdb-b2ca-aa2d9ff7ff95
+		summarizeBy: none
+		sourceColumn: SKU
+
+		annotation SummarizationSetBy = User
+
+	column Product
+		dataType: string
+		lineageTag: 66450f1b-1d8b-5273-972e-801201cba09c
+		summarizeBy: none
+		sourceColumn: Product
+
+		annotation SummarizationSetBy = User
+
+	column Category
+		dataType: string
+		lineageTag: d22ef480-93ed-5540-b50b-f932a709f925
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = User
+
+	column Subcategory
+		dataType: string
+		lineageTag: e8deaf9c-e04a-5563-abca-5248933781cb
+		summarizeBy: none
+		sourceColumn: Subcategory
+
+		annotation SummarizationSetBy = User
+
+	column 'List Price'
+		dataType: decimal
+		formatString: #,##0.00
+		lineageTag: 866dd2d6-140d-5832-b954-a3f9c425e496
+		summarizeBy: none
+		sourceColumn: List Price
+
+		annotation SummarizationSetBy = User
+
+	column 'Unit Cost'
+		dataType: decimal
+		formatString: #,##0.00
+		lineageTag: 38c0b28e-03d3-50be-90a2-a5ae3dfc0f18
+		summarizeBy: none
+		sourceColumn: Unit Cost
+
+		annotation SummarizationSetBy = User
+
+	partition Products = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\products.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"ProductKey", "SKU", "Product", "Category", "Subcategory", "ListPrice", "UnitCost"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"ProductKey", Int64.Type}, {"SKU", type text}, {"Product", type text}, {"Category", type text}, {"Subcategory", type text}, {"ListPrice", Currency.Type}, {"UnitCost", Currency.Type}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"ListPrice", "List Price"}, {"UnitCost", "Unit Cost"}})
+				in
+				    Renamed
+

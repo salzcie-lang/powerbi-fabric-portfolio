@@ -1,0 +1,2148 @@
+table _Measures
+	lineageTag: b582f3ce-9fd6-5634-b599-dc61df992f28
+
+	/// Last day of the latest month with posted actuals; used as today.
+	measure 'As Of Date' = EOMONTH ( CALCULATE ( MAX ( GL[Month] ), REMOVEFILTERS () ), 0 )
+		formatString: dd mmm yyyy
+		displayFolder: 0. Base
+		lineageTag: 1fbe3912-fd5b-5ffc-ae89-ed8ccb4326c4
+
+	/// Last date of the selection, capped at the as-of date. Balances are read at this date.
+	measure 'Period End' = MIN ( MAX ( 'Date'[Date] ), [As Of Date] )
+		formatString: dd mmm yyyy
+		displayFolder: 0. Base
+		lineageTag: 51d1c055-d1f1-5f87-b17b-74e8b1c6db0c
+
+	measure 'GL Amount' = SUM ( GL[Amount] )
+		formatString: $#,##0
+		displayFolder: 0. Base
+		lineageTag: 9dca086e-e318-5809-a28c-0af362ffad84
+
+	measure 'Budget Amount' = SUM ( Budget[Budget Amount] )
+		formatString: $#,##0
+		displayFolder: 0. Base
+		lineageTag: 9c172e68-a893-5aa8-98cd-c13629ccbb00
+
+	measure Revenue = CALCULATE ( [GL Amount], Accounts[PnL Section] = "Revenue" )
+		formatString: $#,##0
+		displayFolder: 1. P&L
+		lineageTag: ce7d0117-7a6e-5a86-9530-cc5c1949e6fd
+
+	measure COGS = CALCULATE ( [GL Amount], Accounts[PnL Section] = "COGS" )
+		formatString: $#,##0
+		displayFolder: 1. P&L
+		lineageTag: 02fa8fd2-8a3e-5a22-8901-291fb19a0120
+
+	measure OpEx = CALCULATE ( [GL Amount], Accounts[PnL Section] = "OpEx" )
+		formatString: $#,##0
+		displayFolder: 1. P&L
+		lineageTag: 52909568-d07a-58c8-a7b2-382501012393
+
+	measure 'Below EBITDA' = CALCULATE ( [GL Amount], Accounts[PnL Section] = "Below EBITDA" )
+		formatString: $#,##0
+		displayFolder: 1. P&L
+		lineageTag: 54514eb0-a386-5004-b639-5d38f3711f48
+
+	measure 'Gross Profit' = [Revenue] - [COGS]
+		formatString: $#,##0
+		displayFolder: 1. P&L
+		lineageTag: 57e6a1a1-2d36-58a3-a2b3-20dc97ae67df
+
+	measure 'Gross Margin' = DIVIDE ( [Gross Profit], [Revenue] )
+		formatString: 0.0%
+		displayFolder: 1. P&L
+		lineageTag: eb8fae72-651b-53d8-ad11-6ecff06d2ab2
+
+	measure EBITDA = [Gross Profit] - [OpEx]
+		formatString: $#,##0
+		displayFolder: 1. P&L
+		lineageTag: 2a299b31-06c8-5568-94b1-0d273727fd6a
+
+	measure 'EBITDA Margin' = DIVIDE ( [EBITDA], [Revenue] )
+		formatString: 0.0%
+		displayFolder: 1. P&L
+		lineageTag: 93e736f7-bd0b-522d-946c-8a3be23c21cd
+
+	measure 'Net Income' = [EBITDA] - [Below EBITDA]
+		formatString: $#,##0
+		displayFolder: 1. P&L
+		lineageTag: 1e23e142-4036-5cd2-b67e-ec44604ebfac
+
+	measure 'Net Margin' = DIVIDE ( [Net Income], [Revenue] )
+		formatString: 0.0%
+		displayFolder: 1. P&L
+		lineageTag: 6eb6e46b-69ad-514e-9700-2d1cbdc04dd7
+
+	/// Operating expenses as a share of revenue.
+	measure 'OpEx Ratio' = DIVIDE ( [OpEx], [Revenue] )
+		formatString: 0.0%
+		displayFolder: 1. P&L
+		lineageTag: b363610a-f5bc-5f22-afec-c872ee18818f
+
+	measure 'Revenue Budget' = CALCULATE ( [Budget Amount], Accounts[PnL Section] = "Revenue" )
+		formatString: $#,##0
+		displayFolder: 2. Budget
+		lineageTag: 258003e5-7c31-593c-b01e-237f33b5fce9
+
+	measure 'COGS Budget' = CALCULATE ( [Budget Amount], Accounts[PnL Section] = "COGS" )
+		formatString: $#,##0
+		displayFolder: 2. Budget
+		lineageTag: c84bfbd8-fd3e-5e9e-8572-4660c43f45c0
+
+	measure 'OpEx Budget' = CALCULATE ( [Budget Amount], Accounts[PnL Section] = "OpEx" )
+		formatString: $#,##0
+		displayFolder: 2. Budget
+		lineageTag: 063e4d58-2325-551b-8905-9eabc5e1e921
+
+	measure 'Below EBITDA Budget' = CALCULATE ( [Budget Amount], Accounts[PnL Section] = "Below EBITDA" )
+		formatString: $#,##0
+		displayFolder: 2. Budget
+		lineageTag: d4c6d5d6-ff15-59a9-912c-687aa7d7592d
+
+	measure 'Gross Profit Budget' = [Revenue Budget] - [COGS Budget]
+		formatString: $#,##0
+		displayFolder: 2. Budget
+		lineageTag: c7e2b9c6-75f3-5049-bc91-4b4a8a7fc7bd
+
+	measure 'Gross Margin Budget' = DIVIDE ( [Gross Profit Budget], [Revenue Budget] )
+		formatString: 0.0%
+		displayFolder: 2. Budget
+		lineageTag: e7177cb3-34e7-5b57-aca7-4465abbd5425
+
+	measure 'EBITDA Budget' = [Gross Profit Budget] - [OpEx Budget]
+		formatString: $#,##0
+		displayFolder: 2. Budget
+		lineageTag: 0054202d-0a1b-5cbb-89af-3449a0804b8f
+
+	measure 'EBITDA Margin Budget' = DIVIDE ( [EBITDA Budget], [Revenue Budget] )
+		formatString: 0.0%
+		displayFolder: 2. Budget
+		lineageTag: 42ed9e4d-dcfe-54bf-bdb9-c5d85caaf491
+
+	measure 'Net Income Budget' = [EBITDA Budget] - [Below EBITDA Budget]
+		formatString: $#,##0
+		displayFolder: 2. Budget
+		lineageTag: 777c5dee-0b4a-54f9-82c6-02c6563580ea
+
+	measure 'Net Margin Budget' = DIVIDE ( [Net Income Budget], [Revenue Budget] )
+		formatString: 0.0%
+		displayFolder: 2. Budget
+		lineageTag: 1e60da26-3eba-51fc-9ec1-166c5a01389e
+
+	/// Operating expenses as a share of revenue.
+	measure 'OpEx Ratio Budget' = DIVIDE ( [OpEx Budget], [Revenue Budget] )
+		formatString: 0.0%
+		displayFolder: 2. Budget
+		lineageTag: 271a9e2b-bfea-5d9d-b62e-dfd682c0fbbe
+
+	measure Depreciation = CALCULATE ( [GL Amount], Accounts[AccountCode] = 7000 )
+		formatString: $#,##0
+		displayFolder: 1. P&L
+		lineageTag: 0415204b-a4be-59e7-bf0a-dfeebf4c31c6
+
+	measure 'Interest and Tax' = CALCULATE ( [GL Amount], Accounts[AccountCode] IN { 7100, 7200 } )
+		formatString: $#,##0
+		displayFolder: 1. P&L
+		lineageTag: 1eca29a2-15e2-56ea-972c-e99ad03a8c56
+
+	measure 'OpEx Variance' = [OpEx] - [OpEx Budget]
+		formatString: $#,##0
+		displayFolder: 2. Budget
+		lineageTag: 8edf6394-74b4-598b-b9eb-eda1fd52ca81
+
+	measure 'OpEx Variance %' = DIVIDE ( [OpEx] - [OpEx Budget], [OpEx Budget] )
+		formatString: +0.0%;-0.0%
+		displayFolder: 2. Budget
+		lineageTag: 6ac8f744-d5db-569d-bea7-1c51a4b7f1f5
+
+	measure 'Revenue Attainment' = DIVIDE ( [Revenue], [Revenue Budget] )
+		formatString: 0.0%
+		displayFolder: 2. Budget
+		lineageTag: 3c12e0d5-cd79-5c41-a4ea-ddf312ba1d00
+
+	measure 'Gross Profit Attainment' = DIVIDE ( [Gross Profit], [Gross Profit Budget] )
+		formatString: 0.0%
+		displayFolder: 2. Budget
+		lineageTag: 9b6dc654-a5d8-58d0-9570-4247957cff57
+
+	measure 'EBITDA Attainment' = DIVIDE ( [EBITDA], [EBITDA Budget] )
+		formatString: 0.0%
+		displayFolder: 2. Budget
+		lineageTag: 9418e647-c28f-58b6-b773-67ee3e8c2f8a
+
+	measure 'Net Income Attainment' = DIVIDE ( [Net Income], [Net Income Budget] )
+		formatString: 0.0%
+		displayFolder: 2. Budget
+		lineageTag: bee6cb91-799a-512e-bae3-98a1eca875b0
+
+	/// Cash at the end of the selected period.
+	measure 'Cash Balance' =
+			VAR _pe = [Period End]
+			RETURN
+			    CALCULATE ( SUM ( Cash[Cash Balance] ), REMOVEFILTERS ( 'Date' ), Cash[Month] = EOMONTH ( _pe, -1 ) + 1 )
+		formatString: $#,##0
+		displayFolder: 3. Cash
+		lineageTag: e021559c-1d1a-5a21-afca-b8b91b2bcca9
+
+	/// Change in cash since the start of the selected period.
+	measure 'Cash Change' =
+			VAR _first = MIN ( 'Date'[Date] )
+			VAR _open = CALCULATE ( SUM ( Cash[Cash Balance] ), REMOVEFILTERS ( 'Date' ), Cash[Month] = EOMONTH ( _first, -2 ) + 1 )
+			RETURN
+			    IF ( NOT ISBLANK ( _open ), [Cash Balance] - _open )
+		formatString: $#,##0
+		displayFolder: 3. Cash
+		lineageTag: c7e3366f-84c8-540f-b8ea-b515e3bd4ea8
+
+	measure 'Operating Cash Flow' = SUM ( Cash[Operating Cash Flow] )
+		formatString: $#,##0
+		displayFolder: 3. Cash
+		lineageTag: 39f242fc-bf7c-52c4-841c-104c43561d20
+
+	measure Capex = SUM ( Cash[Capex] )
+		formatString: $#,##0
+		displayFolder: 3. Cash
+		lineageTag: 871741c7-a8df-504a-8ccf-d0d643cd4d4f
+
+	measure 'Free Cash Flow' = [Operating Cash Flow] - [Capex]
+		formatString: $#,##0
+		displayFolder: 3. Cash
+		lineageTag: b06e2a6c-e136-562a-a212-fb0c530cf289
+
+	/// Cash divided by average monthly operating cost over the last three months.
+	measure 'Cash Cover Months' =
+			VAR _pe = [Period End]
+			VAR _cost = CALCULATE ( [COGS] + [OpEx], REMOVEFILTERS ( 'Date' ), DATESINPERIOD ( 'Date'[Date], _pe, -3, MONTH ) )
+			RETURN
+			    DIVIDE ( [Cash Balance], _cost / 3 )
+		formatString: 0.0
+		displayFolder: 3. Cash
+		lineageTag: 97215c34-9da4-5323-a041-a9a82a1f8a86
+
+	/// Invoices issued and not yet paid at the end of the period.
+	measure 'AR Balance' =
+			VAR _pe = [Period End]
+			RETURN
+			    CALCULATE (
+			        SUM ( Receivables[Amount] ),
+			        REMOVEFILTERS ( 'Date' ),
+			        FILTER (
+			            ALL ( Receivables[Invoice Date], Receivables[Paid Date] ),
+			            Receivables[Invoice Date] <= _pe && ( ISBLANK ( Receivables[Paid Date] ) || Receivables[Paid Date] > _pe )
+			        )
+			    )
+		formatString: $#,##0
+		displayFolder: 4. Working capital
+		lineageTag: 4a460822-d359-563d-acda-d1191c1fdbcd
+
+	measure 'Inventory Value' =
+			VAR _pe = [Period End]
+			RETURN
+			    CALCULATE ( SUM ( Inventory[Inventory Value] ), REMOVEFILTERS ( 'Date' ), Inventory[Month] = EOMONTH ( _pe, -1 ) + 1 )
+		formatString: $#,##0
+		displayFolder: 4. Working capital
+		lineageTag: 46b73363-a60c-5f91-b01d-2217b79e19f2
+
+	measure 'AP Balance' =
+			VAR _pe = [Period End]
+			RETURN
+			    CALCULATE ( SUM ( Cash[Accounts Payable] ), REMOVEFILTERS ( 'Date' ), Cash[Month] = EOMONTH ( _pe, -1 ) + 1 )
+		formatString: $#,##0
+		displayFolder: 4. Working capital
+		lineageTag: cd90f033-4add-5158-825e-246bf66f4e9a
+
+	measure 'Revenue T3M' =
+			VAR _pe = [Period End]
+			RETURN
+			    CALCULATE ( [Revenue], REMOVEFILTERS ( 'Date' ), DATESINPERIOD ( 'Date'[Date], _pe, -3, MONTH ) )
+		formatString: $#,##0
+		displayFolder: 4. Working capital
+		lineageTag: 0d430014-17c7-57f7-9f8a-fdc1cbfe1e6f
+
+	measure 'COGS T3M' =
+			VAR _pe = [Period End]
+			RETURN
+			    CALCULATE ( [COGS], REMOVEFILTERS ( 'Date' ), DATESINPERIOD ( 'Date'[Date], _pe, -3, MONTH ) )
+		formatString: $#,##0
+		displayFolder: 4. Working capital
+		lineageTag: f78b5a3c-213f-5df6-a978-6b259142482a
+
+	/// Days sales outstanding.
+	measure DSO = DIVIDE ( [AR Balance], [Revenue T3M] ) * 91
+		formatString: 0
+		displayFolder: 4. Working capital
+		lineageTag: 44915e32-febb-5d66-9bc7-002ac95d3dc0
+
+	/// Days inventory outstanding.
+	measure DIO = DIVIDE ( [Inventory Value], [COGS T3M] ) * 91
+		formatString: 0
+		displayFolder: 4. Working capital
+		lineageTag: c3c95fac-5f4a-5516-aa55-13537f04adfb
+
+	/// Days payables outstanding.
+	measure DPO = DIVIDE ( [AP Balance], [COGS T3M] ) * 91
+		formatString: 0
+		displayFolder: 4. Working capital
+		lineageTag: c561e5b5-f646-5c21-9d2e-52ded50f73b9
+
+	measure 'Cash Conversion Cycle' = [DSO] + [DIO] - [DPO]
+		formatString: 0
+		displayFolder: 4. Working capital
+		lineageTag: d684245d-7a2a-57c5-9e68-2e2a68004de7
+
+	measure 'AR Current' =
+			VAR _pe = [Period End]
+			RETURN
+			    CALCULATE (
+			        SUM ( Receivables[Amount] ),
+			        REMOVEFILTERS ( 'Date' ),
+			        FILTER (
+			            ALL ( Receivables[Invoice Date], Receivables[Paid Date], Receivables[Due Date] ),
+			            Receivables[Invoice Date] <= _pe && ( ISBLANK ( Receivables[Paid Date] ) || Receivables[Paid Date] > _pe )
+			                && _pe - Receivables[Due Date] <= 0
+			        )
+			    )
+		formatString: $#,##0
+		displayFolder: 4. Working capital
+		lineageTag: 1bffbb89-ad51-5278-ba83-f50f63091ef1
+
+	measure 'AR 1-30' =
+			VAR _pe = [Period End]
+			RETURN
+			    CALCULATE (
+			        SUM ( Receivables[Amount] ),
+			        REMOVEFILTERS ( 'Date' ),
+			        FILTER (
+			            ALL ( Receivables[Invoice Date], Receivables[Paid Date], Receivables[Due Date] ),
+			            Receivables[Invoice Date] <= _pe && ( ISBLANK ( Receivables[Paid Date] ) || Receivables[Paid Date] > _pe )
+			                && _pe - Receivables[Due Date] > 0 && _pe - Receivables[Due Date] <= 30
+			        )
+			    )
+		formatString: $#,##0
+		displayFolder: 4. Working capital
+		lineageTag: 7523d59a-3447-56b2-bc9b-099dae7241f0
+
+	measure 'AR 31-60' =
+			VAR _pe = [Period End]
+			RETURN
+			    CALCULATE (
+			        SUM ( Receivables[Amount] ),
+			        REMOVEFILTERS ( 'Date' ),
+			        FILTER (
+			            ALL ( Receivables[Invoice Date], Receivables[Paid Date], Receivables[Due Date] ),
+			            Receivables[Invoice Date] <= _pe && ( ISBLANK ( Receivables[Paid Date] ) || Receivables[Paid Date] > _pe )
+			                && _pe - Receivables[Due Date] > 30 && _pe - Receivables[Due Date] <= 60
+			        )
+			    )
+		formatString: $#,##0
+		displayFolder: 4. Working capital
+		lineageTag: 199c45dc-8c16-5b18-8752-db2ff20e7fb9
+
+	measure 'AR 61-90' =
+			VAR _pe = [Period End]
+			RETURN
+			    CALCULATE (
+			        SUM ( Receivables[Amount] ),
+			        REMOVEFILTERS ( 'Date' ),
+			        FILTER (
+			            ALL ( Receivables[Invoice Date], Receivables[Paid Date], Receivables[Due Date] ),
+			            Receivables[Invoice Date] <= _pe && ( ISBLANK ( Receivables[Paid Date] ) || Receivables[Paid Date] > _pe )
+			                && _pe - Receivables[Due Date] > 60 && _pe - Receivables[Due Date] <= 90
+			        )
+			    )
+		formatString: $#,##0
+		displayFolder: 4. Working capital
+		lineageTag: 32d9679c-1561-5ccf-9ef5-3790c927821c
+
+	measure 'AR 90+' =
+			VAR _pe = [Period End]
+			RETURN
+			    CALCULATE (
+			        SUM ( Receivables[Amount] ),
+			        REMOVEFILTERS ( 'Date' ),
+			        FILTER (
+			            ALL ( Receivables[Invoice Date], Receivables[Paid Date], Receivables[Due Date] ),
+			            Receivables[Invoice Date] <= _pe && ( ISBLANK ( Receivables[Paid Date] ) || Receivables[Paid Date] > _pe )
+			                && _pe - Receivables[Due Date] > 90
+			        )
+			    )
+		formatString: $#,##0
+		displayFolder: 4. Working capital
+		lineageTag: 6d2c0f68-ae01-5bbe-ba58-a4752d3ca8af
+
+	measure 'Invoices 90+' =
+			VAR _pe = [Period End]
+			RETURN
+			    CALCULATE (
+			        COUNTROWS ( Receivables ),
+			        REMOVEFILTERS ( 'Date' ),
+			        FILTER (
+			            ALL ( Receivables[Invoice Date], Receivables[Paid Date], Receivables[Due Date] ),
+			            Receivables[Invoice Date] <= _pe && ( ISBLANK ( Receivables[Paid Date] ) || Receivables[Paid Date] > _pe )
+			                && _pe - Receivables[Due Date] > 90
+			        )
+			    )
+		formatString: #,##0
+		displayFolder: 4. Working capital
+		lineageTag: 3d43aab8-1064-56cb-a7be-b85e4796b689
+
+	/// Open receivables past their due date.
+	measure 'AR Overdue' = [AR Balance] - [AR Current]
+		formatString: $#,##0
+		displayFolder: 4. Working capital
+		lineageTag: 50a8d7c2-56d2-542b-a9ce-5e3619076962
+
+	measure 'Days Overdue Color' = SWITCH ( TRUE (), [Oldest Days Overdue] > 90, "#FF6B7A", [Oldest Days Overdue] > 30, "#FFB86B", "#C9D0DE" )
+		displayFolder: 9. Formatting
+		lineageTag: 5e3f44b1-cd77-5896-aee7-065e0c33253c
+
+	measure 'AR Overdue %' = DIVIDE ( [AR Balance] - [AR Current], [AR Balance] )
+		formatString: 0.0%
+		displayFolder: 4. Working capital
+		lineageTag: 75d9830e-9e75-5637-9113-0c308c902672
+
+	measure 'GL Amount PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [GL Amount],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 5. Prior year
+		lineageTag: ef3e9074-3ead-5316-9a2f-5e6b09795acf
+
+	measure 'Revenue PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Revenue],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 5. Prior year
+		lineageTag: 33c92569-912c-526a-888b-5616b30da4bf
+
+	measure 'COGS PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [COGS],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 5. Prior year
+		lineageTag: bf61fffc-4986-55d8-95c4-64b48f00967b
+
+	measure 'Gross Profit PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Gross Profit],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 5. Prior year
+		lineageTag: 73ad3f4e-f5ac-53c2-bf35-5845fc60bfb0
+
+	measure 'Gross Margin PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Gross Margin],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: 0.0%
+		displayFolder: 5. Prior year
+		lineageTag: 84bf23ff-807f-56b9-86ab-a92b37391c7a
+
+	measure 'OpEx PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [OpEx],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 5. Prior year
+		lineageTag: 90608297-4747-57f6-bbd3-6fad68dc02e7
+
+	measure 'EBITDA PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [EBITDA],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 5. Prior year
+		lineageTag: 4a7840c3-9d94-5be7-aa65-b284423c6cb5
+
+	measure 'EBITDA Margin PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [EBITDA Margin],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: 0.0%
+		displayFolder: 5. Prior year
+		lineageTag: ea9af8d1-9a5e-52ca-af4d-5b5dd04dd975
+
+	measure 'Net Income PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Net Income],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 5. Prior year
+		lineageTag: 582e4cbc-7197-503a-954a-50a06f75f82b
+
+	measure 'Net Margin PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Net Margin],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: 0.0%
+		displayFolder: 5. Prior year
+		lineageTag: dd0ffa9f-0e99-579d-9fba-7dcc6ac73fa5
+
+	measure 'OpEx Ratio PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [OpEx Ratio],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: 0.0%
+		displayFolder: 5. Prior year
+		lineageTag: a2a70738-c13b-59d3-8a76-e79d53568bfe
+
+	measure 'DSO PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [DSO],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: 0
+		displayFolder: 5. Prior year
+		lineageTag: 9d80f19f-0abd-5548-a670-76b34b87ff32
+
+	measure 'DIO PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [DIO],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: 0
+		displayFolder: 5. Prior year
+		lineageTag: 4614229f-2fa9-5251-80cb-aee8975016b6
+
+	measure 'DPO PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [DPO],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: 0
+		displayFolder: 5. Prior year
+		lineageTag: 80b38b84-9217-5969-999b-981a3a6c14a1
+
+	measure 'Cash Conversion Cycle PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Cash Conversion Cycle],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: 0
+		displayFolder: 5. Prior year
+		lineageTag: 94bca2e9-b2cb-5b3a-b659-8958e9a33775
+
+	measure 'AR Balance PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [AR Balance],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 5. Prior year
+		lineageTag: 1f1c4aa7-0239-5d8e-9c81-76d12f0a524e
+
+	measure 'PnL Value' =
+			VAR _o = SELECTEDVALUE ( 'PnL Lines'[Line Order] )
+			VAR _acc = SELECTEDVALUE ( 'PnL Lines'[AccountCode] )
+			RETURN
+			    SWITCH (
+			        TRUE (),
+			        _o = 1, [Revenue],
+			        _o = 5, [COGS],
+			        _o = 6, [Gross Profit],
+			        _o = 7, [Gross Margin],
+			        _o = 8, [OpEx],
+			        _o = 15, [EBITDA],
+			        _o = 16, [EBITDA Margin],
+			        _o = 20, [Net Income],
+			        _o = 21, [Net Margin],
+			        _acc > 0, CALCULATE ( [GL Amount], Accounts[AccountCode] = _acc )
+			    )
+		formatString: #,##0
+		displayFolder: 6. Statement
+		lineageTag: c4daeab8-2ed0-5084-a718-a1df3a0ea094
+
+	measure 'PnL Budget' =
+			VAR _o = SELECTEDVALUE ( 'PnL Lines'[Line Order] )
+			VAR _acc = SELECTEDVALUE ( 'PnL Lines'[AccountCode] )
+			RETURN
+			    SWITCH (
+			        TRUE (),
+			        _o = 1, [Revenue Budget],
+			        _o = 5, [COGS Budget],
+			        _o = 6, [Gross Profit Budget],
+			        _o = 7, [Gross Margin Budget],
+			        _o = 8, [OpEx Budget],
+			        _o = 15, [EBITDA Budget],
+			        _o = 16, [EBITDA Margin Budget],
+			        _o = 20, [Net Income Budget],
+			        _o = 21, [Net Margin Budget],
+			        _acc > 0, CALCULATE ( [Budget Amount], Accounts[AccountCode] = _acc )
+			    )
+		formatString: #,##0
+		displayFolder: 6. Statement
+		lineageTag: 81f5a14e-65ac-5d4f-8c25-2d5d1222843b
+
+	measure 'PnL PY' =
+			VAR _o = SELECTEDVALUE ( 'PnL Lines'[Line Order] )
+			VAR _acc = SELECTEDVALUE ( 'PnL Lines'[AccountCode] )
+			RETURN
+			    SWITCH (
+			        TRUE (),
+			        _o = 1, [Revenue PY],
+			        _o = 5, [COGS PY],
+			        _o = 6, [Gross Profit PY],
+			        _o = 7, [Gross Margin PY],
+			        _o = 8, [OpEx PY],
+			        _o = 15, [EBITDA PY],
+			        _o = 16, [EBITDA Margin PY],
+			        _o = 20, [Net Income PY],
+			        _o = 21, [Net Margin PY],
+			        _acc > 0, CALCULATE ( [GL Amount PY], Accounts[AccountCode] = _acc )
+			    )
+		formatString: #,##0
+		displayFolder: 6. Statement
+		lineageTag: f20916c2-035a-529b-a7fc-9679853d19a8
+
+	/// In thousands; ratios in percent.
+	measure Actual =
+			VAR _v = [PnL Value]
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _v ),
+			        IF ( SELECTEDVALUE ( 'PnL Lines'[Line Type] ) = "ratio", FORMAT ( _v, "0.0%" ), FORMAT ( _v / 1000, "#,##0" ) )
+			    )
+		displayFolder: 6. Statement
+		lineageTag: 4e6d4b8c-b8f2-5888-9ce8-dcd9c41f974c
+
+	measure Budget =
+			VAR _v = [PnL Budget]
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _v ),
+			        IF ( SELECTEDVALUE ( 'PnL Lines'[Line Type] ) = "ratio", FORMAT ( _v, "0.0%" ), FORMAT ( _v / 1000, "#,##0" ) )
+			    )
+		displayFolder: 6. Statement
+		lineageTag: 032e9cf8-2288-54e3-8f55-875131c3a671
+
+	measure 'Prior Year' =
+			VAR _v = [PnL PY]
+			RETURN
+			    IF (
+			        NOT ISBLANK ( _v ),
+			        IF ( SELECTEDVALUE ( 'PnL Lines'[Line Type] ) = "ratio", FORMAT ( _v, "0.0%" ), FORMAT ( _v / 1000, "#,##0" ) )
+			    )
+		displayFolder: 6. Statement
+		lineageTag: 93f0517b-7809-573a-9d48-a93df6fa156d
+
+	measure 'Var vs Budget' =
+			VAR _a = [PnL Value]
+			VAR _b = [PnL Budget]
+			VAR _ratio = SELECTEDVALUE ( 'PnL Lines'[Line Type] ) = "ratio"
+			RETURN
+			    IF ( NOT ISBLANK ( _a ) && NOT ISBLANK ( _b ), IF ( _ratio, FORMAT ( ( _a - _b ) * 100, "+0.0;-0.0" ) & " pts", FORMAT ( ( _a - _b ) / 1000, "+#,##0;-#,##0" ) ) )
+		displayFolder: 6. Statement
+		lineageTag: 9bb5bb06-3273-55c1-b462-2fa5a24dc8d1
+
+	measure 'Var % vs Budget' =
+			VAR _a = [PnL Value]
+			VAR _b = [PnL Budget]
+			VAR _ratio = SELECTEDVALUE ( 'PnL Lines'[Line Type] ) = "ratio"
+			RETURN
+			    IF ( NOT ISBLANK ( _a ) && NOT ISBLANK ( _b ), IF ( NOT _ratio, FORMAT ( DIVIDE ( _a - _b, ABS ( _b ) ), "+0.0%;-0.0%" ) ) )
+		displayFolder: 6. Statement
+		lineageTag: 60460dd5-097a-593b-9db4-17ef313562ec
+
+	measure 'Var % vs PY' =
+			VAR _a = [PnL Value]
+			VAR _b = [PnL PY]
+			VAR _ratio = SELECTEDVALUE ( 'PnL Lines'[Line Type] ) = "ratio"
+			RETURN
+			    IF ( NOT ISBLANK ( _a ) && NOT ISBLANK ( _b ), IF ( NOT _ratio, FORMAT ( DIVIDE ( _a - _b, ABS ( _b ) ), "+0.0%;-0.0%" ) ) )
+		displayFolder: 6. Statement
+		lineageTag: 4d759a14-24aa-550e-b348-322c681142f3
+
+	measure 'Budget Var Color' =
+			VAR _a = [PnL Value]
+			VAR _b = [PnL Budget]
+			VAR _cost = SELECTEDVALUE ( 'PnL Lines'[Line Order] ) IN { 5, 8, 9, 10, 11, 12, 13, 14, 17, 18, 19 }
+			VAR _rel = IF ( SELECTEDVALUE ( 'PnL Lines'[Line Type] ) = "ratio", ( _a - _b ) * 10, DIVIDE ( _a - _b, ABS ( _b ) ) )
+			RETURN
+			    SWITCH ( TRUE (), ABS ( _rel ) < 0.005, "#8D96AA", ( _rel > 0 ) <> _cost, "#5BE3B0", "#FF6B7A" )
+		displayFolder: 9. Formatting
+		lineageTag: dc90e4d9-ea17-574e-8bb4-1bd5b2fecfd8
+
+	measure 'PY Var Color' =
+			VAR _a = [PnL Value]
+			VAR _b = [PnL PY]
+			VAR _cost = SELECTEDVALUE ( 'PnL Lines'[Line Order] ) IN { 5, 8, 9, 10, 11, 12, 13, 14, 17, 18, 19 }
+			VAR _rel = IF ( SELECTEDVALUE ( 'PnL Lines'[Line Type] ) = "ratio", ( _a - _b ) * 10, DIVIDE ( _a - _b, ABS ( _b ) ) )
+			RETURN
+			    SWITCH ( TRUE (), ABS ( _rel ) < 0.005, "#8D96AA", ( _rel > 0 ) <> _cost, "#5BE3B0", "#FF6B7A" )
+		displayFolder: 9. Formatting
+		lineageTag: b41f899d-bc29-5a00-bc4a-b719aef12e3b
+
+	measure 'PnL Line Color' = SWITCH ( SELECTEDVALUE ( 'PnL Lines'[Line Type] ), "detail", "#8D96AA", "ratio", "#7AB0FF", "#F3F5FA" )
+		displayFolder: 9. Formatting
+		lineageTag: 0b1a01fc-3e8e-519b-823c-79fecb8b94c2
+
+	measure 'OpEx Variance Color' = SWITCH ( TRUE (), ABS ( [OpEx Variance %] ) < 0.005, "#8D96AA", [OpEx Variance %] > 0, "#FF6B7A", "#5BE3B0" )
+		displayFolder: 9. Formatting
+		lineageTag: 31b531d3-9e19-5811-a488-b76bbdce4d65
+
+	/// Header subtitle that follows the fiscal year selection.
+	measure 'SVG Header' =
+			VAR _first = CALCULATE ( MIN ( GL[Month] ) )
+			VAR _fy = SELECTEDVALUE ( 'Date'[Fiscal Year], "All years" )
+			VAR _txt = "Meridian Supply Co.   ·   " & _fy & "   ·   " & FORMAT ( _first, "MMM yyyy", "en-US" ) & " to " & FORMAT ( [Period End], "MMM yyyy", "en-US" ) & "   ·   demo data"
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 520 18'><defs><linearGradient id='gB' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#4C8DFF'/><stop offset='1' stop-color='#9B7BFF'/></linearGradient><linearGradient id='gBv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#7AB0FF'/><stop offset='1' stop-color='#3D6BF5'/></linearGradient><linearGradient id='gO' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF6A3D'/></linearGradient><linearGradient id='gOv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF7A3D'/></linearGradient><linearGradient id='gG' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#3CC8E0'/><stop offset='1' stop-color='#5BE3B0'/></linearGradient><linearGradient id='gA' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4C8DFF' stop-opacity='0.38'/><stop offset='1' stop-color='#4C8DFF' stop-opacity='0'/></linearGradient><filter id='gl' filterUnits='userSpaceOnUse' x='0' y='0' width='520' height='18'><feGaussianBlur stdDeviation='5'/></filter></defs>" &
+			    "<text x='" &
+			    "0" &
+			    "' y='" &
+			    "13" &
+			    "' font-family='Segoe UI' font-size='11.5' font-weight='400' text-anchor='start'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    _txt &
+			    "</text>" &
+			    "</svg>"
+		displayFolder: 7. SVG visuals
+		lineageTag: ad36e5c7-fc4d-58a5-a835-fbf0a80d6d4b
+		dataCategory: ImageUrl
+
+	/// Headline card. Revenue by default; when a P&L line is clicked in the bridge or OpEx chart it shows that line against prior year and budget.
+	measure 'SVG Revenue Hero' =
+			VAR _rev = [Focus Value]
+			VAR _bud = [Focus Budget]
+			VAR _py = [Focus PY]
+			VAR _sel = HASONEVALUE ( 'PnL Lines'[Line Order] )
+			VAR _cost = _sel && SELECTEDVALUE ( 'PnL Lines'[Line Order] ) IN { 5, 8, 9, 10, 11, 12, 13, 14, 17, 18, 19 }
+			VAR _name = IF ( _sel, UPPER ( SUBSTITUTE ( SELECTEDVALUE ( 'PnL Lines'[Line Name] ), "&", "&amp;" ) ), "NET REVENUE" )
+			VAR _aD = IF ( NOT ISBLANK ( _py ), DIVIDE ( _rev - _py, ABS ( _py ) ) )
+			VAR _aC = IF ( ( _aD >= 0 ) <> _cost, "#5BE3B0", "#FF6B7A" )
+			VAR _aS = FORMAT ( ABS ( _aD ), "0.0%", "en-US" ) & " vs PY"
+			VAR _aA = IF ( _aD >= 0, "M0 7 L4.5 0 L9 7 Z", "M0 0 L9 0 L4.5 7 Z" )
+			VAR _bD = IF ( NOT ISBLANK ( _bud ), DIVIDE ( _rev - _bud, ABS ( _bud ) ) )
+			VAR _bC = IF ( ( _bD >= 0 ) <> _cost, "#5BE3B0", "#FF6B7A" )
+			VAR _bS = FORMAT ( ABS ( _bD ), "0.0%", "en-US" ) & " vs budget"
+			VAR _bA = IF ( _bD >= 0, "M0 7 L4.5 0 L9 7 Z", "M0 0 L9 0 L4.5 7 Z" )
+			VAR _sT = ADDCOLUMNS ( FILTER ( VALUES ( 'Date'[Month Start] ), NOT ISBLANK ( [Focus Value] ) ), "@v0", [Focus Value], "@v1", [Focus Budget] )
+			VAR _sN = COUNTROWS ( _sT )
+			VAR _sF = MINX ( _sT, 'Date'[Month Start] )
+			VAR _sLo = MINX ( _sT, MIN ( [@v0], [@v1] ) )
+			VAR _sHi = MAXX ( _sT, MAX ( [@v0], [@v1] ) )
+			VAR _sR = IF ( _sHi - _sLo = 0, 1, _sHi - _sLo )
+			VAR _sP1 = ADDCOLUMNS ( _sT, "@i", DATEDIFF ( _sF, 'Date'[Month Start], MONTH ) )
+			VAR _sP2 = ADDCOLUMNS ( _sP1, "@x", 20 + 380 * DIVIDE ( [@i], _sN - 1, 0.5 ), "@y0", 172 - 50 * DIVIDE ( [@v0] - _sLo, _sR ), "@y1", 172 - 50 * DIVIDE ( [@v1] - _sLo, _sR ) )
+			VAR _sQ = ADDCOLUMNS ( _sP2, "@nx", VAR _i = [@i] RETURN MAXX ( FILTER ( _sP2, [@i] = _i + 1 ), [@x] ), "@ny0", VAR _i = [@i] RETURN MAXX ( FILTER ( _sP2, [@i] = _i + 1 ), [@y0] ), "@ny1", VAR _i = [@i] RETURN MAXX ( FILTER ( _sP2, [@i] = _i + 1 ), [@y1] ) )
+			VAR _sFX = MAXX ( FILTER ( _sQ, [@i] = 0 ), [@x] )
+			VAR _sLX = MAXX ( FILTER ( _sQ, [@i] = _sN - 1 ), [@x] )
+			VAR _sFY0 = MAXX ( FILTER ( _sQ, [@i] = 0 ), [@y0] )
+			VAR _sLY0 = MAXX ( FILTER ( _sQ, [@i] = _sN - 1 ), [@y0] )
+			VAR _sPath0 = "M" & FORMAT ( _sFX, "0.0", "en-US" ) & "," & FORMAT ( _sFY0, "0.0", "en-US" ) & CONCATENATEX ( FILTER ( _sQ, NOT ISBLANK ( [@nx] ) ), IF ( [@i] = 0, " L", " Q" & FORMAT ( [@x], "0.0", "en-US" ) & "," & FORMAT ( [@y0], "0.0", "en-US" ) & " " ) & FORMAT ( ( [@x] + [@nx] ) / 2, "0.0", "en-US" ) & "," & FORMAT ( ( [@y0] + [@ny0] ) / 2, "0.0", "en-US" ), "", [@i], ASC ) & " L" & FORMAT ( _sLX, "0.0", "en-US" ) & "," & FORMAT ( _sLY0, "0.0", "en-US" )
+			VAR _sFY1 = MAXX ( FILTER ( _sQ, [@i] = 0 ), [@y1] )
+			VAR _sLY1 = MAXX ( FILTER ( _sQ, [@i] = _sN - 1 ), [@y1] )
+			VAR _sPath1 = "M" & FORMAT ( _sFX, "0.0", "en-US" ) & "," & FORMAT ( _sFY1, "0.0", "en-US" ) & CONCATENATEX ( FILTER ( _sQ, NOT ISBLANK ( [@nx] ) ), IF ( [@i] = 0, " L", " Q" & FORMAT ( [@x], "0.0", "en-US" ) & "," & FORMAT ( [@y1], "0.0", "en-US" ) & " " ) & FORMAT ( ( [@x] + [@nx] ) / 2, "0.0", "en-US" ) & "," & FORMAT ( ( [@y1] + [@ny1] ) / 2, "0.0", "en-US" ), "", [@i], ASC ) & " L" & FORMAT ( _sLX, "0.0", "en-US" ) & "," & FORMAT ( _sLY1, "0.0", "en-US" )
+			VAR _sArea = _sPath0 & " L" & FORMAT ( _sLX, "0.0", "en-US" ) & ",180 L" & FORMAT ( _sFX, "0.0", "en-US" ) & ",180 Z"
+			VAR _months = CONCATENATEX ( _sQ, "<text x='" &
+			    FORMAT ( [@x], "0.0", "en-US" ) &
+			    "' y='194' font-family='Segoe UI' font-size='8' text-anchor='middle' fill='#5F6880'>" &
+			    LEFT ( FORMAT ( 'Date'[Month Start], "MMM", "en-US" ), 1 ) &
+			    "</text>", "" )
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 420 200'><defs><linearGradient id='gB' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#4C8DFF'/><stop offset='1' stop-color='#9B7BFF'/></linearGradient><linearGradient id='gBv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#7AB0FF'/><stop offset='1' stop-color='#3D6BF5'/></linearGradient><linearGradient id='gO' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF6A3D'/></linearGradient><linearGradient id='gOv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF7A3D'/></linearGradient><linearGradient id='gG' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#3CC8E0'/><stop offset='1' stop-color='#5BE3B0'/></linearGradient><linearGradient id='gA' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4C8DFF' stop-opacity='0.38'/><stop offset='1' stop-color='#4C8DFF' stop-opacity='0'/></linearGradient><filter id='gl' filterUnits='userSpaceOnUse' x='0' y='0' width='420' height='200'><feGaussianBlur stdDeviation='5'/></filter></defs>" &
+			    "<text x='" &
+			    "56" &
+			    "' y='" &
+			    "34" &
+			    "' font-family='Segoe UI' font-size='10' font-weight='600' text-anchor='start' letter-spacing='1.1' fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    _name &
+			    "</text>" &
+			    IF ( _sel, "<text x='" &
+			    "400" &
+			    "' y='" &
+			    "34" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='end'  fill='" &
+			    "#7AB0FF" &
+			    "'>" &
+			    "selected line" &
+			    "</text>", "" ) &
+			    "<text x='" &
+			    "20" &
+			    "' y='" &
+			    "84" &
+			    "' font-family='Segoe UI' font-size='36' font-weight='600' text-anchor='start' letter-spacing='-0.5' fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    IF ( ABS ( _rev ) >= 1000000, FORMAT ( _rev / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( _rev / 1000, "$0", "en-US" ) & "K" ) &
+			    "</text>" &
+			    IF ( ISBLANK ( _aD ), "", "<g transform='translate(20,94)'><rect width='104' height='20' rx='10' fill='" &
+			    _aC &
+			    "' fill-opacity='0.13'/>" &
+			    "<path transform='translate(9,6.5)' d='" &
+			    _aA &
+			    "' fill='" &
+			    _aC &
+			    "'/>" &
+			    "<text x='" &
+			    "23" &
+			    "' y='" &
+			    "14" &
+			    "' font-family='Segoe UI' font-size='10' font-weight='600' text-anchor='start'  fill='" &
+			    _aC &
+			    "'>" &
+			    _aS &
+			    "</text>" &
+			    "</g>" ) &
+			    IF ( ISBLANK ( _bD ), "", "<g transform='translate(132,94)'><rect width='128' height='20' rx='10' fill='" &
+			    _bC &
+			    "' fill-opacity='0.13'/>" &
+			    "<path transform='translate(9,6.5)' d='" &
+			    _bA &
+			    "' fill='" &
+			    _bC &
+			    "'/>" &
+			    "<text x='" &
+			    "23" &
+			    "' y='" &
+			    "14" &
+			    "' font-family='Segoe UI' font-size='10' font-weight='600' text-anchor='start'  fill='" &
+			    _bC &
+			    "'>" &
+			    _bS &
+			    "</text>" &
+			    "</g>" ) &
+			    "<text x='" &
+			    "400" &
+			    "' y='" &
+			    "62" &
+			    "' font-family='Segoe UI' font-size='10' font-weight='400' text-anchor='end'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "Budget  " &
+			    IF ( ABS ( _bud ) >= 1000000, FORMAT ( _bud / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( _bud / 1000, "$0", "en-US" ) & "K" ) &
+			    "</text>" &
+			    IF ( ISBLANK ( _py ), "", "<text x='" &
+			    "400" &
+			    "' y='" &
+			    "78" &
+			    "' font-family='Segoe UI' font-size='10' font-weight='400' text-anchor='end'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "Prior year  " &
+			    IF ( ABS ( _py ) >= 1000000, FORMAT ( _py / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( _py / 1000, "$0", "en-US" ) & "K" ) &
+			    "</text>" ) &
+			    "<path d='" &
+			    _sArea &
+			    "' fill='url(#gA)'/>" &
+			    "<path d='" &
+			    _sPath1 &
+			    "' fill='none' stroke='#8D96AA' stroke-width='1.2' stroke-dasharray='3 4' opacity='0.8'/>" &
+			    "<path d='" &
+			    _sPath0 &
+			    "' fill='none' stroke='url(#gB)' stroke-width='4.6' stroke-linecap='round' opacity='0.6' filter='url(#gl)'/>" &
+			    "<path d='" &
+			    _sPath0 &
+			    "' fill='none' stroke='url(#gB)' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/>" &
+			    "<circle cx='" &
+			    FORMAT ( _sLX, "0.0", "en-US" ) &
+			    "' cy='" &
+			    FORMAT ( _sLY0, "0.0", "en-US" ) &
+			    "' r='8' fill='#9B7BFF' opacity='0.28'/>" &
+			    "<circle cx='" &
+			    FORMAT ( _sLX, "0.0", "en-US" ) &
+			    "' cy='" &
+			    FORMAT ( _sLY0, "0.0", "en-US" ) &
+			    "' r='3.4' fill='#FFFFFF'/>" &
+			    _months &
+			    "</svg>"
+		displayFolder: 7. SVG visuals
+		lineageTag: 4f4402eb-2f85-57ae-b1f3-29c961698bea
+		dataCategory: ImageUrl
+
+	/// KPI tile for Gross Margin: value, change on prior year and monthly trend.
+	measure 'SVG Tile Gross Margin' =
+			VAR _cur = [Gross Margin]
+			VAR _py = [Gross Margin PY]
+			VAR _aD = IF ( NOT ISBLANK ( _py ), ( _cur - _py ) * 100 )
+			VAR _aC = IF ( _aD >= 0, "#5BE3B0", "#FF6B7A" )
+			VAR _aS = FORMAT ( ABS ( _aD ), "0.0", "en-US" ) & " pts vs PY"
+			VAR _aA = IF ( _aD >= 0, "M0 7 L4.5 0 L9 7 Z", "M0 0 L9 0 L4.5 7 Z" )
+			VAR _sT = ADDCOLUMNS ( FILTER ( VALUES ( 'Date'[Month Start] ), NOT ISBLANK ( [Gross Margin] ) ), "@v0", [Gross Margin] )
+			VAR _sN = COUNTROWS ( _sT )
+			VAR _sF = MINX ( _sT, 'Date'[Month Start] )
+			VAR _sLo = MINX ( _sT, [@v0] )
+			VAR _sHi = MAXX ( _sT, [@v0] )
+			VAR _sR = IF ( _sHi - _sLo = 0, 1, _sHi - _sLo )
+			VAR _sP1 = ADDCOLUMNS ( _sT, "@i", DATEDIFF ( _sF, 'Date'[Month Start], MONTH ) )
+			VAR _sP2 = ADDCOLUMNS ( _sP1, "@x", 108 + 62 * DIVIDE ( [@i], _sN - 1, 0.5 ), "@y0", 70 - 26 * DIVIDE ( [@v0] - _sLo, _sR ) )
+			VAR _sQ = ADDCOLUMNS ( _sP2, "@nx", VAR _i = [@i] RETURN MAXX ( FILTER ( _sP2, [@i] = _i + 1 ), [@x] ), "@ny0", VAR _i = [@i] RETURN MAXX ( FILTER ( _sP2, [@i] = _i + 1 ), [@y0] ) )
+			VAR _sFX = MAXX ( FILTER ( _sQ, [@i] = 0 ), [@x] )
+			VAR _sLX = MAXX ( FILTER ( _sQ, [@i] = _sN - 1 ), [@x] )
+			VAR _sFY0 = MAXX ( FILTER ( _sQ, [@i] = 0 ), [@y0] )
+			VAR _sLY0 = MAXX ( FILTER ( _sQ, [@i] = _sN - 1 ), [@y0] )
+			VAR _sPath0 = "M" & FORMAT ( _sFX, "0.0", "en-US" ) & "," & FORMAT ( _sFY0, "0.0", "en-US" ) & CONCATENATEX ( FILTER ( _sQ, NOT ISBLANK ( [@nx] ) ), IF ( [@i] = 0, " L", " Q" & FORMAT ( [@x], "0.0", "en-US" ) & "," & FORMAT ( [@y0], "0.0", "en-US" ) & " " ) & FORMAT ( ( [@x] + [@nx] ) / 2, "0.0", "en-US" ) & "," & FORMAT ( ( [@y0] + [@ny0] ) / 2, "0.0", "en-US" ), "", [@i], ASC ) & " L" & FORMAT ( _sLX, "0.0", "en-US" ) & "," & FORMAT ( _sLY0, "0.0", "en-US" )
+			VAR _sArea = _sPath0 & " L" & FORMAT ( _sLX, "0.0", "en-US" ) & ",78 L" & FORMAT ( _sFX, "0.0", "en-US" ) & ",78 Z"
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 188 94'><defs><linearGradient id='gB' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#4C8DFF'/><stop offset='1' stop-color='#9B7BFF'/></linearGradient><linearGradient id='gBv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#7AB0FF'/><stop offset='1' stop-color='#3D6BF5'/></linearGradient><linearGradient id='gO' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF6A3D'/></linearGradient><linearGradient id='gOv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF7A3D'/></linearGradient><linearGradient id='gG' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#3CC8E0'/><stop offset='1' stop-color='#5BE3B0'/></linearGradient><linearGradient id='gA' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4C8DFF' stop-opacity='0.38'/><stop offset='1' stop-color='#4C8DFF' stop-opacity='0'/></linearGradient><filter id='gl' filterUnits='userSpaceOnUse' x='0' y='0' width='188' height='94'><feGaussianBlur stdDeviation='3'/></filter></defs>" &
+			    "<path d='" &
+			    _sPath0 &
+			    "' fill='none' stroke='#4C8DFF' stroke-width='4' stroke-linecap='round' opacity='0.5' filter='url(#gl)'/>" &
+			    "<path d='" &
+			    _sPath0 &
+			    "' fill='none' stroke='#4C8DFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/>" &
+			    "<circle cx='" &
+			    FORMAT ( _sLX, "0.0", "en-US" ) &
+			    "' cy='" &
+			    FORMAT ( _sLY0, "0.0", "en-US" ) &
+			    "' r='2.6' fill='#FFFFFF'/>" &
+			    "<text x='" &
+			    "14" &
+			    "' y='" &
+			    "66" &
+			    "' font-family='Segoe UI' font-size='22' font-weight='600' text-anchor='start' letter-spacing='-0.3' fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    FORMAT ( _cur, "0.0%", "en-US" ) &
+			    "</text>" &
+			    IF ( ISBLANK ( _aD ), "", "<path transform='translate(14,76.5)' d='" &
+			    _aA &
+			    "' fill='" &
+			    _aC &
+			    "'/>" &
+			    "<text x='" &
+			    "27" &
+			    "' y='" &
+			    "84" &
+			    "' font-family='Segoe UI' font-size='9.5' font-weight='600' text-anchor='start'  fill='" &
+			    _aC &
+			    "'>" &
+			    _aS &
+			    "</text>" ) &
+			    "</svg>"
+		displayFolder: 7. SVG visuals
+		lineageTag: 2799cc3b-4768-5f73-8bc2-05030c705d13
+		dataCategory: ImageUrl
+
+	/// KPI tile for EBITDA Margin: value, change on prior year and monthly trend.
+	measure 'SVG Tile EBITDA Margin' =
+			VAR _cur = [EBITDA Margin]
+			VAR _py = [EBITDA Margin PY]
+			VAR _aD = IF ( NOT ISBLANK ( _py ), ( _cur - _py ) * 100 )
+			VAR _aC = IF ( _aD >= 0, "#5BE3B0", "#FF6B7A" )
+			VAR _aS = FORMAT ( ABS ( _aD ), "0.0", "en-US" ) & " pts vs PY"
+			VAR _aA = IF ( _aD >= 0, "M0 7 L4.5 0 L9 7 Z", "M0 0 L9 0 L4.5 7 Z" )
+			VAR _sT = ADDCOLUMNS ( FILTER ( VALUES ( 'Date'[Month Start] ), NOT ISBLANK ( [EBITDA Margin] ) ), "@v0", [EBITDA Margin] )
+			VAR _sN = COUNTROWS ( _sT )
+			VAR _sF = MINX ( _sT, 'Date'[Month Start] )
+			VAR _sLo = MINX ( _sT, [@v0] )
+			VAR _sHi = MAXX ( _sT, [@v0] )
+			VAR _sR = IF ( _sHi - _sLo = 0, 1, _sHi - _sLo )
+			VAR _sP1 = ADDCOLUMNS ( _sT, "@i", DATEDIFF ( _sF, 'Date'[Month Start], MONTH ) )
+			VAR _sP2 = ADDCOLUMNS ( _sP1, "@x", 108 + 62 * DIVIDE ( [@i], _sN - 1, 0.5 ), "@y0", 70 - 26 * DIVIDE ( [@v0] - _sLo, _sR ) )
+			VAR _sQ = ADDCOLUMNS ( _sP2, "@nx", VAR _i = [@i] RETURN MAXX ( FILTER ( _sP2, [@i] = _i + 1 ), [@x] ), "@ny0", VAR _i = [@i] RETURN MAXX ( FILTER ( _sP2, [@i] = _i + 1 ), [@y0] ) )
+			VAR _sFX = MAXX ( FILTER ( _sQ, [@i] = 0 ), [@x] )
+			VAR _sLX = MAXX ( FILTER ( _sQ, [@i] = _sN - 1 ), [@x] )
+			VAR _sFY0 = MAXX ( FILTER ( _sQ, [@i] = 0 ), [@y0] )
+			VAR _sLY0 = MAXX ( FILTER ( _sQ, [@i] = _sN - 1 ), [@y0] )
+			VAR _sPath0 = "M" & FORMAT ( _sFX, "0.0", "en-US" ) & "," & FORMAT ( _sFY0, "0.0", "en-US" ) & CONCATENATEX ( FILTER ( _sQ, NOT ISBLANK ( [@nx] ) ), IF ( [@i] = 0, " L", " Q" & FORMAT ( [@x], "0.0", "en-US" ) & "," & FORMAT ( [@y0], "0.0", "en-US" ) & " " ) & FORMAT ( ( [@x] + [@nx] ) / 2, "0.0", "en-US" ) & "," & FORMAT ( ( [@y0] + [@ny0] ) / 2, "0.0", "en-US" ), "", [@i], ASC ) & " L" & FORMAT ( _sLX, "0.0", "en-US" ) & "," & FORMAT ( _sLY0, "0.0", "en-US" )
+			VAR _sArea = _sPath0 & " L" & FORMAT ( _sLX, "0.0", "en-US" ) & ",78 L" & FORMAT ( _sFX, "0.0", "en-US" ) & ",78 Z"
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 188 94'><defs><linearGradient id='gB' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#4C8DFF'/><stop offset='1' stop-color='#9B7BFF'/></linearGradient><linearGradient id='gBv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#7AB0FF'/><stop offset='1' stop-color='#3D6BF5'/></linearGradient><linearGradient id='gO' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF6A3D'/></linearGradient><linearGradient id='gOv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF7A3D'/></linearGradient><linearGradient id='gG' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#3CC8E0'/><stop offset='1' stop-color='#5BE3B0'/></linearGradient><linearGradient id='gA' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4C8DFF' stop-opacity='0.38'/><stop offset='1' stop-color='#4C8DFF' stop-opacity='0'/></linearGradient><filter id='gl' filterUnits='userSpaceOnUse' x='0' y='0' width='188' height='94'><feGaussianBlur stdDeviation='3'/></filter></defs>" &
+			    "<path d='" &
+			    _sPath0 &
+			    "' fill='none' stroke='#9B7BFF' stroke-width='4' stroke-linecap='round' opacity='0.5' filter='url(#gl)'/>" &
+			    "<path d='" &
+			    _sPath0 &
+			    "' fill='none' stroke='#9B7BFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/>" &
+			    "<circle cx='" &
+			    FORMAT ( _sLX, "0.0", "en-US" ) &
+			    "' cy='" &
+			    FORMAT ( _sLY0, "0.0", "en-US" ) &
+			    "' r='2.6' fill='#FFFFFF'/>" &
+			    "<text x='" &
+			    "14" &
+			    "' y='" &
+			    "66" &
+			    "' font-family='Segoe UI' font-size='22' font-weight='600' text-anchor='start' letter-spacing='-0.3' fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    FORMAT ( _cur, "0.0%", "en-US" ) &
+			    "</text>" &
+			    IF ( ISBLANK ( _aD ), "", "<path transform='translate(14,76.5)' d='" &
+			    _aA &
+			    "' fill='" &
+			    _aC &
+			    "'/>" &
+			    "<text x='" &
+			    "27" &
+			    "' y='" &
+			    "84" &
+			    "' font-family='Segoe UI' font-size='9.5' font-weight='600' text-anchor='start'  fill='" &
+			    _aC &
+			    "'>" &
+			    _aS &
+			    "</text>" ) &
+			    "</svg>"
+		displayFolder: 7. SVG visuals
+		lineageTag: 930d6cba-e837-5184-8c9f-eac07932755a
+		dataCategory: ImageUrl
+
+	/// KPI tile for Net Income: value, change on prior year and monthly trend.
+	measure 'SVG Tile Net Income' =
+			VAR _cur = [Net Income]
+			VAR _py = [Net Income PY]
+			VAR _aD = IF ( NOT ISBLANK ( _py ), DIVIDE ( _cur - _py, ABS ( _py ) ) )
+			VAR _aC = IF ( _aD >= 0, "#5BE3B0", "#FF6B7A" )
+			VAR _aS = FORMAT ( ABS ( _aD ), "0.0%", "en-US" ) & " vs PY"
+			VAR _aA = IF ( _aD >= 0, "M0 7 L4.5 0 L9 7 Z", "M0 0 L9 0 L4.5 7 Z" )
+			VAR _sT = ADDCOLUMNS ( FILTER ( VALUES ( 'Date'[Month Start] ), NOT ISBLANK ( [Net Income] ) ), "@v0", [Net Income] )
+			VAR _sN = COUNTROWS ( _sT )
+			VAR _sF = MINX ( _sT, 'Date'[Month Start] )
+			VAR _sLo = MINX ( _sT, [@v0] )
+			VAR _sHi = MAXX ( _sT, [@v0] )
+			VAR _sR = IF ( _sHi - _sLo = 0, 1, _sHi - _sLo )
+			VAR _sP1 = ADDCOLUMNS ( _sT, "@i", DATEDIFF ( _sF, 'Date'[Month Start], MONTH ) )
+			VAR _sP2 = ADDCOLUMNS ( _sP1, "@x", 108 + 62 * DIVIDE ( [@i], _sN - 1, 0.5 ), "@y0", 70 - 26 * DIVIDE ( [@v0] - _sLo, _sR ) )
+			VAR _sQ = ADDCOLUMNS ( _sP2, "@nx", VAR _i = [@i] RETURN MAXX ( FILTER ( _sP2, [@i] = _i + 1 ), [@x] ), "@ny0", VAR _i = [@i] RETURN MAXX ( FILTER ( _sP2, [@i] = _i + 1 ), [@y0] ) )
+			VAR _sFX = MAXX ( FILTER ( _sQ, [@i] = 0 ), [@x] )
+			VAR _sLX = MAXX ( FILTER ( _sQ, [@i] = _sN - 1 ), [@x] )
+			VAR _sFY0 = MAXX ( FILTER ( _sQ, [@i] = 0 ), [@y0] )
+			VAR _sLY0 = MAXX ( FILTER ( _sQ, [@i] = _sN - 1 ), [@y0] )
+			VAR _sPath0 = "M" & FORMAT ( _sFX, "0.0", "en-US" ) & "," & FORMAT ( _sFY0, "0.0", "en-US" ) & CONCATENATEX ( FILTER ( _sQ, NOT ISBLANK ( [@nx] ) ), IF ( [@i] = 0, " L", " Q" & FORMAT ( [@x], "0.0", "en-US" ) & "," & FORMAT ( [@y0], "0.0", "en-US" ) & " " ) & FORMAT ( ( [@x] + [@nx] ) / 2, "0.0", "en-US" ) & "," & FORMAT ( ( [@y0] + [@ny0] ) / 2, "0.0", "en-US" ), "", [@i], ASC ) & " L" & FORMAT ( _sLX, "0.0", "en-US" ) & "," & FORMAT ( _sLY0, "0.0", "en-US" )
+			VAR _sArea = _sPath0 & " L" & FORMAT ( _sLX, "0.0", "en-US" ) & ",78 L" & FORMAT ( _sFX, "0.0", "en-US" ) & ",78 Z"
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 188 94'><defs><linearGradient id='gB' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#4C8DFF'/><stop offset='1' stop-color='#9B7BFF'/></linearGradient><linearGradient id='gBv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#7AB0FF'/><stop offset='1' stop-color='#3D6BF5'/></linearGradient><linearGradient id='gO' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF6A3D'/></linearGradient><linearGradient id='gOv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF7A3D'/></linearGradient><linearGradient id='gG' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#3CC8E0'/><stop offset='1' stop-color='#5BE3B0'/></linearGradient><linearGradient id='gA' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4C8DFF' stop-opacity='0.38'/><stop offset='1' stop-color='#4C8DFF' stop-opacity='0'/></linearGradient><filter id='gl' filterUnits='userSpaceOnUse' x='0' y='0' width='188' height='94'><feGaussianBlur stdDeviation='3'/></filter></defs>" &
+			    "<path d='" &
+			    _sPath0 &
+			    "' fill='none' stroke='#5BE3B0' stroke-width='4' stroke-linecap='round' opacity='0.5' filter='url(#gl)'/>" &
+			    "<path d='" &
+			    _sPath0 &
+			    "' fill='none' stroke='#5BE3B0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/>" &
+			    "<circle cx='" &
+			    FORMAT ( _sLX, "0.0", "en-US" ) &
+			    "' cy='" &
+			    FORMAT ( _sLY0, "0.0", "en-US" ) &
+			    "' r='2.6' fill='#FFFFFF'/>" &
+			    "<text x='" &
+			    "14" &
+			    "' y='" &
+			    "66" &
+			    "' font-family='Segoe UI' font-size='22' font-weight='600' text-anchor='start' letter-spacing='-0.3' fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    IF ( ABS ( _cur ) >= 1000000, FORMAT ( _cur / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( _cur / 1000, "$0", "en-US" ) & "K" ) &
+			    "</text>" &
+			    IF ( ISBLANK ( _aD ), "", "<path transform='translate(14,76.5)' d='" &
+			    _aA &
+			    "' fill='" &
+			    _aC &
+			    "'/>" &
+			    "<text x='" &
+			    "27" &
+			    "' y='" &
+			    "84" &
+			    "' font-family='Segoe UI' font-size='9.5' font-weight='600' text-anchor='start'  fill='" &
+			    _aC &
+			    "'>" &
+			    _aS &
+			    "</text>" ) &
+			    "</svg>"
+		displayFolder: 7. SVG visuals
+		lineageTag: c07fb4e5-b575-57c9-8816-ab28b166ac0c
+		dataCategory: ImageUrl
+
+	/// KPI tile for OpEx Ratio: value, change on prior year and monthly trend.
+	measure 'SVG Tile OpEx Ratio' =
+			VAR _cur = [OpEx Ratio]
+			VAR _py = [OpEx Ratio PY]
+			VAR _aD = IF ( NOT ISBLANK ( _py ), ( _cur - _py ) * 100 )
+			VAR _aC = IF ( _aD >= 0, "#FF6B7A", "#5BE3B0" )
+			VAR _aS = FORMAT ( ABS ( _aD ), "0.0", "en-US" ) & " pts vs PY"
+			VAR _aA = IF ( _aD >= 0, "M0 7 L4.5 0 L9 7 Z", "M0 0 L9 0 L4.5 7 Z" )
+			VAR _sT = ADDCOLUMNS ( FILTER ( VALUES ( 'Date'[Month Start] ), NOT ISBLANK ( [OpEx Ratio] ) ), "@v0", [OpEx Ratio] )
+			VAR _sN = COUNTROWS ( _sT )
+			VAR _sF = MINX ( _sT, 'Date'[Month Start] )
+			VAR _sLo = MINX ( _sT, [@v0] )
+			VAR _sHi = MAXX ( _sT, [@v0] )
+			VAR _sR = IF ( _sHi - _sLo = 0, 1, _sHi - _sLo )
+			VAR _sP1 = ADDCOLUMNS ( _sT, "@i", DATEDIFF ( _sF, 'Date'[Month Start], MONTH ) )
+			VAR _sP2 = ADDCOLUMNS ( _sP1, "@x", 108 + 62 * DIVIDE ( [@i], _sN - 1, 0.5 ), "@y0", 70 - 26 * DIVIDE ( [@v0] - _sLo, _sR ) )
+			VAR _sQ = ADDCOLUMNS ( _sP2, "@nx", VAR _i = [@i] RETURN MAXX ( FILTER ( _sP2, [@i] = _i + 1 ), [@x] ), "@ny0", VAR _i = [@i] RETURN MAXX ( FILTER ( _sP2, [@i] = _i + 1 ), [@y0] ) )
+			VAR _sFX = MAXX ( FILTER ( _sQ, [@i] = 0 ), [@x] )
+			VAR _sLX = MAXX ( FILTER ( _sQ, [@i] = _sN - 1 ), [@x] )
+			VAR _sFY0 = MAXX ( FILTER ( _sQ, [@i] = 0 ), [@y0] )
+			VAR _sLY0 = MAXX ( FILTER ( _sQ, [@i] = _sN - 1 ), [@y0] )
+			VAR _sPath0 = "M" & FORMAT ( _sFX, "0.0", "en-US" ) & "," & FORMAT ( _sFY0, "0.0", "en-US" ) & CONCATENATEX ( FILTER ( _sQ, NOT ISBLANK ( [@nx] ) ), IF ( [@i] = 0, " L", " Q" & FORMAT ( [@x], "0.0", "en-US" ) & "," & FORMAT ( [@y0], "0.0", "en-US" ) & " " ) & FORMAT ( ( [@x] + [@nx] ) / 2, "0.0", "en-US" ) & "," & FORMAT ( ( [@y0] + [@ny0] ) / 2, "0.0", "en-US" ), "", [@i], ASC ) & " L" & FORMAT ( _sLX, "0.0", "en-US" ) & "," & FORMAT ( _sLY0, "0.0", "en-US" )
+			VAR _sArea = _sPath0 & " L" & FORMAT ( _sLX, "0.0", "en-US" ) & ",78 L" & FORMAT ( _sFX, "0.0", "en-US" ) & ",78 Z"
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 188 94'><defs><linearGradient id='gB' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#4C8DFF'/><stop offset='1' stop-color='#9B7BFF'/></linearGradient><linearGradient id='gBv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#7AB0FF'/><stop offset='1' stop-color='#3D6BF5'/></linearGradient><linearGradient id='gO' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF6A3D'/></linearGradient><linearGradient id='gOv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF7A3D'/></linearGradient><linearGradient id='gG' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#3CC8E0'/><stop offset='1' stop-color='#5BE3B0'/></linearGradient><linearGradient id='gA' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4C8DFF' stop-opacity='0.38'/><stop offset='1' stop-color='#4C8DFF' stop-opacity='0'/></linearGradient><filter id='gl' filterUnits='userSpaceOnUse' x='0' y='0' width='188' height='94'><feGaussianBlur stdDeviation='3'/></filter></defs>" &
+			    "<path d='" &
+			    _sPath0 &
+			    "' fill='none' stroke='#FF8A3D' stroke-width='4' stroke-linecap='round' opacity='0.5' filter='url(#gl)'/>" &
+			    "<path d='" &
+			    _sPath0 &
+			    "' fill='none' stroke='#FF8A3D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/>" &
+			    "<circle cx='" &
+			    FORMAT ( _sLX, "0.0", "en-US" ) &
+			    "' cy='" &
+			    FORMAT ( _sLY0, "0.0", "en-US" ) &
+			    "' r='2.6' fill='#FFFFFF'/>" &
+			    "<text x='" &
+			    "14" &
+			    "' y='" &
+			    "66" &
+			    "' font-family='Segoe UI' font-size='22' font-weight='600' text-anchor='start' letter-spacing='-0.3' fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    FORMAT ( _cur, "0.0%", "en-US" ) &
+			    "</text>" &
+			    IF ( ISBLANK ( _aD ), "", "<path transform='translate(14,76.5)' d='" &
+			    _aA &
+			    "' fill='" &
+			    _aC &
+			    "'/>" &
+			    "<text x='" &
+			    "27" &
+			    "' y='" &
+			    "84" &
+			    "' font-family='Segoe UI' font-size='9.5' font-weight='600' text-anchor='start'  fill='" &
+			    _aC &
+			    "'>" &
+			    _aS &
+			    "</text>" ) &
+			    "</svg>"
+		displayFolder: 7. SVG visuals
+		lineageTag: bb777bd5-f490-572e-865a-bc41fc14764d
+		dataCategory: ImageUrl
+
+	/// Ring: EBITDA against budget. Rows: revenue, gross profit and net income against budget, tick marks 100%.
+	measure 'SVG Budget Ring' =
+			VAR _att = [EBITDA Attainment]
+			VAR _dash = MAX ( MIN ( _att, 1 ), 0 ) * 339.29
+			VAR _r0 = [Revenue Attainment]
+			VAR _c0 = SWITCH ( TRUE (), _r0 >= 0.995, "url(#gG)", _r0 >= 0.95, "url(#gB)", "url(#gO)" )
+			VAR _w0 = 148 * MAX ( MIN ( _r0 / 1.2, 1 ), 0.02 )
+			VAR _r1 = [Gross Profit Attainment]
+			VAR _c1 = SWITCH ( TRUE (), _r1 >= 0.995, "url(#gG)", _r1 >= 0.95, "url(#gB)", "url(#gO)" )
+			VAR _w1 = 148 * MAX ( MIN ( _r1 / 1.2, 1 ), 0.02 )
+			VAR _r2 = [Net Income Attainment]
+			VAR _c2 = SWITCH ( TRUE (), _r2 >= 0.995, "url(#gG)", _r2 >= 0.95, "url(#gB)", "url(#gO)" )
+			VAR _w2 = 148 * MAX ( MIN ( _r2 / 1.2, 1 ), 0.02 )
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 352 200'><defs><linearGradient id='gB' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#4C8DFF'/><stop offset='1' stop-color='#9B7BFF'/></linearGradient><linearGradient id='gBv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#7AB0FF'/><stop offset='1' stop-color='#3D6BF5'/></linearGradient><linearGradient id='gO' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF6A3D'/></linearGradient><linearGradient id='gOv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF7A3D'/></linearGradient><linearGradient id='gG' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#3CC8E0'/><stop offset='1' stop-color='#5BE3B0'/></linearGradient><linearGradient id='gA' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4C8DFF' stop-opacity='0.38'/><stop offset='1' stop-color='#4C8DFF' stop-opacity='0'/></linearGradient><filter id='gl' filterUnits='userSpaceOnUse' x='0' y='0' width='352' height='200'><feGaussianBlur stdDeviation='6'/></filter></defs>" &
+			    "<circle cx='96' cy='116' r='54' fill='none' stroke='#FFFFFF' stroke-opacity='0.07' stroke-width='12'/>" &
+			    "<circle cx='96' cy='116' r='54' fill='none' stroke='url(#gO)' stroke-width='14' stroke-linecap='round' opacity='0.55' filter='url(#gl)' transform='rotate(-90 96 116)' stroke-dasharray='" &
+			    FORMAT ( _dash, "0.0", "en-US" ) &
+			    " 400'/>" &
+			    "<circle cx='96' cy='116' r='54' fill='none' stroke='url(#gO)' stroke-width='12' stroke-linecap='round' transform='rotate(-90 96 116)' stroke-dasharray='" &
+			    FORMAT ( _dash, "0.0", "en-US" ) &
+			    " 400'/>" &
+			    "<text x='" &
+			    "96" &
+			    "' y='" &
+			    "121" &
+			    "' font-family='Segoe UI' font-size='25' font-weight='600' text-anchor='middle' letter-spacing='-0.4' fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    FORMAT ( _att, "0.0%", "en-US" ) &
+			    "</text>" &
+			    "<text x='" &
+			    "96" &
+			    "' y='" &
+			    "138" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='middle'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "EBITDA vs budget" &
+			    "</text>" &
+			    "<text x='" &
+			    "190" &
+			    "' y='" &
+			    "62" &
+			    "' font-family='Segoe UI' font-size='10' font-weight='400' text-anchor='start'  fill='" &
+			    "#C9D0DE" &
+			    "'>" &
+			    "Revenue" &
+			    "</text>" &
+			    "<text x='" &
+			    "338" &
+			    "' y='" &
+			    "62" &
+			    "' font-family='Segoe UI' font-size='10.5' font-weight='600' text-anchor='end'  fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    FORMAT ( _r0, "0.0%", "en-US" ) &
+			    "</text>" &
+			    "<rect x='190' y='70' width='148' height='5' rx='2.5' fill='#FFFFFF' fill-opacity='0.08'/>" &
+			    "<rect x='190' y='70' width='" &
+			    FORMAT ( _w0, "0.0", "en-US" ) &
+			    "' height='5' rx='2.5' fill='" &
+			    _c0 &
+			    "'/>" &
+			    "<rect x='312.6' y='67' width='1.5' height='11' rx='0.75' fill='#FFFFFF' fill-opacity='0.55'/>" &
+			    "<text x='" &
+			    "190" &
+			    "' y='" &
+			    "87" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='start'  fill='" &
+			    "#5F6880" &
+			    "'>" &
+			    IF ( ABS ( [Revenue] ) >= 1000000, FORMAT ( [Revenue] / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( [Revenue] / 1000, "$0", "en-US" ) & "K" ) &
+			    " of " &
+			    IF ( ABS ( [Revenue Budget] ) >= 1000000, FORMAT ( [Revenue Budget] / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( [Revenue Budget] / 1000, "$0", "en-US" ) & "K" ) &
+			    "</text>" &
+			    "<text x='" &
+			    "190" &
+			    "' y='" &
+			    "104" &
+			    "' font-family='Segoe UI' font-size='10' font-weight='400' text-anchor='start'  fill='" &
+			    "#C9D0DE" &
+			    "'>" &
+			    "Gross profit" &
+			    "</text>" &
+			    "<text x='" &
+			    "338" &
+			    "' y='" &
+			    "104" &
+			    "' font-family='Segoe UI' font-size='10.5' font-weight='600' text-anchor='end'  fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    FORMAT ( _r1, "0.0%", "en-US" ) &
+			    "</text>" &
+			    "<rect x='190' y='112' width='148' height='5' rx='2.5' fill='#FFFFFF' fill-opacity='0.08'/>" &
+			    "<rect x='190' y='112' width='" &
+			    FORMAT ( _w1, "0.0", "en-US" ) &
+			    "' height='5' rx='2.5' fill='" &
+			    _c1 &
+			    "'/>" &
+			    "<rect x='312.6' y='109' width='1.5' height='11' rx='0.75' fill='#FFFFFF' fill-opacity='0.55'/>" &
+			    "<text x='" &
+			    "190" &
+			    "' y='" &
+			    "129" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='start'  fill='" &
+			    "#5F6880" &
+			    "'>" &
+			    IF ( ABS ( [Gross Profit] ) >= 1000000, FORMAT ( [Gross Profit] / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( [Gross Profit] / 1000, "$0", "en-US" ) & "K" ) &
+			    " of " &
+			    IF ( ABS ( [Gross Profit Budget] ) >= 1000000, FORMAT ( [Gross Profit Budget] / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( [Gross Profit Budget] / 1000, "$0", "en-US" ) & "K" ) &
+			    "</text>" &
+			    "<text x='" &
+			    "190" &
+			    "' y='" &
+			    "146" &
+			    "' font-family='Segoe UI' font-size='10' font-weight='400' text-anchor='start'  fill='" &
+			    "#C9D0DE" &
+			    "'>" &
+			    "Net income" &
+			    "</text>" &
+			    "<text x='" &
+			    "338" &
+			    "' y='" &
+			    "146" &
+			    "' font-family='Segoe UI' font-size='10.5' font-weight='600' text-anchor='end'  fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    FORMAT ( _r2, "0.0%", "en-US" ) &
+			    "</text>" &
+			    "<rect x='190' y='154' width='148' height='5' rx='2.5' fill='#FFFFFF' fill-opacity='0.08'/>" &
+			    "<rect x='190' y='154' width='" &
+			    FORMAT ( _w2, "0.0", "en-US" ) &
+			    "' height='5' rx='2.5' fill='" &
+			    _c2 &
+			    "'/>" &
+			    "<rect x='312.6' y='151' width='1.5' height='11' rx='0.75' fill='#FFFFFF' fill-opacity='0.55'/>" &
+			    "<text x='" &
+			    "190" &
+			    "' y='" &
+			    "171" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='start'  fill='" &
+			    "#5F6880" &
+			    "'>" &
+			    IF ( ABS ( [Net Income] ) >= 1000000, FORMAT ( [Net Income] / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( [Net Income] / 1000, "$0", "en-US" ) & "K" ) &
+			    " of " &
+			    IF ( ABS ( [Net Income Budget] ) >= 1000000, FORMAT ( [Net Income Budget] / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( [Net Income Budget] / 1000, "$0", "en-US" ) & "K" ) &
+			    "</text>" &
+			    "</svg>"
+		displayFolder: 7. SVG visuals
+		lineageTag: bff09b5c-1153-514d-a189-f807e7e372ea
+		dataCategory: ImageUrl
+
+	/// Cash at period end, months of operating cost it covers, and free cash flow for each month.
+	measure 'SVG Cash' =
+			VAR _cash = [Cash Balance]
+			VAR _chg = [Cash Change]
+			VAR _cover = [Cash Cover Months]
+			VAR _cc = IF ( _chg >= 0, "#5BE3B0", "#FF6B7A" )
+			VAR _fT = ADDCOLUMNS ( FILTER ( VALUES ( 'Date'[Month Start] ), NOT ISBLANK ( [Free Cash Flow] ) ), "@v", [Free Cash Flow] )
+			VAR _fN = COUNTROWS ( _fT )
+			VAR _fF = MINX ( _fT, 'Date'[Month Start] )
+			VAR _fL = MAXX ( _fT, 'Date'[Month Start] )
+			VAR _fM = MAXX ( _fT, ABS ( [@v] ) )
+			VAR _step = DIVIDE ( 268, _fN )
+			VAR _last = MAXX ( FILTER ( _fT, 'Date'[Month Start] = _fL ), [@v] )
+			VAR _bars = CONCATENATEX ( _fT, VAR _i = DATEDIFF ( _fF, 'Date'[Month Start], MONTH ) VAR _cx = 18 + _step * ( _i + 0.5 ) VAR _h = MAX ( 28 * DIVIDE ( ABS ( [@v] ), _fM ), 4 ) RETURN "<rect x='" &
+			    FORMAT ( _cx - 6, "0.0", "en-US" ) &
+			    "' y='" &
+			    FORMAT ( IF ( [@v] >= 0, 150 - _h, 150 ), "0.0", "en-US" ) &
+			    "' width='12' height='" &
+			    FORMAT ( _h, "0.0", "en-US" ) &
+			    "' rx='6' fill='" &
+			    IF ( [@v] >= 0, "url(#gBv)", "url(#gOv)" ) &
+			    "' fill-opacity='" &
+			    IF ( _i = _fN - 1, "1", "0.6" ) &
+			    "'/>" &
+			    "<text x='" &
+			    FORMAT ( _cx, "0.0", "en-US" ) &
+			    "' y='197' font-family='Segoe UI' font-size='8' text-anchor='middle' fill='#5F6880'>" &
+			    LEFT ( FORMAT ( 'Date'[Month Start], "MMM", "en-US" ), 1 ) &
+			    "</text>", "" )
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 304 210'><defs><linearGradient id='gB' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#4C8DFF'/><stop offset='1' stop-color='#9B7BFF'/></linearGradient><linearGradient id='gBv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#7AB0FF'/><stop offset='1' stop-color='#3D6BF5'/></linearGradient><linearGradient id='gO' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF6A3D'/></linearGradient><linearGradient id='gOv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF7A3D'/></linearGradient><linearGradient id='gG' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#3CC8E0'/><stop offset='1' stop-color='#5BE3B0'/></linearGradient><linearGradient id='gA' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4C8DFF' stop-opacity='0.38'/><stop offset='1' stop-color='#4C8DFF' stop-opacity='0'/></linearGradient><filter id='gl' filterUnits='userSpaceOnUse' x='0' y='0' width='304' height='210'><feGaussianBlur stdDeviation='5'/></filter></defs>" &
+			    "<text x='" &
+			    "18" &
+			    "' y='" &
+			    "76" &
+			    "' font-family='Segoe UI' font-size='27' font-weight='600' text-anchor='start' letter-spacing='-0.4' fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    IF ( ABS ( _cash ) >= 1000000, FORMAT ( _cash / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( _cash / 1000, "$0", "en-US" ) & "K" ) &
+			    "</text>" &
+			    IF ( ISBLANK ( _chg ), "", "<path transform='translate(18,85.5)' d='" &
+			    IF ( _chg >= 0, "M0 7 L4.5 0 L9 7 Z", "M0 0 L9 0 L4.5 7 Z" ) &
+			    "' fill='" &
+			    _cc &
+			    "'/>" &
+			    "<text x='" &
+			    "31" &
+			    "' y='" &
+			    "93" &
+			    "' font-family='Segoe UI' font-size='9.5' font-weight='600' text-anchor='start'  fill='" &
+			    _cc &
+			    "'>" &
+			    IF ( ABS ( ABS ( _chg ) ) >= 1000000, FORMAT ( ABS ( _chg ) / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( ABS ( _chg ) / 1000, "$0", "en-US" ) & "K" ) &
+			    " since period start" &
+			    "</text>" ) &
+			    "<text x='" &
+			    "286" &
+			    "' y='" &
+			    "64" &
+			    "' font-family='Segoe UI' font-size='15' font-weight='600' text-anchor='end'  fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    FORMAT ( _cover, "0.0", "en-US" ) &
+			    " mo" &
+			    "</text>" &
+			    "<text x='" &
+			    "286" &
+			    "' y='" &
+			    "77" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='end'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "cost cover" &
+			    "</text>" &
+			    "<text x='" &
+			    "18" &
+			    "' y='" &
+			    "114" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='start'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "Free cash flow by month" &
+			    "</text>" &
+			    "<text x='" &
+			    "286" &
+			    "' y='" &
+			    "114" &
+			    "' font-family='Segoe UI' font-size='9' font-weight='600' text-anchor='end'  fill='" &
+			    IF ( _last >= 0, "#7AB0FF", "#FFB86B" ) &
+			    "'>" &
+			    FORMAT ( _fL, "MMM", "en-US" ) &
+			    "  " &
+			    IF ( _last < 0, "-", "" ) &
+			    IF ( ABS ( ABS ( _last ) ) >= 1000000, FORMAT ( ABS ( _last ) / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( ABS ( _last ) / 1000, "$0", "en-US" ) & "K" ) &
+			    "</text>" &
+			    "<line x1='18' x2='286' y1='150' y2='150' stroke='#FFFFFF' stroke-opacity='0.14'/>" &
+			    _bars &
+			    "</svg>"
+		displayFolder: 7. SVG visuals
+		lineageTag: 5176e8b2-be8d-5440-a4eb-d42c6c00c996
+		dataCategory: ImageUrl
+
+	/// Days sales, inventory and payables outstanding, and the cash conversion cycle they add up to.
+	measure 'SVG Cash Cycle' =
+			VAR _v0 = [DSO]
+			VAR _p0 = [DSO PY]
+			VAR _d0 = MAX ( MIN ( DIVIDE ( _v0, 120 ), 1 ), 0 ) * 175.93
+			VAR _x0D = IF ( NOT ISBLANK ( _p0 ), _v0 - _p0 )
+			VAR _x0C = IF ( _x0D >= 0, "#FF6B7A", "#5BE3B0" )
+			VAR _x0S = FORMAT ( ABS ( _x0D ), "0", "en-US" ) & "d vs PY"
+			VAR _x0A = IF ( _x0D >= 0, "M0 7 L4.5 0 L9 7 Z", "M0 0 L9 0 L4.5 7 Z" )
+			VAR _v1 = [DIO]
+			VAR _p1 = [DIO PY]
+			VAR _d1 = MAX ( MIN ( DIVIDE ( _v1, 120 ), 1 ), 0 ) * 175.93
+			VAR _x1D = IF ( NOT ISBLANK ( _p1 ), _v1 - _p1 )
+			VAR _x1C = IF ( _x1D >= 0, "#FF6B7A", "#5BE3B0" )
+			VAR _x1S = FORMAT ( ABS ( _x1D ), "0", "en-US" ) & "d vs PY"
+			VAR _x1A = IF ( _x1D >= 0, "M0 7 L4.5 0 L9 7 Z", "M0 0 L9 0 L4.5 7 Z" )
+			VAR _v2 = [DPO]
+			VAR _p2 = [DPO PY]
+			VAR _d2 = MAX ( MIN ( DIVIDE ( _v2, 120 ), 1 ), 0 ) * 175.93
+			VAR _x2D = IF ( NOT ISBLANK ( _p2 ), _v2 - _p2 )
+			VAR _x2C = IF ( _x2D >= 0, "#5BE3B0", "#FF6B7A" )
+			VAR _x2S = FORMAT ( ABS ( _x2D ), "0", "en-US" ) & "d vs PY"
+			VAR _x2A = IF ( _x2D >= 0, "M0 7 L4.5 0 L9 7 Z", "M0 0 L9 0 L4.5 7 Z" )
+			VAR _ccc = [Cash Conversion Cycle]
+			VAR _cpy = [Cash Conversion Cycle PY]
+			VAR _zD = IF ( NOT ISBLANK ( _cpy ), _ccc - _cpy )
+			VAR _zC = IF ( _zD >= 0, "#FF6B7A", "#5BE3B0" )
+			VAR _zS = FORMAT ( ABS ( _zD ), "0", "en-US" ) & "d vs PY"
+			VAR _zA = IF ( _zD >= 0, "M0 7 L4.5 0 L9 7 Z", "M0 0 L9 0 L4.5 7 Z" )
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 390 198'><defs><linearGradient id='gB' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#4C8DFF'/><stop offset='1' stop-color='#9B7BFF'/></linearGradient><linearGradient id='gBv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#7AB0FF'/><stop offset='1' stop-color='#3D6BF5'/></linearGradient><linearGradient id='gO' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF6A3D'/></linearGradient><linearGradient id='gOv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF7A3D'/></linearGradient><linearGradient id='gG' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#3CC8E0'/><stop offset='1' stop-color='#5BE3B0'/></linearGradient><linearGradient id='gA' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4C8DFF' stop-opacity='0.38'/><stop offset='1' stop-color='#4C8DFF' stop-opacity='0'/></linearGradient><filter id='gl' filterUnits='userSpaceOnUse' x='0' y='0' width='390' height='198'><feGaussianBlur stdDeviation='4'/></filter></defs>" &
+			    "<circle cx='56' cy='98' r='28' fill='none' stroke='#FFFFFF' stroke-opacity='0.07' stroke-width='7'/>" &
+			    "<circle cx='56' cy='98' r='28' fill='none' stroke='#4C8DFF' stroke-width='8' stroke-linecap='round' opacity='0.5' filter='url(#gl)' transform='rotate(-90 56 98)' stroke-dasharray='" &
+			    FORMAT ( _d0, "0.0", "en-US" ) &
+			    " 200'/>" &
+			    "<circle cx='56' cy='98' r='28' fill='none' stroke='#4C8DFF' stroke-width='7' stroke-linecap='round' transform='rotate(-90 56 98)' stroke-dasharray='" &
+			    FORMAT ( _d0, "0.0", "en-US" ) &
+			    " 200'/>" &
+			    "<text x='" &
+			    "56" &
+			    "' y='" &
+			    "104" &
+			    "' font-family='Segoe UI' font-size='17' font-weight='600' text-anchor='middle'  fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    FORMAT ( _v0, "0", "en-US" ) &
+			    "</text>" &
+			    "<text x='" &
+			    "56" &
+			    "' y='" &
+			    "146" &
+			    "' font-family='Segoe UI' font-size='10' font-weight='600' text-anchor='middle'  fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    "DSO" &
+			    "</text>" &
+			    "<text x='" &
+			    "56" &
+			    "' y='" &
+			    "159" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='middle'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "receivables" &
+			    "</text>" &
+			    IF ( ISBLANK ( _x0D ), "", "<path transform='translate(26,169.5)' d='" &
+			    _x0A &
+			    "' fill='" &
+			    _x0C &
+			    "'/>" &
+			    "<text x='" &
+			    "39" &
+			    "' y='" &
+			    "177" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='600' text-anchor='start'  fill='" &
+			    _x0C &
+			    "'>" &
+			    _x0S &
+			    "</text>" ) &
+			    "<circle cx='148' cy='98' r='28' fill='none' stroke='#FFFFFF' stroke-opacity='0.07' stroke-width='7'/>" &
+			    "<circle cx='148' cy='98' r='28' fill='none' stroke='#9B7BFF' stroke-width='8' stroke-linecap='round' opacity='0.5' filter='url(#gl)' transform='rotate(-90 148 98)' stroke-dasharray='" &
+			    FORMAT ( _d1, "0.0", "en-US" ) &
+			    " 200'/>" &
+			    "<circle cx='148' cy='98' r='28' fill='none' stroke='#9B7BFF' stroke-width='7' stroke-linecap='round' transform='rotate(-90 148 98)' stroke-dasharray='" &
+			    FORMAT ( _d1, "0.0", "en-US" ) &
+			    " 200'/>" &
+			    "<text x='" &
+			    "148" &
+			    "' y='" &
+			    "104" &
+			    "' font-family='Segoe UI' font-size='17' font-weight='600' text-anchor='middle'  fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    FORMAT ( _v1, "0", "en-US" ) &
+			    "</text>" &
+			    "<text x='" &
+			    "148" &
+			    "' y='" &
+			    "146" &
+			    "' font-family='Segoe UI' font-size='10' font-weight='600' text-anchor='middle'  fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    "DIO" &
+			    "</text>" &
+			    "<text x='" &
+			    "148" &
+			    "' y='" &
+			    "159" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='middle'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "inventory" &
+			    "</text>" &
+			    IF ( ISBLANK ( _x1D ), "", "<path transform='translate(118,169.5)' d='" &
+			    _x1A &
+			    "' fill='" &
+			    _x1C &
+			    "'/>" &
+			    "<text x='" &
+			    "131" &
+			    "' y='" &
+			    "177" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='600' text-anchor='start'  fill='" &
+			    _x1C &
+			    "'>" &
+			    _x1S &
+			    "</text>" ) &
+			    "<circle cx='240' cy='98' r='28' fill='none' stroke='#FFFFFF' stroke-opacity='0.07' stroke-width='7'/>" &
+			    "<circle cx='240' cy='98' r='28' fill='none' stroke='#5BE3B0' stroke-width='8' stroke-linecap='round' opacity='0.5' filter='url(#gl)' transform='rotate(-90 240 98)' stroke-dasharray='" &
+			    FORMAT ( _d2, "0.0", "en-US" ) &
+			    " 200'/>" &
+			    "<circle cx='240' cy='98' r='28' fill='none' stroke='#5BE3B0' stroke-width='7' stroke-linecap='round' transform='rotate(-90 240 98)' stroke-dasharray='" &
+			    FORMAT ( _d2, "0.0", "en-US" ) &
+			    " 200'/>" &
+			    "<text x='" &
+			    "240" &
+			    "' y='" &
+			    "104" &
+			    "' font-family='Segoe UI' font-size='17' font-weight='600' text-anchor='middle'  fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    FORMAT ( _v2, "0", "en-US" ) &
+			    "</text>" &
+			    "<text x='" &
+			    "240" &
+			    "' y='" &
+			    "146" &
+			    "' font-family='Segoe UI' font-size='10' font-weight='600' text-anchor='middle'  fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    "DPO" &
+			    "</text>" &
+			    "<text x='" &
+			    "240" &
+			    "' y='" &
+			    "159" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='middle'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "payables" &
+			    "</text>" &
+			    IF ( ISBLANK ( _x2D ), "", "<path transform='translate(210,169.5)' d='" &
+			    _x2A &
+			    "' fill='" &
+			    _x2C &
+			    "'/>" &
+			    "<text x='" &
+			    "223" &
+			    "' y='" &
+			    "177" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='600' text-anchor='start'  fill='" &
+			    _x2C &
+			    "'>" &
+			    _x2S &
+			    "</text>" ) &
+			    "<text x='" &
+			    "102" &
+			    "' y='" &
+			    "104" &
+			    "' font-family='Segoe UI' font-size='17' font-weight='400' text-anchor='middle'  fill='" &
+			    "#5F6880" &
+			    "'>" &
+			    "+" &
+			    "</text>" &
+			    "<text x='" &
+			    "194" &
+			    "' y='" &
+			    "104" &
+			    "' font-family='Segoe UI' font-size='17' font-weight='400' text-anchor='middle'  fill='" &
+			    "#5F6880" &
+			    "'>" &
+			    "-" &
+			    "</text>" &
+			    "<text x='" &
+			    "282" &
+			    "' y='" &
+			    "104" &
+			    "' font-family='Segoe UI' font-size='17' font-weight='400' text-anchor='middle'  fill='" &
+			    "#5F6880" &
+			    "'>" &
+			    "=" &
+			    "</text>" &
+			    "<text x='" &
+			    "336" &
+			    "' y='" &
+			    "108" &
+			    "' font-family='Segoe UI' font-size='36' font-weight='600' text-anchor='middle' letter-spacing='-0.6' fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    FORMAT ( _ccc, "0", "en-US" ) &
+			    "</text>" &
+			    "<text x='" &
+			    "336" &
+			    "' y='" &
+			    "124" &
+			    "' font-family='Segoe UI' font-size='9.5' font-weight='400' text-anchor='middle'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "days" &
+			    "</text>" &
+			    "<text x='" &
+			    "336" &
+			    "' y='" &
+			    "146" &
+			    "' font-family='Segoe UI' font-size='10' font-weight='600' text-anchor='middle'  fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    "Cash cycle" &
+			    "</text>" &
+			    "<text x='" &
+			    "336" &
+			    "' y='" &
+			    "159" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='middle'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "DSO + DIO - DPO" &
+			    "</text>" &
+			    IF ( ISBLANK ( _zD ), "", "<path transform='translate(306,169.5)' d='" &
+			    _zA &
+			    "' fill='" &
+			    _zC &
+			    "'/>" &
+			    "<text x='" &
+			    "319" &
+			    "' y='" &
+			    "177" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='600' text-anchor='start'  fill='" &
+			    _zC &
+			    "'>" &
+			    _zS &
+			    "</text>" ) &
+			    "</svg>"
+		displayFolder: 7. SVG visuals
+		lineageTag: ace4ce3a-dc4c-5858-97d9-4261297ccdb9
+		dataCategory: ImageUrl
+
+	/// Open receivables at period end, split by days past due.
+	measure 'SVG AR Aging' =
+			VAR _ar = [AR Balance]
+			VAR _od = [AR Overdue %]
+			VAR _n90 = [Invoices 90+]
+			VAR _a0 = [AR Current] + 0
+			VAR _w0 = MAX ( 316 * DIVIDE ( _a0, _ar ), 4 )
+			VAR _x0 = 18
+			VAR _a1 = [AR 1-30] + 0
+			VAR _w1 = MAX ( 316 * DIVIDE ( _a1, _ar ), 4 )
+			VAR _x1 = _x0 + _w0 + 4
+			VAR _a2 = [AR 31-60] + 0
+			VAR _w2 = MAX ( 316 * DIVIDE ( _a2, _ar ), 4 )
+			VAR _x2 = _x1 + _w1 + 4
+			VAR _a3 = [AR 61-90] + 0
+			VAR _w3 = MAX ( 316 * DIVIDE ( _a3, _ar ), 4 )
+			VAR _x3 = _x2 + _w2 + 4
+			VAR _a4 = [AR 90+] + 0
+			VAR _w4 = MAX ( 316 * DIVIDE ( _a4, _ar ), 4 )
+			VAR _x4 = _x3 + _w3 + 4
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 368 198'><defs><linearGradient id='gB' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#4C8DFF'/><stop offset='1' stop-color='#9B7BFF'/></linearGradient><linearGradient id='gBv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#7AB0FF'/><stop offset='1' stop-color='#3D6BF5'/></linearGradient><linearGradient id='gO' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF6A3D'/></linearGradient><linearGradient id='gOv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF7A3D'/></linearGradient><linearGradient id='gG' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#3CC8E0'/><stop offset='1' stop-color='#5BE3B0'/></linearGradient><linearGradient id='gA' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4C8DFF' stop-opacity='0.38'/><stop offset='1' stop-color='#4C8DFF' stop-opacity='0'/></linearGradient><filter id='gl' filterUnits='userSpaceOnUse' x='0' y='0' width='368' height='198'><feGaussianBlur stdDeviation='5'/></filter></defs>" &
+			    "<text x='" &
+			    "18" &
+			    "' y='" &
+			    "76" &
+			    "' font-family='Segoe UI' font-size='25' font-weight='600' text-anchor='start' letter-spacing='-0.4' fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    IF ( ABS ( _ar ) >= 1000000, FORMAT ( _ar / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( _ar / 1000, "$0", "en-US" ) & "K" ) &
+			    "</text>" &
+			    "<text x='" &
+			    "350" &
+			    "' y='" &
+			    "64" &
+			    "' font-family='Segoe UI' font-size='15' font-weight='600' text-anchor='end'  fill='" &
+			    "#FF6B7A" &
+			    "'>" &
+			    FORMAT ( _od, "0.0%", "en-US" ) &
+			    "</text>" &
+			    "<text x='" &
+			    "350" &
+			    "' y='" &
+			    "77" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='end'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "overdue" &
+			    "</text>" &
+			    "<rect x='" &
+			    FORMAT ( _x0, "0.0", "en-US" ) &
+			    "' y='92' width='" &
+			    FORMAT ( _w0, "0.0", "en-US" ) &
+			    "' height='14' rx='5' fill='#4C8DFF'/>" &
+			    "<circle cx='22' cy='125' r='3.5' fill='#4C8DFF'/>" &
+			    "<text x='" &
+			    "30" &
+			    "' y='" &
+			    "128" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='start'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "Current" &
+			    "</text>" &
+			    "<text x='" &
+			    "18" &
+			    "' y='" &
+			    "147" &
+			    "' font-family='Segoe UI' font-size='12' font-weight='600' text-anchor='start'  fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    IF ( ABS ( _a0 ) >= 1000000, FORMAT ( _a0 / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( _a0 / 1000, "$0", "en-US" ) & "K" ) &
+			    "</text>" &
+			    "<text x='" &
+			    "18" &
+			    "' y='" &
+			    "160" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='start'  fill='" &
+			    "#5F6880" &
+			    "'>" &
+			    FORMAT ( DIVIDE ( _a0, _ar ), "0.0%", "en-US" ) &
+			    "</text>" &
+			    "<rect x='" &
+			    FORMAT ( _x1, "0.0", "en-US" ) &
+			    "' y='92' width='" &
+			    FORMAT ( _w1, "0.0", "en-US" ) &
+			    "' height='14' rx='5' fill='#7AB0FF'/>" &
+			    "<circle cx='90' cy='125' r='3.5' fill='#7AB0FF'/>" &
+			    "<text x='" &
+			    "98" &
+			    "' y='" &
+			    "128" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='start'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "1-30 d" &
+			    "</text>" &
+			    "<text x='" &
+			    "86" &
+			    "' y='" &
+			    "147" &
+			    "' font-family='Segoe UI' font-size='12' font-weight='600' text-anchor='start'  fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    IF ( ABS ( _a1 ) >= 1000000, FORMAT ( _a1 / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( _a1 / 1000, "$0", "en-US" ) & "K" ) &
+			    "</text>" &
+			    "<text x='" &
+			    "86" &
+			    "' y='" &
+			    "160" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='start'  fill='" &
+			    "#5F6880" &
+			    "'>" &
+			    FORMAT ( DIVIDE ( _a1, _ar ), "0.0%", "en-US" ) &
+			    "</text>" &
+			    "<rect x='" &
+			    FORMAT ( _x2, "0.0", "en-US" ) &
+			    "' y='92' width='" &
+			    FORMAT ( _w2, "0.0", "en-US" ) &
+			    "' height='14' rx='5' fill='#FFD39A'/>" &
+			    "<circle cx='158' cy='125' r='3.5' fill='#FFD39A'/>" &
+			    "<text x='" &
+			    "166" &
+			    "' y='" &
+			    "128" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='start'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "31-60 d" &
+			    "</text>" &
+			    "<text x='" &
+			    "154" &
+			    "' y='" &
+			    "147" &
+			    "' font-family='Segoe UI' font-size='12' font-weight='600' text-anchor='start'  fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    IF ( ABS ( _a2 ) >= 1000000, FORMAT ( _a2 / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( _a2 / 1000, "$0", "en-US" ) & "K" ) &
+			    "</text>" &
+			    "<text x='" &
+			    "154" &
+			    "' y='" &
+			    "160" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='start'  fill='" &
+			    "#5F6880" &
+			    "'>" &
+			    FORMAT ( DIVIDE ( _a2, _ar ), "0.0%", "en-US" ) &
+			    "</text>" &
+			    "<rect x='" &
+			    FORMAT ( _x3, "0.0", "en-US" ) &
+			    "' y='92' width='" &
+			    FORMAT ( _w3, "0.0", "en-US" ) &
+			    "' height='14' rx='5' fill='#FF8A3D'/>" &
+			    "<circle cx='226' cy='125' r='3.5' fill='#FF8A3D'/>" &
+			    "<text x='" &
+			    "234" &
+			    "' y='" &
+			    "128" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='start'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "61-90 d" &
+			    "</text>" &
+			    "<text x='" &
+			    "222" &
+			    "' y='" &
+			    "147" &
+			    "' font-family='Segoe UI' font-size='12' font-weight='600' text-anchor='start'  fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    IF ( ABS ( _a3 ) >= 1000000, FORMAT ( _a3 / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( _a3 / 1000, "$0", "en-US" ) & "K" ) &
+			    "</text>" &
+			    "<text x='" &
+			    "222" &
+			    "' y='" &
+			    "160" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='start'  fill='" &
+			    "#5F6880" &
+			    "'>" &
+			    FORMAT ( DIVIDE ( _a3, _ar ), "0.0%", "en-US" ) &
+			    "</text>" &
+			    "<rect x='" &
+			    FORMAT ( _x4, "0.0", "en-US" ) &
+			    "' y='92' width='" &
+			    FORMAT ( _w4, "0.0", "en-US" ) &
+			    "' height='14' rx='5' fill='#FF6B7A'/>" &
+			    "<circle cx='294' cy='125' r='3.5' fill='#FF6B7A'/>" &
+			    "<text x='" &
+			    "302" &
+			    "' y='" &
+			    "128" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='start'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "90+ d" &
+			    "</text>" &
+			    "<text x='" &
+			    "290" &
+			    "' y='" &
+			    "147" &
+			    "' font-family='Segoe UI' font-size='12' font-weight='600' text-anchor='start'  fill='" &
+			    "#F3F5FA" &
+			    "'>" &
+			    IF ( ABS ( _a4 ) >= 1000000, FORMAT ( _a4 / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( _a4 / 1000, "$0", "en-US" ) & "K" ) &
+			    "</text>" &
+			    "<text x='" &
+			    "290" &
+			    "' y='" &
+			    "160" &
+			    "' font-family='Segoe UI' font-size='8.5' font-weight='400' text-anchor='start'  fill='" &
+			    "#5F6880" &
+			    "'>" &
+			    FORMAT ( DIVIDE ( _a4, _ar ), "0.0%", "en-US" ) &
+			    "</text>" &
+			    "<circle cx='22' cy='180' r='3' fill='#FF6B7A'/>" &
+			    "<text x='" &
+			    "31" &
+			    "' y='" &
+			    "183.5" &
+			    "' font-family='Segoe UI' font-size='9' font-weight='400' text-anchor='start'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    FORMAT ( _n90, "0", "en-US" ) &
+			    " invoices are more than 90 days overdue" &
+			    "</text>" &
+			    "</svg>"
+		displayFolder: 7. SVG visuals
+		lineageTag: 9fefd0bf-426b-5838-a02a-dbe1745f366a
+		dataCategory: ImageUrl
+
+	/// Department operating expense against budget, as a diverging bar.
+	measure 'SVG Dept Bar' =
+			VAR _v = [OpEx Variance %]
+			VAR _m = MAX ( MAXX ( ALLSELECTED ( Departments[Department] ), ABS ( [OpEx Variance %] ) ), 0.02 )
+			VAR _w = MAX ( 44 * DIVIDE ( ABS ( _v ), _m ), 2 )
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 16'><defs><linearGradient id='gB' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#4C8DFF'/><stop offset='1' stop-color='#9B7BFF'/></linearGradient><linearGradient id='gBv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#7AB0FF'/><stop offset='1' stop-color='#3D6BF5'/></linearGradient><linearGradient id='gO' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF6A3D'/></linearGradient><linearGradient id='gOv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF7A3D'/></linearGradient><linearGradient id='gG' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#3CC8E0'/><stop offset='1' stop-color='#5BE3B0'/></linearGradient><linearGradient id='gA' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4C8DFF' stop-opacity='0.38'/><stop offset='1' stop-color='#4C8DFF' stop-opacity='0'/></linearGradient><filter id='gl' filterUnits='userSpaceOnUse' x='0' y='0' width='96' height='16'><feGaussianBlur stdDeviation='5'/></filter></defs>" &
+			    "<line x1='48' x2='48' y1='1' y2='15' stroke='#FFFFFF' stroke-opacity='0.25'/>" &
+			    "<rect x='" &
+			    FORMAT ( IF ( _v >= 0, 48, 48 - _w ), "0.0", "en-US" ) &
+			    "' y='4' width='" &
+			    FORMAT ( _w, "0.0", "en-US" ) &
+			    "' height='8' rx='4' fill='" &
+			    IF ( _v >= 0, "url(#gO)", "url(#gG)" ) &
+			    "'/>" &
+			    "</svg>"
+		displayFolder: 7. SVG visuals
+		lineageTag: 132c6648-5819-55b2-84bf-04f2a6537cf7
+		dataCategory: ImageUrl
+
+	/// Overdue amount per customer relative to the largest; orange when the oldest invoice is 90+ days late.
+	measure 'SVG Overdue Bar' =
+			VAR _v = [AR Overdue]
+			VAR _m = MAXX ( ALLSELECTED ( Receivables[Customer] ), [AR Overdue] )
+			VAR _w = MAX ( 104 * DIVIDE ( _v, _m ), 3 )
+			VAR _c = IF ( [Oldest Days Overdue] > 90, "url(#gO)", "url(#gB)" )
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 14'><defs><linearGradient id='gB' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#4C8DFF'/><stop offset='1' stop-color='#9B7BFF'/></linearGradient><linearGradient id='gBv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#7AB0FF'/><stop offset='1' stop-color='#3D6BF5'/></linearGradient><linearGradient id='gO' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF6A3D'/></linearGradient><linearGradient id='gOv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF7A3D'/></linearGradient><linearGradient id='gG' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#3CC8E0'/><stop offset='1' stop-color='#5BE3B0'/></linearGradient><linearGradient id='gA' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4C8DFF' stop-opacity='0.38'/><stop offset='1' stop-color='#4C8DFF' stop-opacity='0'/></linearGradient><filter id='gl' filterUnits='userSpaceOnUse' x='0' y='0' width='110' height='14'><feGaussianBlur stdDeviation='5'/></filter></defs>" &
+			    "<rect x='2' y='4' width='104' height='6' rx='3' fill='#FFFFFF' fill-opacity='0.07'/>" &
+			    "<rect x='2' y='4' width='" &
+			    FORMAT ( _w, "0.0", "en-US" ) &
+			    "' height='6' rx='3' fill='" &
+			    _c &
+			    "'/>" &
+			    "</svg>"
+		displayFolder: 7. SVG visuals
+		lineageTag: 2c30e726-6c28-5f9f-b64e-5fa6401b424e
+		dataCategory: ImageUrl
+
+	/// Variance to budget for a statement line; green is favourable.
+	measure 'SVG Line Bar' =
+			VAR _a = [PnL Value]
+			VAR _b = [PnL Budget]
+			VAR _cost = SELECTEDVALUE ( 'PnL Lines'[Line Order] ) IN { 5, 8, 9, 10, 11, 12, 13, 14, 17, 18, 19 }
+			VAR _rel = IF ( SELECTEDVALUE ( 'PnL Lines'[Line Type] ) = "ratio", ( _a - _b ) * 10, DIVIDE ( _a - _b, ABS ( _b ) ) )
+			VAR _w = MAX ( 46 * MIN ( DIVIDE ( ABS ( _rel ), 0.16 ), 1 ), 2 )
+			VAR _good = ( _rel > 0 ) <> _cost
+			RETURN
+			    IF ( NOT ISBLANK ( _a ) && NOT ISBLANK ( _b ), "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16'><defs><linearGradient id='gB' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#4C8DFF'/><stop offset='1' stop-color='#9B7BFF'/></linearGradient><linearGradient id='gBv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#7AB0FF'/><stop offset='1' stop-color='#3D6BF5'/></linearGradient><linearGradient id='gO' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF6A3D'/></linearGradient><linearGradient id='gOv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF7A3D'/></linearGradient><linearGradient id='gG' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#3CC8E0'/><stop offset='1' stop-color='#5BE3B0'/></linearGradient><linearGradient id='gA' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4C8DFF' stop-opacity='0.38'/><stop offset='1' stop-color='#4C8DFF' stop-opacity='0'/></linearGradient><filter id='gl' filterUnits='userSpaceOnUse' x='0' y='0' width='100' height='16'><feGaussianBlur stdDeviation='5'/></filter></defs>" &
+			    "<line x1='50' x2='50' y1='1' y2='15' stroke='#FFFFFF' stroke-opacity='0.25'/>" &
+			    "<rect x='" &
+			    FORMAT ( IF ( _rel >= 0, 50, 50 - _w ), "0.0", "en-US" ) &
+			    "' y='4' width='" &
+			    FORMAT ( _w, "0.0", "en-US" ) &
+			    "' height='8' rx='4' fill='" &
+			    IF ( _good, "url(#gG)", "url(#gO)" ) &
+			    "'/>" &
+			    "</svg>" )
+		displayFolder: 7. SVG visuals
+		lineageTag: 5a7bf79b-1898-5307-9b4e-2cf8233828eb
+		dataCategory: ImageUrl
+
+	/// Monthly trend of a statement line.
+	measure 'SVG Line Trend' =
+			VAR _sT = ADDCOLUMNS ( FILTER ( VALUES ( 'Date'[Month Start] ), NOT ISBLANK ( [PnL Value] ) ), "@v0", [PnL Value] )
+			VAR _sN = COUNTROWS ( _sT )
+			VAR _sF = MINX ( _sT, 'Date'[Month Start] )
+			VAR _sLo = MINX ( _sT, [@v0] )
+			VAR _sHi = MAXX ( _sT, [@v0] )
+			VAR _sR = IF ( _sHi - _sLo = 0, 1, _sHi - _sLo )
+			VAR _sP1 = ADDCOLUMNS ( _sT, "@i", DATEDIFF ( _sF, 'Date'[Month Start], MONTH ) )
+			VAR _sP2 = ADDCOLUMNS ( _sP1, "@x", 4 + 92 * DIVIDE ( [@i], _sN - 1, 0.5 ), "@y0", 15 - 12 * DIVIDE ( [@v0] - _sLo, _sR ) )
+			VAR _sQ = ADDCOLUMNS ( _sP2, "@nx", VAR _i = [@i] RETURN MAXX ( FILTER ( _sP2, [@i] = _i + 1 ), [@x] ), "@ny0", VAR _i = [@i] RETURN MAXX ( FILTER ( _sP2, [@i] = _i + 1 ), [@y0] ) )
+			VAR _sFX = MAXX ( FILTER ( _sQ, [@i] = 0 ), [@x] )
+			VAR _sLX = MAXX ( FILTER ( _sQ, [@i] = _sN - 1 ), [@x] )
+			VAR _sFY0 = MAXX ( FILTER ( _sQ, [@i] = 0 ), [@y0] )
+			VAR _sLY0 = MAXX ( FILTER ( _sQ, [@i] = _sN - 1 ), [@y0] )
+			VAR _sPath0 = "M" & FORMAT ( _sFX, "0.0", "en-US" ) & "," & FORMAT ( _sFY0, "0.0", "en-US" ) & CONCATENATEX ( FILTER ( _sQ, NOT ISBLANK ( [@nx] ) ), IF ( [@i] = 0, " L", " Q" & FORMAT ( [@x], "0.0", "en-US" ) & "," & FORMAT ( [@y0], "0.0", "en-US" ) & " " ) & FORMAT ( ( [@x] + [@nx] ) / 2, "0.0", "en-US" ) & "," & FORMAT ( ( [@y0] + [@ny0] ) / 2, "0.0", "en-US" ), "", [@i], ASC ) & " L" & FORMAT ( _sLX, "0.0", "en-US" ) & "," & FORMAT ( _sLY0, "0.0", "en-US" )
+			VAR _sArea = _sPath0 & " L" & FORMAT ( _sLX, "0.0", "en-US" ) & ",23 L" & FORMAT ( _sFX, "0.0", "en-US" ) & ",23 Z"
+			RETURN
+			    IF ( _sN > 1, "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 18'><defs><linearGradient id='gB' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#4C8DFF'/><stop offset='1' stop-color='#9B7BFF'/></linearGradient><linearGradient id='gBv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#7AB0FF'/><stop offset='1' stop-color='#3D6BF5'/></linearGradient><linearGradient id='gO' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF6A3D'/></linearGradient><linearGradient id='gOv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF7A3D'/></linearGradient><linearGradient id='gG' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#3CC8E0'/><stop offset='1' stop-color='#5BE3B0'/></linearGradient><linearGradient id='gA' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4C8DFF' stop-opacity='0.38'/><stop offset='1' stop-color='#4C8DFF' stop-opacity='0'/></linearGradient><filter id='gl' filterUnits='userSpaceOnUse' x='0' y='0' width='100' height='18'><feGaussianBlur stdDeviation='5'/></filter></defs>" &
+			    "<path d='" &
+			    _sPath0 &
+			    "' fill='none' stroke='#7AB0FF' stroke-width='1.6' stroke-linecap='round'/>" &
+			    "<circle cx='" &
+			    FORMAT ( _sLX, "0.0", "en-US" ) &
+			    "' cy='" &
+			    FORMAT ( _sLY0, "0.0", "en-US" ) &
+			    "' r='2' fill='#FFFFFF'/>" &
+			    "</svg>" )
+		displayFolder: 7. SVG visuals
+		lineageTag: 6d21e5fb-c96e-588b-96e0-95010ec084ca
+		dataCategory: ImageUrl
+
+	/// Days past due of the oldest open invoice.
+	measure 'Oldest Days Overdue' =
+			VAR _pe = [Period End]
+			RETURN
+			    CALCULATE (
+			        MAXX ( Receivables, DATEDIFF ( Receivables[Due Date], _pe, DAY ) ),
+			        REMOVEFILTERS ( 'Date' ),
+			        FILTER (
+			            ALL ( Receivables[Invoice Date], Receivables[Paid Date] ),
+			            Receivables[Invoice Date] <= _pe && ( ISBLANK ( Receivables[Paid Date] ) || Receivables[Paid Date] > _pe )
+			        )
+			    )
+		formatString: 0
+		displayFolder: 4. Working capital
+		lineageTag: 04bd5a84-4ac9-59f8-87b8-a63331aec6d7
+
+	measure 'PnL Variance' = [PnL Value] - [PnL Budget]
+		formatString: $#,##0
+		displayFolder: 6. Statement
+		lineageTag: 39f29616-f7f8-5d8c-a9b9-95fb3f80530e
+
+	measure 'PnL Variance %' = DIVIDE ( [PnL Value] - [PnL Budget], ABS ( [PnL Budget] ) )
+		formatString: +0.0%;-0.0%
+		displayFolder: 6. Statement
+		lineageTag: 0d8f737f-2daf-5332-9fb9-c7150f4e4ad3
+
+	measure 'Pct of Revenue' = DIVIDE ( [PnL Value], [Revenue] )
+		formatString: 0.0%
+		displayFolder: 6. Statement
+		lineageTag: 7359dbfb-1aee-5081-98ed-a9bed3a20ad1
+
+	measure Interest = CALCULATE ( [GL Amount], Accounts[AccountCode] = 7100 )
+		formatString: $#,##0
+		displayFolder: 1. P&L
+		lineageTag: c7911cb4-57a2-51fb-93ff-9283fe36500f
+
+	measure 'Income Tax' = CALCULATE ( [GL Amount], Accounts[AccountCode] = 7200 )
+		formatString: $#,##0
+		displayFolder: 1. P&L
+		lineageTag: db4649b6-611f-533a-a949-c62562c9620f
+
+	/// Lower edge of a bridge bar: zero for totals, the level after the deduction for cost steps.
+	measure 'Bridge Low' =
+			SWITCH (
+			    SELECTEDVALUE ( 'PnL Lines'[Bridge Order] ),
+			    2, [Gross Profit],
+			    4, [EBITDA],
+			    6, [EBITDA] - [Depreciation],
+			    7, [EBITDA] - [Depreciation] - [Interest],
+			    8, [Net Income],
+			    0
+			)
+		formatString: $#,##0
+		displayFolder: 6. Statement
+		lineageTag: 465f6836-0042-522b-8df0-f0c1334e54e3
+
+	/// Upper edge of a bridge bar.
+	measure 'Bridge High' =
+			SWITCH (
+			    SELECTEDVALUE ( 'PnL Lines'[Bridge Order] ),
+			    1, [Revenue],
+			    2, [Revenue],
+			    3, [Gross Profit],
+			    4, [Gross Profit],
+			    5, [EBITDA],
+			    6, [EBITDA],
+			    7, [EBITDA] - [Depreciation],
+			    8, [Net Income] + [Income Tax],
+			    9, [Net Income]
+			)
+		formatString: $#,##0
+		displayFolder: 6. Statement
+		lineageTag: 2c8c7b8e-1ae6-5e0d-9009-39c3b273dc3b
+
+	measure 'Focus Value' = IF ( HASONEVALUE ( 'PnL Lines'[Line Order] ), [PnL Value], [Revenue] )
+		formatString: $#,##0
+		displayFolder: 6. Statement
+		lineageTag: ce656ed9-350b-57d1-85f1-fbd979675297
+
+	measure 'Focus Budget' = IF ( HASONEVALUE ( 'PnL Lines'[Line Order] ), [PnL Budget], [Revenue Budget] )
+		formatString: $#,##0
+		displayFolder: 6. Statement
+		lineageTag: 25ef3400-3297-59ad-815b-e1167a77d34f
+
+	measure 'Focus PY' = IF ( HASONEVALUE ( 'PnL Lines'[Line Order] ), [PnL PY], [Revenue PY] )
+		formatString: $#,##0
+		displayFolder: 6. Statement
+		lineageTag: 10e73713-03ec-5891-8977-4c05b0ad869d
+
+	/// Total operating expenses against budget.
+	measure 'SVG OpEx Total' =
+			VAR _tv = [OpEx Variance %]
+			VAR _ta = [OpEx Variance]
+			VAR _tc = IF ( _tv > 0, "#FFB86B", "#5BE3B0" )
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 296 26'><defs><linearGradient id='gB' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#4C8DFF'/><stop offset='1' stop-color='#9B7BFF'/></linearGradient><linearGradient id='gBv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#7AB0FF'/><stop offset='1' stop-color='#3D6BF5'/></linearGradient><linearGradient id='gO' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF6A3D'/></linearGradient><linearGradient id='gOv' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#FFB86B'/><stop offset='1' stop-color='#FF7A3D'/></linearGradient><linearGradient id='gG' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#3CC8E0'/><stop offset='1' stop-color='#5BE3B0'/></linearGradient><linearGradient id='gA' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4C8DFF' stop-opacity='0.38'/><stop offset='1' stop-color='#4C8DFF' stop-opacity='0'/></linearGradient><filter id='gl' filterUnits='userSpaceOnUse' x='0' y='0' width='296' height='26'><feGaussianBlur stdDeviation='5'/></filter></defs>" &
+			    "<text x='" &
+			    "16" &
+			    "' y='" &
+			    "15" &
+			    "' font-family='Segoe UI' font-size='9.5' font-weight='400' text-anchor='start'  fill='" &
+			    "#8D96AA" &
+			    "'>" &
+			    "Total OpEx" &
+			    "</text>" &
+			    "<text x='" &
+			    "280" &
+			    "' y='" &
+			    "15" &
+			    "' font-family='Segoe UI' font-size='9.5' font-weight='600' text-anchor='end'  fill='" &
+			    _tc &
+			    "'>" &
+			    FORMAT ( _tv, "+0.0%;-0.0%", "en-US" ) &
+			    "  ·  " &
+			    IF ( ABS ( ABS ( _ta ) ) >= 1000000, FORMAT ( ABS ( _ta ) / 1000000, "$0.00", "en-US" ) & "M", FORMAT ( ABS ( _ta ) / 1000, "$0", "en-US" ) & "K" ) &
+			    IF ( _ta > 0, " over", " under" ) &
+			    "</text>" &
+			    "</svg>"
+		displayFolder: 7. SVG visuals
+		lineageTag: c2f805a3-99a8-5b55-ba19-51a8d1b1ab69
+		dataCategory: ImageUrl
+
+	column Placeholder
+		dataType: string
+		isHidden
+		lineageTag: db3abf1d-e323-550b-8bfa-c432b3746259
+		summarizeBy: none
+		sourceColumn: Placeholder
+
+		annotation SummarizationSetBy = User
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = #table(type table [Placeholder = text], {})
+				in
+				    Source
+

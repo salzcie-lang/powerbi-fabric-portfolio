@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>City Operations Data Platform · Architecture</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  .canvas { width: 1920px; height: 1080px; padding: 36px 56px 34px; }
+  header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 20px; }
+  .badge { font-size: 13px; padding: 6px 14px; margin-bottom: 12px; }
+  h1 { font-size: 44px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; }
+  .sub { color: var(--ink-2); font-size: 17px; margin-top: 8px; }
+  .legend { display: flex; gap: 22px; color: var(--ink-2); font-size: 13px; padding-bottom: 6px; }
+  .legend i { display: inline-block; width: 26px; height: 0; border-top: 2px solid var(--violet); vertical-align: middle; margin-right: 8px; }
+  .legend i.ctl { border-top: 2px dashed var(--ink-3); }
+
+  /* orchestration band */
+  .orch { padding: 16px 22px; display: flex; align-items: center; gap: 22px; margin-bottom: 0; border-color: rgba(157,140,255,0.45);
+          background: linear-gradient(90deg, rgba(120,96,255,0.20), rgba(120,96,255,0.06)); }
+  .orch .ttl { min-width: 268px; }
+  .kicker { font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-3); text-transform: uppercase; }
+  .orch .name { font-size: 19px; font-weight: 700; margin-top: 3px; }
+  .steps { display: flex; align-items: center; gap: 8px; flex: 1; }
+  .step { flex: 1; background: rgba(8,12,34,0.6); border: 1px solid var(--line); border-radius: 11px; padding: 9px 12px; font-size: 14px; font-weight: 600; white-space: nowrap; }
+  .step small { display: block; color: var(--ink-3); font-weight: 500; font-size: 12px; margin-top: 2px; }
+  .step.fail { border-color: rgba(255,107,125,0.55); color: #ffc2ca; flex: 0.9; }
+  .chev { color: var(--violet); font-size: 15px; }
+  .chips { display: flex; flex-direction: column; gap: 6px; }
+  .chip { font-size: 11.5px; font-weight: 600; color: var(--ink-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; white-space: nowrap; }
+
+  .drops { height: 34px; position: relative; }
+  .drops svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  /* main flow */
+  .flow { display: grid; grid-template-columns: 232px 40px 222px 40px minmax(0,1fr) 40px 330px 40px 218px; align-items: stretch; height: 574px; }
+  .arrow { display: flex; align-items: center; justify-content: center; }
+  .arrow svg { width: 40px; height: 24px; }
+  .col { padding: 18px; display: flex; flex-direction: column; }
+  .col h2 { font-size: 18px; font-weight: 700; margin-top: 3px; }
+  .col .item-name { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+  .cards { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; flex: 1; }
+  .card { background: rgba(8,12,34,0.62); border: 1px solid var(--line); border-radius: 13px; padding: 13px 14px; }
+  .card h3 { font-size: 15.5px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .card p { font-size: 13.5px; line-height: 1.45; color: var(--ink-2); margin-top: 6px; }
+  .card .tag { font-size: 11px; color: var(--ink-3); margin-top: 7px; }
+  .ico { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: rgba(157,140,255,0.16); flex: none; }
+  .ico svg { width: 17px; height: 17px; stroke: var(--violet); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .stat { font-size: 26px; font-weight: 800; letter-spacing: -0.01em; margin-top: 8px; }
+  .card .stat span { display: block; margin-left: 0; margin-top: 1px; }
+  .stat span { font-size: 13px; font-weight: 500; color: var(--ink-3); margin-left: 5px; letter-spacing: 0; }
+
+  /* lakehouse */
+  .lake { border-color: rgba(91,140,255,0.5); }
+  .layers { display: grid; grid-template-columns: minmax(0,0.8fr) 16px minmax(0,1fr) 16px minmax(0,1.08fr); gap: 0; margin-top: 14px; flex: 1; }
+  .layer { min-width: 0; overflow: hidden; border-radius: 13px; padding: 13px 13px; background: rgba(8,12,34,0.62); border: 1px solid var(--line); border-top: 3px solid var(--c); display: flex; flex-direction: column; }
+  .layer h3 { font-size: 16px; font-weight: 800; color: var(--c); letter-spacing: 0.02em; }
+  .layer .what { font-size: 13px; color: var(--ink-2); margin-top: 4px; line-height: 1.4; min-height: 38px; }
+  .tbl { font-size: 11.5px; color: var(--ink); background: rgba(255,255,255,0.05); border-radius: 7px; padding: 5px 8px; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .layer ul { list-style: none; margin-top: 14px; font-size: 13.5px; color: var(--ink-2); line-height: 1.45; }
+  .layer li { margin-bottom: 7px; }
+  .layer li { padding-left: 13px; position: relative; }
+  .layer li::before { content: ''; position: absolute; left: 0; top: 8px; width: 5px; height: 5px; border-radius: 50%; background: var(--c); }
+  .layer .stat { margin-top: auto; padding-top: 10px; }
+  .mini { display: flex; align-items: center; justify-content: center; color: var(--ink-3); font-size: 14px; }
+
+  /* warehouse star */
+  .wh { border-color: rgba(255,210,31,0.5); }
+  .star { position: relative; flex: 1; margin-top: 12px; }
+  .star svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .ent { position: absolute; font-size: 11.5px; border-radius: 8px; padding: 6px 9px; background: rgba(8,12,34,0.85); border: 1px solid var(--line); white-space: nowrap; transform: translate(-50%, -50%); }
+  .ent.shared { border-color: rgba(157,140,255,0.7); }
+  .conf { position: absolute; left: 50%; top: 60%; transform: translate(-50%,-50%); font-size: 10.5px; color: var(--ink-3); letter-spacing: 0.08em; text-transform: uppercase; }
+  .ent.fact { border-color: var(--gold); color: var(--gold); font-weight: 600; background: rgba(255,210,31,0.09); }
+  .procs { font-size: 13.5px; color: var(--ink-2); line-height: 1.5; margin-top: 10px; }
+  .procs b { color: var(--ink); font-weight: 600; }
+
+  /* control band */
+  .ups { height: 30px; position: relative; }
+  .ups svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .ctl { display: grid; grid-template-columns: 1.35fr 1fr 1fr 1fr; gap: 16px; }
+  .ctl .panel { padding: 14px 18px; }
+  .ctl h4 { font-size: 16px; font-weight: 700; margin-top: 3px; }
+  .ctl p { font-size: 13.5px; color: var(--ink-2); line-height: 1.5; margin-top: 6px; }
+  .ctl .mono { font-size: 11.5px; color: var(--teal); }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <header>
+    <div>
+      <span class="badge">MICROSOFT FABRIC</span>
+      <h1>City Operations Data Platform</h1>
+      <div class="sub">Public REST APIs to an analytics-ready star schema, loaded daily and checked at every layer</div>
+    </div>
+    <div class="legend"><span><i></i>Data flow</span><span><i class="ctl"></i>Orchestration and control</span></div>
+  </header>
+
+  <!-- Orchestration -->
+  <div class="panel orch">
+    <div class="ttl">
+      <div class="kicker">Orchestration · Data Pipeline</div>
+      <div class="name mono">pl_city_ops_daily</div>
+    </div>
+    <div class="steps">
+      <div class="step">Ingest 311 + Weather<small>2 notebooks in parallel</small></div><span class="chev">▶</span>
+      <div class="step">Transform to Silver<small>notebook</small></div><span class="chev">▶</span>
+      <div class="step">Load dimensions<small>stored procedure</small></div><span class="chev">▶</span>
+      <div class="step">Load facts<small>2 stored procedures</small></div><span class="chev">▶</span>
+      <div class="step">Reconcile<small>fails run on mismatch</small></div><span class="chev">▶</span>
+      <div class="step fail">On failure: log + fail<small>alert hook</small></div>
+    </div>
+    <div class="chips">
+      <span class="chip">Daily schedule · 06:00</span>
+      <span class="chip">Parameterised · retry policy</span>
+    </div>
+  </div>
+
+  <div class="drops">
+    <svg viewBox="0 0 1808 34" preserveAspectRatio="none">
+      <g stroke="#7f88b8" stroke-width="1.5" stroke-dasharray="4 5" fill="none">
+        <path d="M412 0 V34"/><path d="M880 0 V34"/><path d="M1345 0 V34"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Main flow -->
+  <div class="flow">
+    <div class="panel col">
+      <div class="kicker">1 · Sources</div>
+      <h2>Public REST APIs</h2>
+      <div class="cards">
+        <div class="card">
+          <h3><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></span>NYC Open Data</h3>
+          <p>311 service requests. Socrata API, JSON, 50,000 rows per page. Records change after creation.</p>
+          <div class="stat">{{SRC_311}}<span>requests in 2026</span></div>
+        </div>
+        <div class="card">
+          <h3><span class="ico"><svg viewBox="0 0 24 24"><path d="M7 18a5 5 0 1 1 1.5-9.8A6 6 0 0 1 20 11a3.5 3.5 0 0 1-1 7H7z"/></svg></span>Open-Meteo</h3>
+          <p>Hourly weather for the five boroughs. Archive plus recent observations, which are revised.</p>
+          <div class="stat">{{SRC_WX}}<span>hourly readings</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 46 24"><path d="M4 12h34" stroke="#9d8cff" stroke-width="2.5"/><path d="M32 5l9 7-9 7" fill="none" stroke="#9d8cff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+    <div class="panel col">
+      <div class="kicker">2 · Ingest</div>
+      <h2>PySpark notebooks</h2>
+      <div class="cards">
+        <div class="card">
+          <h3 class="mono" style="font-size:13px">nb_01_ingest_nyc311</h3>
+          <h3 class="mono" style="font-size:13px;margin-top:4px">nb_02_ingest_weather</h3>
+          <p>Settings come from a control table.</p>
+        </div>
+        <div class="card">
+          <h3>Built to be re-run</h3>
+          <p>High-watermark incremental loads with a look-back window. Paging, retry and back-off on throttling. Row counts reconciled against the API before the watermark moves.</p>
+        </div>
+        <div class="card">
+          <h3 class="mono" style="font-size:13px">nb_00_common</h3>
+          <p>One shared framework for logging, watermarks, retries and quality checks.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 46 24"><path d="M4 12h34" stroke="#9d8cff" stroke-width="2.5"/><path d="M32 5l9 7-9 7" fill="none" stroke="#9d8cff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+    <div class="panel col lake">
+      <div class="kicker">3 · Store and refine · OneLake (Delta)</div>
+      <h2>Lakehouse <span class="mono" style="font-weight:500;color:var(--ink-2);font-size:14px">lh_city_ops</span></h2>
+      <div class="layers">
+        <div class="layer" style="--c:#8fa0c8">
+          <h3>LANDING</h3>
+          <div class="what">Raw API responses, untouched</div>
+          <div class="tbl mono">Files/landing/nyc311/</div>
+          <div class="tbl mono">Files/landing/weather/</div>
+          <ul><li>Compressed JSON</li><li>Foldered by load date and run id</li><li>Replayable</li></ul>
+          <div class="stat">{{LANDING_FILES}}<span>files</span></div>
+        </div>
+        <div class="mini">›</div>
+        <div class="layer" style="--c:var(--bronze)">
+          <h3>BRONZE</h3>
+          <div class="what">As received, append-only history</div>
+          <div class="tbl mono">bronze.nyc311_service_requests</div>
+          <div class="tbl mono">bronze.weather_hourly</div>
+          <ul><li>Every column kept as text</li><li>Lineage: file, run, load time</li><li>Partitioned by ingest date</li></ul>
+          <div class="stat">{{BRONZE_ROWS}}<span>rows</span></div>
+        </div>
+        <div class="mini">›</div>
+        <div class="layer" style="--c:var(--silver)">
+          <h3>SILVER</h3>
+          <div class="what">Typed, validated, one row per business key</div>
+          <div class="tbl mono">silver.service_requests</div>
+          <div class="tbl mono">silver.weather_hourly</div>
+          <div class="tbl mono">silver.service_requests_quarantine</div>
+          <ul><li>10 data-quality rules, results logged</li><li>Bad rows kept in quarantine</li><li>Idempotent MERGE upserts</li></ul>
+          <div class="stat">{{SILVER_ROWS}}<span>requests</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 46 24"><path d="M4 12h34" stroke="#9d8cff" stroke-width="2.5"/><path d="M32 5l9 7-9 7" fill="none" stroke="#9d8cff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+    <div class="panel col wh">
+      <div class="kicker">4 · Model · T-SQL</div>
+      <h2>Warehouse <span class="mono" style="font-weight:500;color:var(--ink-2);font-size:14px">wh_city_ops</span></h2>
+      <div class="star">
+        <svg viewBox="0 0 280 270" preserveAspectRatio="none">
+          <g stroke="rgba(255,210,31,0.5)" stroke-width="1.3" fill="none">
+            <line x1="140" y1="88" x2="42" y2="22"/><line x1="140" y1="88" x2="140" y2="22"/><line x1="140" y1="88" x2="238" y2="22"/>
+            <line x1="140" y1="88" x2="72" y2="162"/><line x1="140" y1="88" x2="208" y2="162"/>
+            <line x1="140" y1="236" x2="72" y2="162"/><line x1="140" y1="236" x2="208" y2="162"/>
+          </g>
+        </svg>
+        <div class="ent mono" style="left:15%;top:8%">dim_agency</div>
+        <div class="ent mono" style="left:50%;top:8%">dim_complaint</div>
+        <div class="ent mono" style="left:85%;top:8%">dim_channel</div>
+        <div class="ent fact mono" style="left:50%;top:32.5%">fact_service_request</div>
+        <div class="ent mono shared" style="left:25.7%;top:60%">dim_date</div>
+        <div class="ent mono shared" style="left:74.3%;top:60%">dim_borough</div>
+        <div class="ent fact mono" style="left:50%;top:87.5%">fact_weather_daily</div>
+      </div>
+      <div class="procs">
+        <b>Stored procedures</b> load only what changed, inside a transaction. Two facts share conformed date and borough dimensions.
+      </div>
+      <div class="stat" style="margin-top:8px">{{GOLD_ROWS}}<span>fact rows · 5 dimensions</span></div>
+    </div>
+
+    <div class="arrow"><svg viewBox="0 0 46 24"><path d="M4 12h34" stroke="#9d8cff" stroke-width="2.5"/><path d="M32 5l9 7-9 7" fill="none" stroke="#9d8cff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+    <div class="panel col">
+      <div class="kicker">5 · Serve</div>
+      <h2>Analytics</h2>
+      <div class="cards">
+        <div class="card">
+          <h3><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></span>Power BI</h3>
+          <p>A Direct Lake semantic model reads the Gold tables directly, with no import refresh.</p>
+        </div>
+        <div class="card">
+          <h3><span class="ico"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></span>SQL endpoint</h3>
+          <p>Analysts query Gold with plain T-SQL from SSMS, Excel or any BI tool.</p>
+        </div>
+        <div class="card">
+          <h3><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.4 8.3-8 9-4.6-.7-8-4-8-9V7l8-4z"/></svg></span>Reporting views</h3>
+          <p class="mono" style="font-size:11.5px;word-break:break-all">gold.vw_daily_borough_summary</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ups">
+    <svg viewBox="0 0 1808 30" preserveAspectRatio="none">
+      <g stroke="#7f88b8" stroke-width="1.5" stroke-dasharray="4 5" fill="none">
+        <path d="M412 0 V30"/><path d="M880 0 V30"/><path d="M1345 0 V30"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Control band -->
+  <div class="ctl">
+    <div class="panel">
+      <div class="kicker">Control and audit</div>
+      <h4>Every run leaves a record</h4>
+      <p><span class="mono">meta.source_config · meta.watermarks · meta.run_log · etl.load_log</span><br>Rows in, rows out, duration and status for each step. Sources are added or tuned as data, without code changes.</p>
+    </div>
+    <div class="panel">
+      <div class="kicker">Data quality</div>
+      <h4>Rules with logged results</h4>
+      <p><span class="mono">meta.dq_results</span><br>Each rule logs how many rows it checked and how many failed, on every run.</p>
+    </div>
+    <div class="panel">
+      <div class="kicker">Reconciliation</div>
+      <h4>Layers must agree</h4>
+      <p><span class="mono">etl.reconciliation_log</span><br>API vs Bronze and Silver vs Gold counts are compared. A mismatch stops the run.</p>
+    </div>
+    <div class="panel">
+      <div class="kicker">Lifecycle</div>
+      <h4>Everything is code</h4>
+      <p>Notebooks, SQL, pipeline and semantic model are files, deployed by script. Ready for Git and Dev / Test / Prod promotion.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

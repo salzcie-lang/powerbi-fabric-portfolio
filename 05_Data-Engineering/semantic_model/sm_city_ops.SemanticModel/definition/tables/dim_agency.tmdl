@@ -1,0 +1,34 @@
+table dim_agency
+	lineageTag: 19e36cd7-a062-5ef1-aba3-9f0a38fa0510
+
+	column agency_key
+		dataType: int64
+		isHidden
+		lineageTag: ffed7eda-998a-5776-a3e4-dfcb29a7eef5
+		summarizeBy: none
+		sourceColumn: agency_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column agency_code
+		dataType: string
+		lineageTag: 4dddacee-0a02-5d7d-8b5f-3ee7d525e76a
+		summarizeBy: none
+		sourceColumn: agency_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column agency_name
+		dataType: string
+		lineageTag: 84839837-90c2-59e6-a712-2e3b4dc01bbc
+		summarizeBy: none
+		sourceColumn: agency_name
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_agency = entity
+		mode: directLake
+		source
+			entityName: dim_agency
+			schemaName: gold
+			expressionSource: DatabaseQuery

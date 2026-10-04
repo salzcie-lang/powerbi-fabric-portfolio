@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "CRMPipeline"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9e56956d-5c96-46f4-b80d-9743e9466733"
+  }
+}

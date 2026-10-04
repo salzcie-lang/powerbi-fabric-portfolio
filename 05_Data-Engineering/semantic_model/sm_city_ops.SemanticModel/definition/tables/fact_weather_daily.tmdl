@@ -1,0 +1,117 @@
+table fact_weather_daily
+	lineageTag: 6d5410a9-c2e0-5fef-a831-975090b40083
+
+	measure 'Avg Temperature C' = AVERAGE(fact_weather_daily[avg_temperature_c])
+		formatString: 0.0
+		lineageTag: d4edbde9-220b-5115-8262-da47fbefdefd
+
+	measure 'Total Precipitation mm' = SUM(fact_weather_daily[precipitation_mm])
+		formatString: #,0.0
+		lineageTag: 1c886c04-4c01-5285-8828-8f12237d91d0
+
+	column date_key
+		dataType: int64
+		isHidden
+		lineageTag: f15e31d5-0e23-5815-b814-a9c04d315121
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column borough_key
+		dataType: int64
+		isHidden
+		lineageTag: 107fbf98-4a89-5970-8730-f5ae083dfaaa
+		summarizeBy: none
+		sourceColumn: borough_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column avg_temperature_c
+		dataType: decimal
+		lineageTag: 0b8d04e2-b6cf-5091-8bd1-939d9850e78b
+		summarizeBy: none
+		sourceColumn: avg_temperature_c
+
+		annotation SummarizationSetBy = Automatic
+
+	column min_temperature_c
+		dataType: decimal
+		lineageTag: aa9bc4d5-bdb7-5df4-b23e-7e3d5c9e1fd3
+		summarizeBy: none
+		sourceColumn: min_temperature_c
+
+		annotation SummarizationSetBy = Automatic
+
+	column max_temperature_c
+		dataType: decimal
+		lineageTag: 89d93c7c-634d-5d18-b879-3ebb60d1b522
+		summarizeBy: none
+		sourceColumn: max_temperature_c
+
+		annotation SummarizationSetBy = Automatic
+
+	column precipitation_mm
+		dataType: decimal
+		lineageTag: 96a25861-50df-56ac-8752-3c6a8344edef
+		summarizeBy: none
+		sourceColumn: precipitation_mm
+
+		annotation SummarizationSetBy = Automatic
+
+	column snowfall_cm
+		dataType: decimal
+		lineageTag: 83ba5598-e39d-587d-9ef9-9c8ca67cfb55
+		summarizeBy: none
+		sourceColumn: snowfall_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	column max_wind_speed_kmh
+		dataType: decimal
+		lineageTag: c96f7b60-8bf6-5e6a-a616-007fbe87117e
+		summarizeBy: none
+		sourceColumn: max_wind_speed_kmh
+
+		annotation SummarizationSetBy = Automatic
+
+	column hours_observed
+		dataType: int64
+		lineageTag: 850e665a-6459-5181-9bbb-7b6c639ffdf9
+		summarizeBy: none
+		sourceColumn: hours_observed
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_wet_day
+		dataType: boolean
+		lineageTag: 1b609bfd-fcd3-537a-8000-93e14e12ddb3
+		summarizeBy: none
+		sourceColumn: is_wet_day
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_freezing_day
+		dataType: boolean
+		lineageTag: 66823a5b-bc4a-56f4-85d3-3a288655e8ef
+		summarizeBy: none
+		sourceColumn: is_freezing_day
+
+		annotation SummarizationSetBy = Automatic
+
+	column loaded_at
+		dataType: dateTime
+		isHidden
+		formatString: General Date
+		lineageTag: d8bd8b85-03c5-5eb0-9b15-102c17fb0b73
+		summarizeBy: none
+		sourceColumn: loaded_at
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_weather_daily = entity
+		mode: directLake
+		source
+			entityName: fact_weather_daily
+			schemaName: gold
+			expressionSource: DatabaseQuery

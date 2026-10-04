@@ -1,0 +1,66 @@
+table Activities
+	lineageTag: c6fa65b6-de38-589d-bf2d-6dcd4c4ed501
+
+	column ActivityKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 6ae19956-9453-5c5c-9ee4-8edee8d9400b
+		summarizeBy: none
+		sourceColumn: ActivityKey
+
+		annotation SummarizationSetBy = User
+
+	column OpportunityKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 608e9968-fbab-5e1f-856f-db0a158d34fa
+		summarizeBy: none
+		sourceColumn: OpportunityKey
+
+		annotation SummarizationSetBy = User
+
+	column RepKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 07610452-cdfd-55dc-8cb4-e2c1261f4cdc
+		summarizeBy: none
+		sourceColumn: RepKey
+
+		annotation SummarizationSetBy = User
+
+	column 'Activity Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: a6055b15-7fb3-54c4-922d-a8b62b848389
+		summarizeBy: none
+		sourceColumn: Activity Date
+
+		annotation SummarizationSetBy = User
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Activity Type'
+		dataType: string
+		lineageTag: 2f5f9baf-8273-5157-aae5-de5a27082eba
+		summarizeBy: none
+		sourceColumn: Activity Type
+
+		annotation SummarizationSetBy = User
+
+	partition Activities = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\activities.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"ActivityKey", "OpportunityKey", "RepKey", "ActivityDate", "ActivityType"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"ActivityKey", Int64.Type}, {"OpportunityKey", Int64.Type}, {"RepKey", Int64.Type}, {"ActivityDate", type date}, {"ActivityType", type text}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"ActivityDate", "Activity Date"}, {"ActivityType", "Activity Type"}})
+				in
+				    Renamed
+
+	annotation PBI_ResultType = Table
+

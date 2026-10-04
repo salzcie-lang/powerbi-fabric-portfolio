@@ -1,0 +1,5 @@
+expression DataFolder = "D:\Portfolio\03_Real-Estate\data" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: cd0ecab7-bf81-55e2-84c8-ea038aa9fa12
+
+	annotation PBI_ResultType = Text
+

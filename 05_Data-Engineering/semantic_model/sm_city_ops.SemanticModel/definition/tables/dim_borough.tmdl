@@ -1,0 +1,26 @@
+table dim_borough
+	lineageTag: 0d29b4a6-fc66-5446-81c0-895a08080301
+
+	column borough_key
+		dataType: int64
+		isHidden
+		lineageTag: 68f83963-8f34-589f-877c-a94d44b5cdbc
+		summarizeBy: none
+		sourceColumn: borough_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column borough_name
+		dataType: string
+		lineageTag: fe8aa690-0c69-50f8-9a0f-39e9e181a8b8
+		summarizeBy: none
+		sourceColumn: borough_name
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_borough = entity
+		mode: directLake
+		source
+			entityName: dim_borough
+			schemaName: gold
+			expressionSource: DatabaseQuery

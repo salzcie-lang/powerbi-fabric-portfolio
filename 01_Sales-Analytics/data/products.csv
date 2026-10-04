@@ -1,0 +1,71 @@
+ProductKey,SKU,Product,Category,Subcategory,ListPrice,UnitCost
+1,LAP-0001,Corelink Ultrabook 101,Laptops,Ultrabook,819.0,585.33
+2,LAP-0002,Northwind Ultrabook 118,Laptops,Ultrabook,2049.0,1623.68
+3,LAP-0003,Corelink Ultrabook 124,Laptops,Ultrabook,1639.0,1245.94
+4,LAP-0004,Northwind Workstation 108,Laptops,Workstation,1989.0,1591.5
+5,LAP-0005,Vertex Workstation 117,Laptops,Workstation,2389.0,1775.56
+6,LAP-0006,Corelink Workstation 120,Laptops,Workstation,1609.0,1234.87
+7,LAP-0007,Lumina Workstation 136,Laptops,Workstation,1759.0,1524.93
+8,LAP-0008,Northwind Workstation 144,Laptops,Workstation,1399.0,1140.34
+9,LAP-0009,Corelink Business 106,Laptops,Business,1369.0,1058.52
+10,LAP-0010,Northwind Business 117,Laptops,Business,2389.0,2011.95
+11,LAP-0011,Lumina Business 124,Laptops,Business,1399.0,1114.85
+12,LAP-0012,Corelink Business 137,Laptops,Business,1429.0,1156.52
+13,LAP-0013,Lumina Business 140,Laptops,Business,2239.0,1564.65
+14,MON-0014,Corelink 4K 100,Monitors,4K,179.0,133.08
+15,MON-0015,Corelink 4K 113,Monitors,4K,869.0,624.9
+16,MON-0016,Apex 4K 122,Monitors,4K,359.0,284.42
+17,MON-0017,Apex 4K 138,Monitors,4K,219.0,156.74
+18,MON-0018,Lumina Ultrawide 106,Monitors,Ultrawide,369.0,272.59
+19,MON-0019,Apex Ultrawide 110,Monitors,Ultrawide,879.0,662.02
+20,MON-0020,Lumina Ultrawide 125,Monitors,Ultrawide,769.0,610.82
+21,MON-0021,Apex Standard 106,Monitors,Standard,419.0,294.85
+22,MON-0022,Northwind Standard 117,Monitors,Standard,849.0,612.06
+23,MON-0023,Vertex Standard 128,Monitors,Standard,269.0,215.28
+24,ACC-0024,Northwind Keyboards 101,Accessories,Keyboards,99.0,46.26
+25,ACC-0025,Apex Keyboards 115,Accessories,Keyboards,59.0,29.83
+26,ACC-0026,Vertex Keyboards 123,Accessories,Keyboards,129.0,76.74
+27,ACC-0027,Lumina Keyboards 132,Accessories,Keyboards,189.0,92.87
+28,ACC-0028,Corelink Keyboards 147,Accessories,Keyboards,219.0,93.85
+29,ACC-0029,Apex Mice 102,Accessories,Mice,109.0,65.43
+30,ACC-0030,Apex Mice 116,Accessories,Mice,39.0,18.65
+31,ACC-0031,Lumina Mice 121,Accessories,Mice,29.0,15.63
+32,ACC-0032,Lumina Docking 104,Accessories,Docking,159.0,91.86
+33,ACC-0033,Apex Docking 113,Accessories,Docking,179.0,100.39
+34,ACC-0034,Apex Docking 123,Accessories,Docking,139.0,85.75
+35,ACC-0035,Corelink Headsets 104,Accessories,Headsets,189.0,102.9
+36,ACC-0036,Vertex Headsets 118,Accessories,Headsets,79.0,41.55
+37,ACC-0037,Northwind Headsets 123,Accessories,Headsets,149.0,74.97
+38,ACC-0038,Corelink Headsets 134,Accessories,Headsets,109.0,52.98
+39,NET-0039,Northwind Routers 104,Networking,Routers,1049.0,723.96
+40,NET-0040,Apex Routers 114,Networking,Routers,699.0,448.89
+41,NET-0041,Corelink Routers 122,Networking,Routers,1049.0,679.05
+42,NET-0042,Corelink Switches 101,Networking,Switches,539.0,355.27
+43,NET-0043,Apex Switches 117,Networking,Switches,209.0,132.82
+44,NET-0044,Northwind Switches 127,Networking,Switches,829.0,556.1
+45,NET-0045,Apex Access Points 103,Networking,Access Points,979.0,623.44
+46,NET-0046,Apex Access Points 110,Networking,Access Points,979.0,740.38
+47,NET-0047,Northwind Access Points 127,Networking,Access Points,739.0,449.3
+48,NET-0048,Lumina Access Points 138,Networking,Access Points,459.0,300.03
+49,NET-0049,Corelink Access Points 148,Networking,Access Points,489.0,324.97
+50,SOF-0050,Northwind Security 102,Software,Security,1149.0,326.79
+51,SOF-0051,Corelink Security 110,Software,Security,89.0,19.15
+52,SOF-0052,Vertex Security 126,Software,Security,59.0,21.88
+53,SOF-0053,Apex Productivity 102,Software,Productivity,919.0,207.62
+54,SOF-0054,Corelink Productivity 116,Software,Productivity,119.0,43.89
+55,SOF-0055,Vertex Productivity 121,Software,Productivity,789.0,234.11
+56,SOF-0056,Lumina Productivity 132,Software,Productivity,499.0,85.3
+57,SOF-0057,Apex Analytics 106,Software,Analytics,419.0,116.78
+58,SOF-0058,Corelink Analytics 116,Software,Analytics,759.0,248.69
+59,SOF-0059,Northwind Analytics 123,Software,Analytics,419.0,123.26
+60,SOF-0060,Vertex Analytics 134,Software,Analytics,929.0,233.09
+61,SOF-0061,Lumina Analytics 144,Software,Analytics,619.0,170.57
+62,SER-0062,Northwind Installation 103,Services,Installation,1249.0,442.72
+63,SER-0063,Lumina Installation 118,Services,Installation,1759.0,660.93
+64,SER-0064,Lumina Installation 121,Services,Installation,1459.0,531.25
+65,SER-0065,Apex Support Plan 106,Services,Support Plan,1499.0,755.5
+66,SER-0066,Vertex Support Plan 110,Services,Support Plan,319.0,121.8
+67,SER-0067,Vertex Support Plan 124,Services,Support Plan,1039.0,352.19
+68,SER-0068,Lumina Training 104,Services,Training,749.0,342.39
+69,SER-0069,Corelink Training 114,Services,Training,2829.0,1085.73
+70,SER-0070,Lumina Training 122,Services,Training,1099.0,543.56

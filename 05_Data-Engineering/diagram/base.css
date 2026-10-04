@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --bg-0: #070b1d;
+  --bg-1: #0c1230;
+  --panel: rgba(255, 255, 255, 0.045);
+  --panel-2: rgba(255, 255, 255, 0.07);
+  --line: rgba(255, 255, 255, 0.11);
+  --ink: #f4f6ff;
+  --ink-2: #b9c0e4;
+  --ink-3: #7f88b8;
+  --accent: #ffd21f;
+  --violet: #9d8cff;
+  --blue: #5b8cff;
+  --bronze: #e39a5c;
+  --silver: #c9d3e6;
+  --gold: #ffd21f;
+  --teal: #3fe0c5;
+  --red: #ff6b7d;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg-0); }
+body {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+.canvas {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(900px 520px at 88% 108%, rgba(214, 92, 40, 0.32), transparent 62%),
+    radial-gradient(1000px 620px at 8% 112%, rgba(108, 70, 255, 0.34), transparent 62%),
+    radial-gradient(900px 500px at 50% -18%, rgba(70, 96, 255, 0.22), transparent 65%),
+    linear-gradient(180deg, #070b1d 0%, #0b1030 60%, #0e1233 100%);
+}
+.mono { font-family: 'JetBrains Mono', Consolas, monospace; }
+.badge {
+  display: inline-block;
+  background: var(--accent);
+  color: #151515;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+}
+.panel {
+  background: linear-gradient(180deg, rgba(255,255,255,0.065), rgba(255,255,255,0.03));
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}

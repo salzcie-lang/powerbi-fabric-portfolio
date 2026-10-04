@@ -1,0 +1,36 @@
+relationship 135bd67f-f88d-5301-87db-14e7a17b70cb
+	fromColumn: GL.Month
+	toColumn: Date.Date
+
+relationship 819339ba-6d9e-51bf-ad08-0ea24f63aaae
+	fromColumn: GL.AccountCode
+	toColumn: Accounts.AccountCode
+
+relationship 47bf1635-6f95-533a-ac4a-aef1dedc38db
+	fromColumn: GL.DepartmentKey
+	toColumn: Departments.DepartmentKey
+
+relationship c3365cc1-6385-587b-8f47-32b514bb20b5
+	fromColumn: Budget.Month
+	toColumn: Date.Date
+
+relationship bb6b8705-582f-56d0-88fc-8e18acd2c3f6
+	fromColumn: Budget.AccountCode
+	toColumn: Accounts.AccountCode
+
+relationship 3d8431d9-0e44-5b3c-82a1-21f33b33f56f
+	fromColumn: Budget.DepartmentKey
+	toColumn: Departments.DepartmentKey
+
+relationship 5d5608e9-5836-5dcc-8c9a-c254bb51be11
+	fromColumn: Receivables.'Invoice Date'
+	toColumn: Date.Date
+
+relationship 971ff9c8-b500-5b7d-bd4e-0553af7b5e62
+	fromColumn: Inventory.Month
+	toColumn: Date.Date
+
+relationship f9e8e4e9-0b2e-5dd9-bf82-12f35b076c4b
+	fromColumn: Cash.Month
+	toColumn: Date.Date
+

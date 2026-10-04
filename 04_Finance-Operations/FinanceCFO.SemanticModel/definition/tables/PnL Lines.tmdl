@@ -1,0 +1,89 @@
+table 'PnL Lines'
+	lineageTag: 8ed5869b-03d7-5d55-a122-1c5593e26fe1
+
+	column 'Line Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: bbb276dc-e179-5f4f-9317-8136af018f13
+		summarizeBy: none
+		sourceColumn: Line Order
+
+		annotation SummarizationSetBy = User
+
+	column Line
+		dataType: string
+		lineageTag: 047bf50a-10bf-5a29-b371-433b03d2bca1
+		summarizeBy: none
+		sourceColumn: Line
+		sortByColumn: 'Line Order'
+
+		annotation SummarizationSetBy = User
+
+	column 'Line Type'
+		dataType: string
+		isHidden
+		lineageTag: 697318b2-518d-58b9-bb27-27b45702873c
+		summarizeBy: none
+		sourceColumn: Line Type
+
+		annotation SummarizationSetBy = User
+
+	column AccountCode
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 65f9c5f4-335e-5e3b-b58f-bded118288ac
+		summarizeBy: none
+		sourceColumn: AccountCode
+
+		annotation SummarizationSetBy = User
+
+	column 'Line Name'
+		dataType: string
+		lineageTag: 6c3b0f32-01a9-5639-8f42-dd2f618b2431
+		summarizeBy: none
+		sourceColumn: Line Name
+
+		annotation SummarizationSetBy = User
+
+	column 'Bridge Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: e622b68f-e7a3-5f0c-96b2-d79546046b95
+		summarizeBy: none
+		sourceColumn: Bridge Order
+
+		annotation SummarizationSetBy = User
+
+	column 'Bridge Label'
+		dataType: string
+		lineageTag: 007f150b-702e-5a52-825d-9cfec0b3558b
+		summarizeBy: none
+		sourceColumn: Bridge Label
+		sortByColumn: 'Bridge Order'
+
+		annotation SummarizationSetBy = User
+
+	column 'Line Group'
+		dataType: string
+		isHidden
+		lineageTag: 836e3529-9cdc-5966-8f43-6acfa250bd48
+		summarizeBy: none
+		sourceColumn: Line Group
+
+		annotation SummarizationSetBy = User
+
+	partition 'PnL Lines' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\pnl_lines.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"LineOrder", "Line", "LineType", "AccountCode", "LineName", "BridgeOrder", "BridgeLabel", "LineGroup"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"LineOrder", Int64.Type}, {"Line", type text}, {"LineType", type text}, {"AccountCode", Int64.Type}, {"LineName", type text}, {"BridgeOrder", Int64.Type}, {"BridgeLabel", type text}, {"LineGroup", type text}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"LineOrder", "Line Order"}, {"LineType", "Line Type"}, {"LineName", "Line Name"}, {"BridgeOrder", "Bridge Order"}, {"BridgeLabel", "Bridge Label"}, {"LineGroup", "Line Group"}})
+				in
+				    Renamed
+

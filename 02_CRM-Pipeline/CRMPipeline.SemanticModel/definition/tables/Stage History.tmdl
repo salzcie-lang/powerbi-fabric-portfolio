@@ -1,0 +1,57 @@
+table 'Stage History'
+	lineageTag: 4c1a78ae-5257-5f2d-bc99-e7ecada7a5d5
+
+	column OpportunityKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0c72a422-6101-5512-ae35-d63cbe236a3d
+		summarizeBy: none
+		sourceColumn: OpportunityKey
+
+		annotation SummarizationSetBy = User
+
+	column 'Stage Reached'
+		dataType: string
+		lineageTag: c56d1af1-bf50-5fe5-b16e-65a2dd14061d
+		summarizeBy: none
+		sourceColumn: Stage Reached
+		sortByColumn: 'Stage Order'
+
+		annotation SummarizationSetBy = User
+
+	column 'Entered Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: 5b16d503-de3a-5a14-9cd8-287525221271
+		summarizeBy: none
+		sourceColumn: Entered Date
+
+		annotation SummarizationSetBy = User
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Stage Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c77af46a-d420-542a-be3d-86d354cb5280
+		summarizeBy: none
+		sourceColumn: Stage Order
+
+		annotation SummarizationSetBy = User
+
+	partition 'Stage History' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\stage_history.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"OpportunityKey", "Stage", "EnteredDate", "StageOrder"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"OpportunityKey", Int64.Type}, {"Stage", type text}, {"EnteredDate", type date}, {"StageOrder", Int64.Type}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"Stage", "Stage Reached"}, {"EnteredDate", "Entered Date"}, {"StageOrder", "Stage Order"}})
+				in
+				    Renamed
+
+	annotation PBI_ResultType = Table
+

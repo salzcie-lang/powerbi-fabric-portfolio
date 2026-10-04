@@ -1,0 +1,79 @@
+table Customers
+	lineageTag: 292af5cd-3b2b-57b5-b4fe-72a160c3f6b3
+
+	column CustomerKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f3886bc1-5642-5c1f-ac55-135cec3facf6
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		annotation SummarizationSetBy = User
+
+	column Customer
+		dataType: string
+		lineageTag: 97d95fe5-83e8-5179-ba95-89f09e06c392
+		summarizeBy: none
+		sourceColumn: Customer
+
+		annotation SummarizationSetBy = User
+
+	column Segment
+		dataType: string
+		lineageTag: c0dab401-1063-5a17-ac0f-f3f7f9c5d449
+		summarizeBy: none
+		sourceColumn: Segment
+
+		annotation SummarizationSetBy = User
+
+	column Industry
+		dataType: string
+		lineageTag: 0c863724-4425-5c01-8ebb-5f1c718f6b70
+		summarizeBy: none
+		sourceColumn: Industry
+
+		annotation SummarizationSetBy = User
+
+	column Country
+		dataType: string
+		lineageTag: af1e0742-3ac1-5fb0-abce-4a5cb071064f
+		dataCategory: Country
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = User
+
+	column RegionKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 0b16b6e1-9b80-56a5-aa94-e3b422dab0c4
+		summarizeBy: none
+		sourceColumn: RegionKey
+
+		annotation SummarizationSetBy = User
+
+	column 'First Order Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: 038f3bb1-2f41-5bb3-86a1-1844f31b6249
+		summarizeBy: none
+		sourceColumn: First Order Date
+
+		annotation SummarizationSetBy = User
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition Customers = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\customers.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"CustomerKey", "Customer", "Segment", "Industry", "Country", "RegionKey", "FirstOrderDate"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"CustomerKey", Int64.Type}, {"Customer", type text}, {"Segment", type text}, {"Industry", type text}, {"Country", type text}, {"RegionKey", Int64.Type}, {"FirstOrderDate", type date}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"FirstOrderDate", "First Order Date"}})
+				in
+				    Renamed
+

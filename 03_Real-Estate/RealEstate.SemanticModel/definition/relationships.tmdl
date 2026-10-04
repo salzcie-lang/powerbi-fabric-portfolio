@@ -1,0 +1,36 @@
+relationship d2552428-9931-50d1-ba67-1ced3523b60c
+	fromColumn: Properties.'Property Type'
+	toColumn: 'Property Types'.'Property Type'
+
+relationship 42d021dc-c977-59ef-acbb-09446e9d07b8
+	fromColumn: Units.PropertyKey
+	toColumn: Properties.PropertyKey
+
+relationship 0659274e-bf71-536d-8764-e3dfcd426459
+	fromColumn: Leases.UnitKey
+	toColumn: Units.UnitKey
+
+relationship 040ba329-0c86-5289-ac7d-f52f0e8ab016
+	fromColumn: 'Rent Payments'.UnitKey
+	toColumn: Units.UnitKey
+
+relationship c37acd07-56e4-5824-8e5d-c67572d66ed8
+	fromColumn: 'Rent Payments'.'Due Date'
+	toColumn: Date.Date
+
+relationship 04dc19e1-e1b7-5cb1-a319-599e4c747133
+	fromColumn: 'Operating Expenses'.PropertyKey
+	toColumn: Properties.PropertyKey
+
+relationship 6df00ef2-58d3-5104-95e9-9c4acb75634f
+	fromColumn: 'Operating Expenses'.Month
+	toColumn: Date.Date
+
+relationship 8c3f69c2-adf1-52b7-941d-24f4e5548d93
+	fromColumn: 'Maintenance Requests'.UnitKey
+	toColumn: Units.UnitKey
+
+relationship 2186a0c3-393f-5728-a3d2-bd3464167591
+	fromColumn: 'Maintenance Requests'.'Opened Date'
+	toColumn: Date.Date
+

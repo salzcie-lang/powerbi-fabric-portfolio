@@ -1,0 +1,53 @@
+table 'Operating Expenses'
+	lineageTag: 97ba4224-e175-57f0-b242-2b18ed10f7d4
+
+	column PropertyKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c21519c1-337a-56e9-8d78-2b79f36342d6
+		summarizeBy: none
+		sourceColumn: PropertyKey
+
+		annotation SummarizationSetBy = User
+
+	column Month
+		dataType: dateTime
+		isHidden
+		formatString: dd mmm yyyy
+		lineageTag: 6f93ba4b-dd63-5330-b023-afd0da572013
+		summarizeBy: none
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = User
+
+	column 'Expense Category'
+		dataType: string
+		lineageTag: 4e3c3ec8-35b3-5ed4-acad-30359ebd230c
+		summarizeBy: none
+		sourceColumn: Expense Category
+
+		annotation SummarizationSetBy = User
+
+	column Amount
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: 0e9cdeb4-49c6-50cc-9ed9-85eff9a1ee5d
+		summarizeBy: none
+		sourceColumn: Amount
+
+		annotation SummarizationSetBy = User
+
+	partition 'Operating Expenses' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\operating_expenses.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"PropertyKey", "Month", "ExpenseCategory", "Amount"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"PropertyKey", Int64.Type}, {"Month", type date}, {"ExpenseCategory", type text}, {"Amount", Currency.Type}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"ExpenseCategory", "Expense Category"}})
+				in
+				    Renamed
+

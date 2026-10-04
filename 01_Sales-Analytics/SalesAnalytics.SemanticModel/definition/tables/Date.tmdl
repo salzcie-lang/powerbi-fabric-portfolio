@@ -1,0 +1,135 @@
+table Date
+	lineageTag: 9b4bb0eb-ccc5-5825-a1ca-36279fecbf22
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: dd mmm yyyy
+		lineageTag: aad656b6-30b3-51c3-a9b2-289a32f9bfd3
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = User
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 3b01f705-714b-545b-a7ae-33fc18e9ce80
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = User
+
+	column 'Fiscal Year'
+		dataType: string
+		lineageTag: 0c1f44d1-dbb8-5a7e-bcd3-e352bd368aae
+		summarizeBy: none
+		sourceColumn: Fiscal Year
+
+		annotation SummarizationSetBy = User
+
+	column Quarter
+		dataType: string
+		lineageTag: c65d8912-a595-5189-9ad9-d8e11b797860
+		summarizeBy: none
+		sourceColumn: Quarter
+
+		annotation SummarizationSetBy = User
+
+	column 'Year Quarter'
+		dataType: string
+		lineageTag: 1d24146c-0c13-5145-83d0-ef507cf318c9
+		summarizeBy: none
+		sourceColumn: Year Quarter
+
+		annotation SummarizationSetBy = User
+
+	column 'Month Number'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: aca78ddc-1611-5071-8792-53e3932815dd
+		summarizeBy: none
+		sourceColumn: Month Number
+
+		annotation SummarizationSetBy = User
+
+	column Month
+		dataType: string
+		lineageTag: d094237d-6996-5284-aa42-14bded054be9
+		summarizeBy: none
+		sourceColumn: Month
+		sortByColumn: 'Month Number'
+
+		annotation SummarizationSetBy = User
+
+	column 'Month Start'
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: f58c0ec6-cb61-5bce-be97-99fc5390d7ea
+		summarizeBy: none
+		sourceColumn: Month Start
+
+		annotation SummarizationSetBy = User
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Year Month'
+		dataType: string
+		lineageTag: 826d1313-ca87-5502-8c62-8cffed3177be
+		summarizeBy: none
+		sourceColumn: Year Month
+		sortByColumn: 'Month Start'
+
+		annotation SummarizationSetBy = User
+
+	column Weekday
+		dataType: string
+		lineageTag: 0dcef7ca-3284-5f76-90ee-97d116be360f
+		summarizeBy: none
+		sourceColumn: Weekday
+		sortByColumn: 'Weekday Number'
+
+		annotation SummarizationSetBy = User
+
+	column 'Weekday Number'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 733794ba-e71c-5aed-9e36-4217af622ca1
+		summarizeBy: none
+		sourceColumn: Weekday Number
+
+		annotation SummarizationSetBy = User
+
+	partition Date = m
+		mode: import
+		source =
+				let
+				    Start = #date(2024, 1, 1),
+				    End = #date(2026, 12, 31),
+				    Dates = List.Dates(Start, Duration.Days(End - Start) + 1, #duration(1, 0, 0, 0)),
+				    AsTable = Table.FromList(Dates, Splitter.SplitByNothing(), type table [Date = date]),
+				    Added = Table.FromRecords(
+				        Table.TransformRows(AsTable, each [
+				            Date = [Date],
+				            Year = Date.Year([Date]),
+				            #"Fiscal Year" = "FY " & Text.From(Date.Year([Date])),
+				            Quarter = "Q" & Text.From(Date.QuarterOfYear([Date])),
+				            #"Year Quarter" = Text.From(Date.Year([Date])) & " Q" & Text.From(Date.QuarterOfYear([Date])),
+				            #"Month Number" = Date.Month([Date]),
+				            Month = Date.ToText([Date], "MMM", "en-US"),
+				            #"Month Start" = Date.StartOfMonth([Date]),
+				            #"Year Month" = Date.ToText([Date], "MMM yyyy", "en-US"),
+				            Weekday = Date.ToText([Date], "ddd", "en-US"),
+				            #"Weekday Number" = Date.DayOfWeek([Date], Day.Monday) + 1
+				        ]),
+				        type table [Date = date, Year = Int64.Type, #"Fiscal Year" = text, Quarter = text, #"Year Quarter" = text, #"Month Number" = Int64.Type,
+				            Month = text, #"Month Start" = date, #"Year Month" = text, Weekday = text, #"Weekday Number" = Int64.Type]
+				    )
+				in
+				    Added
+

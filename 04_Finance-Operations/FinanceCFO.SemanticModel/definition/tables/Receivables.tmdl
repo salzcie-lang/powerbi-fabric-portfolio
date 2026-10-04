@@ -1,0 +1,85 @@
+table Receivables
+	lineageTag: 240482eb-2a19-5884-8674-88ded9759727
+
+	column 'Invoice Number'
+		dataType: string
+		lineageTag: f596e63d-f34e-53fc-b85a-514ece57fb7e
+		summarizeBy: none
+		sourceColumn: Invoice Number
+
+		annotation SummarizationSetBy = User
+
+	column Customer
+		dataType: string
+		lineageTag: 4d536f57-4e9d-5418-805d-3a9c30a9c1f0
+		summarizeBy: none
+		sourceColumn: Customer
+
+		annotation SummarizationSetBy = User
+
+	column 'Invoice Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: 8c410de8-1545-5eae-90a7-5c81539a4f95
+		summarizeBy: none
+		sourceColumn: Invoice Date
+
+		annotation SummarizationSetBy = User
+
+	column 'Due Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: 50f27524-fe0e-5158-92c3-e7b7fd939536
+		summarizeBy: none
+		sourceColumn: Due Date
+
+		annotation SummarizationSetBy = User
+
+	column 'Terms Days'
+		dataType: int64
+		formatString: 0
+		lineageTag: 6cfe8a7f-b44b-5d51-849d-f36d9bc75b25
+		summarizeBy: none
+		sourceColumn: Terms Days
+
+		annotation SummarizationSetBy = User
+
+	column Amount
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: ba565913-22cc-5104-af6d-99f0ed228e76
+		summarizeBy: none
+		sourceColumn: Amount
+
+		annotation SummarizationSetBy = User
+
+	column 'Paid Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: f4d7427b-ea31-5b9f-9492-3cdcf2ffa81a
+		summarizeBy: none
+		sourceColumn: Paid Date
+
+		annotation SummarizationSetBy = User
+
+	column Status
+		dataType: string
+		lineageTag: 833678e1-b1b7-59ab-a5aa-71721e1dd861
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = User
+
+	partition Receivables = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\ar_invoices.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"InvoiceNumber", "Customer", "InvoiceDate", "DueDate", "TermsDays", "Amount", "PaidDate", "Status"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"InvoiceNumber", type text}, {"Customer", type text}, {"InvoiceDate", type date}, {"DueDate", type date}, {"TermsDays", Int64.Type}, {"Amount", Currency.Type}, {"PaidDate", type date}, {"Status", type text}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"InvoiceNumber", "Invoice Number"}, {"InvoiceDate", "Invoice Date"}, {"DueDate", "Due Date"}, {"TermsDays", "Terms Days"}, {"PaidDate", "Paid Date"}})
+				in
+				    Renamed
+

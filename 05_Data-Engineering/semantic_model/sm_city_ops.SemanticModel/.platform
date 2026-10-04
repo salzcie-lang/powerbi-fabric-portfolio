@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "sm_city_ops",
+    "description": "Direct Lake semantic model on the Gold star schema"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "f5320794-f399-5be1-b9b1-013b96a277d5"
+  }
+}

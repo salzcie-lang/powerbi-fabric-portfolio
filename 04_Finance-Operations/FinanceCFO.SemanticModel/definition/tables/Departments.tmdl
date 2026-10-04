@@ -1,0 +1,41 @@
+table Departments
+	lineageTag: c9fabd8b-c657-58e2-b8e7-e2b57bd55b67
+
+	column DepartmentKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: db726ce8-9d11-5a3b-9667-bd50c5e540b9
+		summarizeBy: none
+		sourceColumn: DepartmentKey
+
+		annotation SummarizationSetBy = User
+
+	column Department
+		dataType: string
+		lineageTag: fa2561ac-4cb0-558a-b927-084b0e7b356e
+		summarizeBy: none
+		sourceColumn: Department
+
+		annotation SummarizationSetBy = User
+
+	column 'Cost Center Owner'
+		dataType: string
+		lineageTag: 5ca1d295-8f91-5b9b-88d5-9e13bc8d46df
+		summarizeBy: none
+		sourceColumn: Cost Center Owner
+
+		annotation SummarizationSetBy = User
+
+	partition Departments = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\departments.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"DepartmentKey", "Department", "CostCenterOwner"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"DepartmentKey", Int64.Type}, {"Department", type text}, {"CostCenterOwner", type text}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"CostCenterOwner", "Cost Center Owner"}})
+				in
+				    Renamed
+

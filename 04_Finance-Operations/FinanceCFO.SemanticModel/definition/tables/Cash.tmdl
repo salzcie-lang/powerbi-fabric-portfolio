@@ -1,0 +1,65 @@
+table Cash
+	lineageTag: 5a8f97a8-4ae8-58b4-baa7-128ee1b4f1d4
+
+	column Month
+		dataType: dateTime
+		isHidden
+		formatString: dd mmm yyyy
+		lineageTag: e56891bc-a3c9-5218-bde5-5fdd853dee53
+		summarizeBy: none
+		sourceColumn: Month
+
+		annotation SummarizationSetBy = User
+
+	column 'Cash Balance'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: 71b42f9a-e783-50c6-a269-cf7c3b445b0e
+		summarizeBy: none
+		sourceColumn: Cash Balance
+
+		annotation SummarizationSetBy = User
+
+	column 'Accounts Payable'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: d9d34096-997b-5330-bcdb-11e28483c000
+		summarizeBy: none
+		sourceColumn: Accounts Payable
+
+		annotation SummarizationSetBy = User
+
+	column 'Operating Cash Flow'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: 2741765d-f1b5-5267-9d27-008a073bd01b
+		summarizeBy: none
+		sourceColumn: Operating Cash Flow
+
+		annotation SummarizationSetBy = User
+
+	column Capex
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: 747135c5-fbc8-5493-a119-b578a21f897a
+		summarizeBy: none
+		sourceColumn: Capex
+
+		annotation SummarizationSetBy = User
+
+	partition Cash = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\cash_monthly.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"Month", "CashBalance", "AccountsPayable", "OperatingCashFlow", "Capex"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"Month", type date}, {"CashBalance", Currency.Type}, {"AccountsPayable", Currency.Type}, {"OperatingCashFlow", Currency.Type}, {"Capex", Currency.Type}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"CashBalance", "Cash Balance"}, {"AccountsPayable", "Accounts Payable"}, {"OperatingCashFlow", "Operating Cash Flow"}})
+				in
+				    Renamed
+

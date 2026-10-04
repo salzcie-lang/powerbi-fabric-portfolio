@@ -1,0 +1,409 @@
+table _Measures
+	lineageTag: b582f3ce-9fd6-5634-b599-dc61df992f28
+
+	measure Revenue = SUM ( Orders[Revenue Amount] )
+		formatString: $#,##0
+		displayFolder: 1. Revenue
+		lineageTag: ce7d0117-7a6e-5a86-9530-cc5c1949e6fd
+
+	/// Revenue for the same period one year earlier, limited to dates that have data this year.
+	measure 'Revenue PY' =
+			VAR _LastData = CALCULATE ( MAX ( Orders[Order Date] ), REMOVEFILTERS () )
+			RETURN
+			    CALCULATE (
+			        [Revenue],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _LastData, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 1. Revenue
+		lineageTag: 33c92569-912c-526a-888b-5616b30da4bf
+
+	measure 'Revenue YoY %' = DIVIDE ( [Revenue] - [Revenue PY], [Revenue PY] )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 1. Revenue
+		lineageTag: 91773bf8-d7d0-5069-9ef6-a969dab4e672
+
+	measure 'Revenue Target' = SUM ( Targets[Target Amount] )
+		formatString: $#,##0
+		displayFolder: 2. Target
+		lineageTag: 87275efc-d299-5819-ac7a-de2e9a7c037e
+
+	measure 'Revenue vs Target' = [Revenue] - [Revenue Target]
+		formatString: +$#,##0;-$#,##0;$0
+		displayFolder: 2. Target
+		lineageTag: 267f3b4c-a70a-582d-ba66-06ef9322af83
+
+	measure 'Target Attainment %' = DIVIDE ( [Revenue], [Revenue Target] )
+		formatString: 0.0%
+		displayFolder: 2. Target
+		lineageTag: 895143d2-8fec-58e9-980f-01e2a056e6dd
+
+	measure 'Revenue vs Target %' = DIVIDE ( [Revenue] - [Revenue Target], [Revenue Target] )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 2. Target
+		lineageTag: f17ea308-76c0-5184-b25a-ce3fb9785f18
+
+	measure Cost = SUM ( Orders[Cost Amount] )
+		formatString: $#,##0
+		displayFolder: 3. Margin
+		lineageTag: f81766f2-a7a3-5cf8-90cf-ea4d606530ee
+
+	measure 'Gross Profit' = [Revenue] - [Cost]
+		formatString: $#,##0
+		displayFolder: 3. Margin
+		lineageTag: 57e6a1a1-2d36-58a3-a2b3-20dc97ae67df
+
+	measure 'Gross Margin %' = DIVIDE ( [Gross Profit], [Revenue] )
+		formatString: 0.0%
+		displayFolder: 3. Margin
+		lineageTag: ced99c44-e982-5903-a8df-7850cd774b3f
+
+	measure 'Gross Margin % PY' =
+			VAR _LastData = CALCULATE ( MAX ( Orders[Order Date] ), REMOVEFILTERS () )
+			RETURN
+			    CALCULATE (
+			        [Gross Margin %],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _LastData, -12 )
+			    )
+		formatString: 0.0%
+		displayFolder: 3. Margin
+		lineageTag: b6b083bf-9f5f-50b5-bff8-780e8108be12
+
+	measure 'Gross Margin Change (pts)' = ( [Gross Margin %] - [Gross Margin % PY] ) * 100
+		formatString: +0.0 pts;-0.0 pts;0.0 pts
+		displayFolder: 3. Margin
+		lineageTag: 6f2121ec-d4db-5fd8-ac85-cccc4a7a3274
+
+	measure 'List Sales' = SUMX ( Orders, Orders[Quantity] * Orders[Unit Price] )
+		formatString: $#,##0
+		displayFolder: 4. Discount
+		lineageTag: 59760d49-4866-5bc9-861d-6c4e8200482e
+
+	measure 'Discount Amount' = [List Sales] - [Revenue]
+		formatString: $#,##0
+		displayFolder: 4. Discount
+		lineageTag: 5d268872-da29-5b83-a585-11bb2747d4ea
+
+	measure 'Discount %' = DIVIDE ( [Discount Amount], [List Sales] )
+		formatString: 0.0%
+		displayFolder: 4. Discount
+		lineageTag: 0725ffdf-6ef2-5504-ad77-4f74982073c8
+
+	measure Orders = DISTINCTCOUNT ( Orders[Order ID] )
+		formatString: #,##0
+		displayFolder: 5. Volume
+		lineageTag: 0afa7cb8-7243-5a15-8487-1c334c5a72dd
+
+	measure 'Orders PY' =
+			VAR _LastData = CALCULATE ( MAX ( Orders[Order Date] ), REMOVEFILTERS () )
+			RETURN
+			    CALCULATE (
+			        [Orders],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _LastData, -12 )
+			    )
+		formatString: #,##0
+		displayFolder: 5. Volume
+		lineageTag: 80fa00db-5b03-53a0-91ba-b5e0afc96255
+
+	measure 'Orders YoY %' = DIVIDE ( [Orders] - [Orders PY], [Orders PY] )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 5. Volume
+		lineageTag: 866c930f-ec4f-5e6b-86a1-b3dfc333ed2c
+
+	measure Units = SUM ( Orders[Quantity] )
+		formatString: #,##0
+		displayFolder: 5. Volume
+		lineageTag: 71241bb4-537f-5e10-874d-a1c39c916762
+
+	measure 'Avg Order Value' = DIVIDE ( [Revenue], [Orders] )
+		formatString: $#,##0
+		displayFolder: 5. Volume
+		lineageTag: 73956f1c-a7d8-5325-a38f-f9f4e813aecd
+
+	measure 'Avg Order Value PY' =
+			VAR _LastData = CALCULATE ( MAX ( Orders[Order Date] ), REMOVEFILTERS () )
+			RETURN
+			    CALCULATE (
+			        [Avg Order Value],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _LastData, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 5. Volume
+		lineageTag: a0d77f0a-ad25-5e8d-b810-89a5bfcd731d
+
+	measure 'Avg Order Value YoY %' = DIVIDE ( [Avg Order Value] - [Avg Order Value PY], [Avg Order Value PY] )
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 5. Volume
+		lineageTag: 0a777cf0-dcc2-5b80-9863-04c5c0fc5240
+
+	measure 'Active Customers' = DISTINCTCOUNT ( Orders[CustomerKey] )
+		formatString: #,##0
+		displayFolder: 6. Customers
+		lineageTag: ef8f6645-990d-528d-9225-6cbccfb31074
+
+	measure 'New Customers' =
+			VAR _From = MIN ( 'Date'[Date] )
+			VAR _To = MAX ( 'Date'[Date] )
+			RETURN
+			    COUNTROWS (
+			        FILTER ( Customers, Customers[First Order Date] >= _From && Customers[First Order Date] <= _To )
+			    )
+		formatString: #,##0
+		displayFolder: 6. Customers
+		lineageTag: 2af1c591-a047-5db0-bc3b-f748b4aef0f1
+
+	measure 'Revenue per Customer' = DIVIDE ( [Revenue], [Active Customers] )
+		formatString: $#,##0
+		displayFolder: 6. Customers
+		lineageTag: 2e2122b9-2686-5310-a29b-88743c77faf5
+
+	measure 'Data As Of' = "Data as of " & FORMAT ( CALCULATE ( MAX ( Orders[Order Date] ), REMOVEFILTERS () ), "d mmm yyyy" )
+		displayFolder: 7. Labels
+		lineageTag: feb62bde-5da1-58fb-b09c-0cadbd69b2c8
+
+	measure 'Revenue YoY Color' = IF ( [Revenue YoY %] >= 0, "#3CC08A", "#F0788A" )
+		displayFolder: 8. Formatting
+		lineageTag: d7eb92f1-551c-59f7-b036-9c5bfac2e4e4
+
+	measure 'Target Color' = IF ( [Revenue vs Target] >= 0, "#3CC08A", "#F0788A" )
+		displayFolder: 8. Formatting
+		lineageTag: 055425ab-eed2-52a0-b128-b7432ff15bb5
+
+	measure 'Margin Color' = IF ( [Gross Margin Change (pts)] >= 0, "#3CC08A", "#F0788A" )
+		displayFolder: 8. Formatting
+		lineageTag: 85b41f2c-ae79-5f41-9131-1d4da346fa08
+
+	measure 'Orders YoY Color' = IF ( [Orders YoY %] >= 0, "#3CC08A", "#F0788A" )
+		displayFolder: 8. Formatting
+		lineageTag: b41e079c-0674-5441-bd4c-6565af2be027
+
+	measure 'AOV YoY Color' = IF ( [Avg Order Value YoY %] >= 0, "#3CC08A", "#F0788A" )
+		displayFolder: 8. Formatting
+		lineageTag: 887466ef-7a37-5eb2-894d-2352eefb52d8
+
+	measure 'Revenue YoY Label' = IF ( [Revenue YoY %] >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( [Revenue YoY %] ), "0.0%" ) & " vs PY"
+		displayFolder: 7. Labels
+		lineageTag: 582dd05f-46b6-5398-899b-09f7ae8fdb4c
+
+	measure 'Target Label' = IF ( [Revenue vs Target] >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( [Revenue vs Target %] ), "0.0%" ) & " vs target"
+		displayFolder: 7. Labels
+		lineageTag: d62b5544-3dbd-5999-804e-f8a4ff895aa4
+
+	measure 'Margin Label' = IF ( [Gross Margin Change (pts)] >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( [Gross Margin Change (pts)] ), "0.0" ) & " pts vs PY"
+		displayFolder: 7. Labels
+		lineageTag: f35a4953-8a3b-547b-81b6-18be872b9605
+
+	measure 'AOV YoY Label' = IF ( [Avg Order Value YoY %] >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( [Avg Order Value YoY %] ), "0.0%" ) & " vs PY"
+		displayFolder: 7. Labels
+		lineageTag: 39db9270-bc8a-5c40-95be-7abc983309f5
+
+	measure YoY = IF ( ISBLANK ( [Revenue PY] ) || ISBLANK ( [Revenue] ), BLANK (), IF ( [Revenue YoY %] >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( [Revenue YoY %] ), "0.0%" ) )
+		displayFolder: 7. Labels
+		lineageTag: d8ed8c2a-7b10-5182-ad0e-7128d6c68ba4
+
+	measure 'Attainment Color' = IF ( [Target Attainment %] >= 0.95, "#5E6AD2", "#F4A0AE" )
+		displayFolder: 8. Formatting
+		lineageTag: ae0bddca-9113-5f41-abd2-35e3dc31c1cd
+
+	measure 'Gross Profit PY' =
+			VAR _LastData = CALCULATE ( MAX ( Orders[Order Date] ), REMOVEFILTERS () )
+			RETURN
+			    CALCULATE (
+			        [Gross Profit],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _LastData, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 3. Margin
+		lineageTag: 73ad3f4e-f5ac-53c2-bf35-5845fc60bfb0
+
+	measure 'Gross Profit Label' =
+			VAR _d = DIVIDE ( [Gross Profit] - [Gross Profit PY], [Gross Profit PY] )
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" ) & " vs PY"
+		displayFolder: 7. Labels
+		lineageTag: 621e88db-2bc1-51c1-8342-56e171ece732
+
+	measure 'Gross Profit Color' =
+			VAR _d = DIVIDE ( [Gross Profit] - [Gross Profit PY], [Gross Profit PY] )
+			RETURN
+			    IF ( _d >= 0, "#3CC08A", "#F0788A" )
+		displayFolder: 8. Formatting
+		lineageTag: 9ca77181-4ffa-51eb-a054-c0f643a9041c
+
+	measure 'Discount % PY' =
+			VAR _LastData = CALCULATE ( MAX ( Orders[Order Date] ), REMOVEFILTERS () )
+			RETURN
+			    CALCULATE (
+			        [Discount %],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _LastData, -12 )
+			    )
+		formatString: 0.0%
+		displayFolder: 4. Discount
+		lineageTag: c899fd2a-a0a9-540d-8179-81a01b7df264
+
+	measure 'Discount % Label' =
+			VAR _d = ( [Discount %] - [Discount % PY] ) * 100
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0" ) & " pts vs PY"
+		displayFolder: 7. Labels
+		lineageTag: 0b288c69-cfe2-5af6-acc6-196d14dfaff3
+
+	measure 'Discount % Color' =
+			VAR _d = ( [Discount %] - [Discount % PY] ) * 100
+			RETURN
+			    IF ( _d >= 0, "#F0788A", "#3CC08A" )
+		displayFolder: 8. Formatting
+		lineageTag: 48eb32ff-f368-5465-ab7a-67ac414825e6
+
+	measure 'Units PY' =
+			VAR _LastData = CALCULATE ( MAX ( Orders[Order Date] ), REMOVEFILTERS () )
+			RETURN
+			    CALCULATE (
+			        [Units],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _LastData, -12 )
+			    )
+		formatString: #,##0
+		displayFolder: 5. Volume
+		lineageTag: eca6a202-686b-56b2-8f4a-6d50820d845c
+
+	measure 'Units Label' =
+			VAR _d = DIVIDE ( [Units] - [Units PY], [Units PY] )
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" ) & " vs PY"
+		displayFolder: 7. Labels
+		lineageTag: f2d7bc03-a47a-5de3-8803-d5a4e0158246
+
+	measure 'Units Color' =
+			VAR _d = DIVIDE ( [Units] - [Units PY], [Units PY] )
+			RETURN
+			    IF ( _d >= 0, "#3CC08A", "#F0788A" )
+		displayFolder: 8. Formatting
+		lineageTag: 5628760a-b2fd-5af9-afa2-cce3f33abd57
+
+	measure 'Active Customers PY' =
+			VAR _LastData = CALCULATE ( MAX ( Orders[Order Date] ), REMOVEFILTERS () )
+			RETURN
+			    CALCULATE (
+			        [Active Customers],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _LastData, -12 )
+			    )
+		formatString: #,##0
+		displayFolder: 6. Customers
+		lineageTag: 20d20a54-9192-5445-8f40-04e4b5f84023
+
+	measure 'Active Customers Label' =
+			VAR _d = DIVIDE ( [Active Customers] - [Active Customers PY], [Active Customers PY] )
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" ) & " vs PY"
+		displayFolder: 7. Labels
+		lineageTag: f70d5c26-b6b1-5260-99e9-fa98e1d4c406
+
+	measure 'Active Customers Color' =
+			VAR _d = DIVIDE ( [Active Customers] - [Active Customers PY], [Active Customers PY] )
+			RETURN
+			    IF ( _d >= 0, "#3CC08A", "#F0788A" )
+		displayFolder: 8. Formatting
+		lineageTag: 7bce04c0-5548-5fb4-abdd-cadbec5c54ac
+
+	measure 'Revenue per Customer PY' =
+			VAR _LastData = CALCULATE ( MAX ( Orders[Order Date] ), REMOVEFILTERS () )
+			RETURN
+			    CALCULATE (
+			        [Revenue per Customer],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _LastData, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 6. Customers
+		lineageTag: 2a565b09-d6f8-509d-bbd7-8578c7cc879f
+
+	measure 'Revenue per Customer Label' =
+			VAR _d = DIVIDE ( [Revenue per Customer] - [Revenue per Customer PY], [Revenue per Customer PY] )
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" ) & " vs PY"
+		displayFolder: 7. Labels
+		lineageTag: da937611-fcf9-52aa-b1c1-a52e9faa620c
+
+	measure 'Revenue per Customer Color' =
+			VAR _d = DIVIDE ( [Revenue per Customer] - [Revenue per Customer PY], [Revenue per Customer PY] )
+			RETURN
+			    IF ( _d >= 0, "#3CC08A", "#F0788A" )
+		displayFolder: 8. Formatting
+		lineageTag: 2df11676-263c-50ac-8be8-81df13c61362
+
+	measure 'Orders Label' = IF ( [Orders YoY %] >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( [Orders YoY %] ), "0.0%" ) & " vs PY"
+		displayFolder: 7. Labels
+		lineageTag: 04f6269e-68e3-5a95-9484-aed1c89dec17
+
+	measure 'New Customers Label' = FORMAT ( DIVIDE ( [New Customers], [Active Customers] ), "0.0%" ) & " of active customers"
+		displayFolder: 7. Labels
+		lineageTag: 2dad6533-6ae3-54d0-b7ec-7aeca41439e1
+
+	measure 'Neutral Color' = "#8A8FA3"
+		displayFolder: 8. Formatting
+		lineageTag: 079864c9-ace8-5a37-8512-279f5418beb7
+
+	measure 'Margin Bar Color' =
+			VAR _All = CALCULATE ( [Gross Margin %], ALLSELECTED ( Products ) )
+			RETURN
+			    IF ( [Gross Margin %] < _All, "#F4A0AE", "#5E6AD2" )
+		displayFolder: 8. Formatting
+		lineageTag: 5d3cad1d-bedf-5819-ad69-c4a565b4e82d
+
+	/// Numeric year-over-year change, used to sort tables by decline.
+	measure 'Revenue YoY Sort' = [Revenue YoY %]
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: 1. Revenue
+		lineageTag: 3827cc40-0f70-57a0-be03-9f9fef63671a
+
+	measure 'Order Lines' = COUNTROWS ( Orders )
+		formatString: #,##0
+		displayFolder: 5. Volume
+		lineageTag: 8469a2b2-e424-59e7-b013-c731978eaf69
+
+	measure 'Orders per Customer' = DIVIDE ( [Orders], [Active Customers] )
+		formatString: 0.0
+		displayFolder: 6. Customers
+		lineageTag: ab0dcd0c-3b33-4c6b-b6e5-4deead16f0dc
+
+	measure 'Orders per Customer PY' = DIVIDE ( [Orders PY], [Active Customers PY] )
+		formatString: 0.0
+		displayFolder: 6. Customers
+		lineageTag: 554f03e6-8dd4-40aa-bacb-46f87990b06d
+
+	measure 'Orders per Customer Label' =
+			VAR _d = DIVIDE ( [Orders per Customer] - [Orders per Customer PY], [Orders per Customer PY] )
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" ) & " vs PY"
+		displayFolder: 7. Labels
+		lineageTag: 83196597-c7bd-4e28-ace6-1d8a99151742
+
+	measure 'Orders per Customer Color' = IF ( [Orders per Customer] >= [Orders per Customer PY], "#3CC08A", "#F0788A" )
+		displayFolder: 8. Formatting
+		lineageTag: 34a7f571-6029-4f21-a8ec-84222fe24702
+
+	column Placeholder
+		dataType: string
+		isHidden
+		lineageTag: db3abf1d-e323-550b-8bfa-c432b3746259
+		summarizeBy: none
+		sourceColumn: Placeholder
+
+		annotation SummarizationSetBy = User
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = #table(type table [Placeholder = text], {})
+				in
+				    Source
+

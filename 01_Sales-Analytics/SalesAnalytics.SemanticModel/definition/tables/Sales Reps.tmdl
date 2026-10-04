@@ -1,0 +1,54 @@
+table 'Sales Reps'
+	lineageTag: 0db019f8-0a7b-57fc-890e-25cfebcba24d
+
+	column RepKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 8bdea542-c31b-5350-b4ee-d7c958a64534
+		summarizeBy: none
+		sourceColumn: RepKey
+
+		annotation SummarizationSetBy = User
+
+	column 'Sales Rep'
+		dataType: string
+		lineageTag: be692822-84a7-5068-a292-ad63f6ded377
+		summarizeBy: none
+		sourceColumn: Sales Rep
+
+		annotation SummarizationSetBy = User
+
+	column RegionKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: debe7375-061c-538f-91ca-71ed5cae25fd
+		summarizeBy: none
+		sourceColumn: RegionKey
+
+		annotation SummarizationSetBy = User
+
+	column 'Hire Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: 532f006f-0adc-575c-a57d-5102ca44b5a7
+		summarizeBy: none
+		sourceColumn: Hire Date
+
+		annotation SummarizationSetBy = User
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition 'Sales Reps' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\sales_reps.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"RepKey", "SalesRep", "RegionKey", "HireDate"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"RepKey", Int64.Type}, {"SalesRep", type text}, {"RegionKey", Int64.Type}, {"HireDate", type date}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"SalesRep", "Sales Rep"}, {"HireDate", "Hire Date"}})
+				in
+				    Renamed
+

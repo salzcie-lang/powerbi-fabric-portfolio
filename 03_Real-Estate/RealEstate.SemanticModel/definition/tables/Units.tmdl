@@ -1,0 +1,71 @@
+table Units
+	lineageTag: baf76eec-0884-57cb-aa9b-a483b7c3ec7b
+
+	column UnitKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 50e2b6bb-a494-5e02-959d-6a9930536f33
+		summarizeBy: none
+		sourceColumn: UnitKey
+
+		annotation SummarizationSetBy = User
+
+	column PropertyKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: ac04293b-8e6c-50d5-959e-5917fcbdeab8
+		summarizeBy: none
+		sourceColumn: PropertyKey
+
+		annotation SummarizationSetBy = User
+
+	column 'Unit Number'
+		dataType: string
+		lineageTag: 43242593-296d-5879-961d-0324bcb40c1c
+		summarizeBy: none
+		sourceColumn: Unit Number
+
+		annotation SummarizationSetBy = User
+
+	column 'Unit Type'
+		dataType: string
+		lineageTag: 6ac98802-9c7e-5348-a218-d24e36dc5b68
+		summarizeBy: none
+		sourceColumn: Unit Type
+
+		annotation SummarizationSetBy = User
+
+	column 'Square Feet'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 898578e6-8878-5aa3-b034-46f209fcf8fc
+		summarizeBy: none
+		sourceColumn: Square Feet
+
+		annotation SummarizationSetBy = User
+
+	column 'Market Rent'
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: 24d40e3a-4f7a-5ae7-ae0c-30d906b3632c
+		summarizeBy: none
+		sourceColumn: Market Rent
+
+		annotation SummarizationSetBy = User
+
+	partition Units = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\units.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"UnitKey", "PropertyKey", "UnitNumber", "UnitType", "SquareFeet", "MarketRent"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"UnitKey", Int64.Type}, {"PropertyKey", Int64.Type}, {"UnitNumber", type text}, {"UnitType", type text}, {"SquareFeet", Int64.Type}, {"MarketRent", Currency.Type}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"UnitNumber", "Unit Number"}, {"UnitType", "Unit Type"}, {"SquareFeet", "Square Feet"}, {"MarketRent", "Market Rent"}})
+				in
+				    Renamed
+

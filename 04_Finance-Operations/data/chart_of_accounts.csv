@@ -1,0 +1,16 @@
+AccountCode,Account,AccountGroup,PnLSection,SectionOrder,Sign
+4000,Product Revenue,Revenue,Revenue,1,1
+4100,Service Revenue,Revenue,Revenue,1,1
+4200,Subscription Revenue,Revenue,Revenue,1,1
+5000,Materials,Cost of Goods Sold,COGS,2,-1
+5100,Direct Labor,Cost of Goods Sold,COGS,2,-1
+5200,Freight & Logistics,Cost of Goods Sold,COGS,2,-1
+6000,Salaries & Benefits,Operating Expenses,OpEx,3,-1
+6100,Marketing,Operating Expenses,OpEx,3,-1
+6200,Software & IT,Operating Expenses,OpEx,3,-1
+6300,Rent & Facilities,Operating Expenses,OpEx,3,-1
+6400,Travel,Operating Expenses,OpEx,3,-1
+6500,Professional Fees,Operating Expenses,OpEx,3,-1
+7000,Depreciation,Other,Below EBITDA,4,-1
+7100,Interest Expense,Other,Below EBITDA,4,-1
+7200,Income Tax,Other,Below EBITDA,4,-1

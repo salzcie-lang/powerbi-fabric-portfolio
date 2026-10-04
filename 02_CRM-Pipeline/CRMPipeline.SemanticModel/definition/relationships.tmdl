@@ -1,0 +1,32 @@
+relationship 336c8fae-c37d-576a-851c-20a00cd18b18
+	fromColumn: Opportunities.'Close Date'
+	toColumn: Date.Date
+
+relationship 58642b87-97a1-54de-a852-6c4e7655eb12
+	fromColumn: Opportunities.AccountKey
+	toColumn: Accounts.AccountKey
+
+relationship d47b95d5-d4f3-5583-8abf-d8c6e968bdd2
+	fromColumn: Opportunities.RepKey
+	toColumn: Reps.RepKey
+
+relationship e91b4b77-6a4a-565f-83a8-a327efdc7251
+	fromColumn: Opportunities.Stage
+	toColumn: Stages.Stage
+
+relationship a3d6428e-d3c7-5a41-adf8-cca907e9ce5c
+	fromColumn: Leads.'Created Date'
+	toColumn: Date.Date
+
+relationship a6612c15-419a-558b-bc89-d85be61e7ce1
+	fromColumn: 'Stage History'.OpportunityKey
+	toColumn: Opportunities.OpportunityKey
+
+relationship f6a75389-97c0-5e85-9151-d08fa0867b86
+	fromColumn: Activities.'Activity Date'
+	toColumn: Date.Date
+
+relationship dee668bb-9482-5422-9103-eea4c84c89ac
+	fromColumn: Activities.RepKey
+	toColumn: Reps.RepKey
+

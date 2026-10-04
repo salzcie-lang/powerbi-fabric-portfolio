@@ -1,0 +1,87 @@
+table 'Maintenance Requests'
+	lineageTag: 3807be6a-321d-52f2-879e-04cfa4a688ea
+
+	column RequestKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7096f036-4073-5cf9-87b2-085686263842
+		summarizeBy: none
+		sourceColumn: RequestKey
+
+		annotation SummarizationSetBy = User
+
+	column UnitKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 2955d441-fb8d-591d-8f07-1ac49100e88b
+		summarizeBy: none
+		sourceColumn: UnitKey
+
+		annotation SummarizationSetBy = User
+
+	column 'Opened Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: a24ef4f8-19be-53f8-aae8-665f35ecb20e
+		summarizeBy: none
+		sourceColumn: Opened Date
+
+		annotation SummarizationSetBy = User
+
+	column 'Completed Date'
+		dataType: dateTime
+		formatString: dd mmm yyyy
+		lineageTag: 5e866540-c00a-5c94-8e7b-8c12b517710f
+		summarizeBy: none
+		sourceColumn: Completed Date
+
+		annotation SummarizationSetBy = User
+
+	column Category
+		dataType: string
+		lineageTag: 1f36824f-9317-5dfe-9054-9a490c48542e
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = User
+
+	column Priority
+		dataType: string
+		lineageTag: 6071cb36-c77b-5064-bb5b-c8a8cc1ce210
+		summarizeBy: none
+		sourceColumn: Priority
+
+		annotation SummarizationSetBy = User
+
+	column Status
+		dataType: string
+		lineageTag: 02fb7d56-9421-5aa3-ac1f-fbbadfa6f42a
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = User
+
+	column Cost
+		dataType: decimal
+		isHidden
+		formatString: #,##0
+		lineageTag: c92e3f5c-85de-5e30-b161-6184414f53a4
+		summarizeBy: none
+		sourceColumn: Cost
+
+		annotation SummarizationSetBy = User
+
+	partition 'Maintenance Requests' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\maintenance_requests.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"RequestKey", "UnitKey", "OpenedDate", "CompletedDate", "Category", "Priority", "Status", "Cost"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"RequestKey", Int64.Type}, {"UnitKey", Int64.Type}, {"OpenedDate", type date}, {"CompletedDate", type date}, {"Category", type text}, {"Priority", type text}, {"Status", type text}, {"Cost", Currency.Type}}, "en-US"),
+				    Renamed = Table.RenameColumns(Typed, {{"OpenedDate", "Opened Date"}, {"CompletedDate", "Completed Date"}})
+				in
+				    Renamed
+

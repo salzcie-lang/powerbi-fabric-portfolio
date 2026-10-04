@@ -1,0 +1,231 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Operating expense accounts against budget. Orange runs over budget, green under. Click a bar to focus the headline card on that account.",
+  "data": {
+    "name": "dataset"
+  },
+  "padding": {
+    "left": 16,
+    "right": 10,
+    "top": 44,
+    "bottom": 2
+  },
+  "transform": [
+    {
+      "calculate": "abs(datum['PnL Variance %'])",
+      "as": "absVar"
+    },
+    {
+      "joinaggregate": [
+        {
+          "op": "max",
+          "field": "absVar",
+          "as": "maxVar"
+        }
+      ]
+    },
+    {
+      "calculate": "datum['PnL Variance %'] / max(datum.maxVar, 0.05)",
+      "as": "scaled"
+    },
+    {
+      "calculate": "format(datum['PnL Variance %'], '+.1%')",
+      "as": "varLabel"
+    }
+  ],
+  "encoding": {
+    "y": {
+      "field": "Line Name",
+      "type": "nominal",
+      "sort": {
+        "field": "PnL Variance %",
+        "op": "max",
+        "order": "descending"
+      },
+      "scale": {
+        "paddingInner": 0.55,
+        "paddingOuter": 0.3
+      },
+      "axis": {
+        "title": null,
+        "labelAlign": "left",
+        "labelPadding": 104,
+        "minExtent": 104,
+        "labelLimit": 104,
+        "labelColor": "#C9D0DE",
+        "labelFontSize": 9.5
+      }
+    }
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "rule",
+        "color": "#FFFFFF",
+        "opacity": 0.14
+      },
+      "encoding": {
+        "x": {
+          "datum": 0,
+          "type": "quantitative",
+          "axis": null
+        },
+        "y": {
+          "value": 0
+        },
+        "y2": {
+          "value": {
+            "expr": "height"
+          }
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "bar",
+        "cornerRadius": 5,
+        "height": 10,
+        "cursor": "pointer"
+      },
+      "encoding": {
+        "x": {
+          "field": "scaled",
+          "type": "quantitative",
+          "axis": null,
+          "scale": {
+            "domain": [
+              -0.75,
+              1.8
+            ],
+            "nice": false
+          }
+        },
+        "x2": {
+          "datum": 0
+        },
+        "color": {
+          "condition": {
+            "test": "datum.scaled >= 0",
+            "value": {
+              "gradient": "linear",
+              "x1": 0,
+              "y1": 0,
+              "x2": 1,
+              "y2": 0,
+              "stops": [
+                {
+                  "offset": 0,
+                  "color": "#FFB86B"
+                },
+                {
+                  "offset": 1,
+                  "color": "#FF6A3D"
+                }
+              ]
+            }
+          },
+          "value": {
+            "gradient": "linear",
+            "x1": 0,
+            "y1": 0,
+            "x2": 1,
+            "y2": 0,
+            "stops": [
+              {
+                "offset": 0,
+                "color": "#5BE3B0"
+              },
+              {
+                "offset": 1,
+                "color": "#3CC8E0"
+              }
+            ]
+          }
+        },
+        "opacity": {
+          "condition": {
+            "test": "datum.__selected__ == 'off'",
+            "value": 0.25
+          },
+          "value": 1
+        },
+        "tooltip": [
+          {
+            "field": "Line Name",
+            "title": "Account"
+          },
+          {
+            "field": "PnL Value",
+            "title": "Actual",
+            "format": "$,.0f"
+          },
+          {
+            "field": "PnL Budget",
+            "title": "Budget",
+            "format": "$,.0f"
+          },
+          {
+            "field": "PnL Variance",
+            "title": "Variance",
+            "format": "+$,.0f"
+          },
+          {
+            "field": "PnL Variance %",
+            "title": "Variance %",
+            "format": "+.1%"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.scaled >= 0"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 6,
+        "fontSize": 9.5,
+        "fontWeight": 600,
+        "color": "#FFB86B"
+      },
+      "encoding": {
+        "x": {
+          "field": "scaled",
+          "type": "quantitative",
+          "axis": null
+        },
+        "text": {
+          "field": "varLabel"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.scaled < 0"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -6,
+        "fontSize": 9.5,
+        "fontWeight": 600,
+        "color": "#5BE3B0"
+      },
+      "encoding": {
+        "x": {
+          "field": "scaled",
+          "type": "quantitative",
+          "axis": null
+        },
+        "text": {
+          "field": "varLabel"
+        }
+      }
+    }
+  ]
+}

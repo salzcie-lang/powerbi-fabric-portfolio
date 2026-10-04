@@ -1,0 +1,601 @@
+AccountKey,Account,Segment,Industry,Country,Employees
+1,Jasper Learning,Mid-Market,Education,United Kingdom,737
+2,Delta Analytics,Enterprise,Education,Canada,9263
+3,Lumen Capital,Enterprise,Education,United States,2858
+4,Mosaic Cloud,Mid-Market,Manufacturing,UAE,856
+5,Acorn Health,Mid-Market,Healthcare,United Kingdom,372
+6,Wren Labs,Enterprise,Fintech,United Kingdom,3177
+7,Vela Analytics,Enterprise,Healthcare,United States,5128
+8,Lumen Labs,SMB,SaaS,Germany,131
+9,Acorn Labs,Mid-Market,Logistics,Germany,956
+10,Jasper Capital,Mid-Market,Healthcare,Germany,1289
+11,Rune Health,Mid-Market,Healthcare,Australia,660
+12,Flint Analytics,SMB,Healthcare,United Kingdom,42
+13,Ember Commerce,Mid-Market,Healthcare,Netherlands,880
+14,Helix Commerce,SMB,Education,Canada,34
+15,Lumen Media,Mid-Market,Retail,United Kingdom,1444
+16,Flint Learning,SMB,SaaS,United Kingdom,86
+17,Jasper Learning 36,Mid-Market,Media,United States,367
+18,Jasper Analytics,Mid-Market,Healthcare,Australia,550
+19,Cinder Freight,Enterprise,Manufacturing,Australia,5895
+20,Delta Learning,Mid-Market,Manufacturing,Australia,415
+21,Jasper Health,Mid-Market,Healthcare,Netherlands,171
+22,Terra Labs,SMB,SaaS,United States,66
+23,Mosaic Cloud 84,SMB,Education,Singapore,138
+24,Acorn Learning,Mid-Market,Healthcare,UAE,960
+25,Jasper Capital 80,Mid-Market,Healthcare,Germany,280
+26,Beacon Dynamics,SMB,Logistics,United States,89
+27,Indigo Dynamics,Mid-Market,Manufacturing,Singapore,667
+28,Kite Cloud,SMB,SaaS,UAE,33
+29,Sable Labs,Mid-Market,Media,Singapore,984
+30,Vela Commerce,Mid-Market,Media,United States,1285
+31,Nova Capital,SMB,Education,Germany,79
+32,Terra Media,SMB,Logistics,United Kingdom,74
+33,Flint Dynamics,Mid-Market,Media,Australia,445
+34,Flint Freight,SMB,Media,Australia,69
+35,Sable Health,Mid-Market,SaaS,United Kingdom,362
+36,Prism Health,SMB,Retail,United States,34
+37,Mosaic Freight,Mid-Market,Logistics,Canada,476
+38,Prism Commerce,Enterprise,Education,Netherlands,3130
+39,Terra Cloud,SMB,Media,Canada,44
+40,Onyx Dynamics,Mid-Market,Media,Germany,458
+41,Flint Labs,Mid-Market,Manufacturing,Australia,292
+42,Jasper Commerce,SMB,Manufacturing,United Kingdom,79
+43,Vela Health,SMB,Healthcare,United Kingdom,92
+44,Unity Labs,Enterprise,SaaS,United Kingdom,6295
+45,Glacier Cloud,SMB,Media,Germany,44
+46,Wren Labs 39,Enterprise,Media,United States,3804
+47,Onyx Commerce,SMB,SaaS,Germany,19
+48,Indigo Labs,Mid-Market,Manufacturing,Australia,781
+49,Cinder Media,SMB,Education,United States,73
+50,Delta Health,SMB,SaaS,Germany,357
+51,Onyx Cloud,SMB,Fintech,Australia,95
+52,Onyx Analytics,SMB,Manufacturing,United States,38
+53,Rune Labs,SMB,Media,United States,59
+54,Cinder Commerce,SMB,Logistics,Canada,29
+55,Acorn Dynamics,Mid-Market,SaaS,United States,471
+56,Lumen Commerce,Mid-Market,Media,United States,684
+57,Helix Dynamics,SMB,Education,United States,120
+58,Rune Labs 68,SMB,Manufacturing,Australia,11
+59,Prism Labs,Mid-Market,Fintech,United Kingdom,129
+60,Beacon Cloud,Mid-Market,SaaS,Netherlands,578
+61,Vela Analytics 49,SMB,Fintech,United States,62
+62,Rune Media,Mid-Market,Fintech,United States,666
+63,Wren Learning,SMB,Fintech,Germany,76
+64,Ember Freight,Enterprise,Retail,United States,1695
+65,Vela Capital,Mid-Market,Healthcare,United Kingdom,713
+66,Quill Health,SMB,Media,United States,209
+67,Terra Cloud 80,SMB,Healthcare,Netherlands,50
+68,Rune Capital,SMB,Media,Germany,29
+69,Ember Commerce 4,Mid-Market,Retail,United Kingdom,1592
+70,Delta Learning 62,SMB,Manufacturing,Canada,43
+71,Indigo Analytics,Enterprise,Manufacturing,United States,1917
+72,Wren Learning 38,Enterprise,Healthcare,Australia,13788
+73,Sable Commerce,Mid-Market,Media,Germany,450
+74,Prism Media,Enterprise,Education,Canada,5753
+75,Wren Learning 35,SMB,Logistics,United States,23
+76,Mosaic Commerce,Mid-Market,Education,United Kingdom,279
+77,Vela Cloud,Mid-Market,Healthcare,Canada,252
+78,Delta Capital,SMB,Healthcare,Germany,115
+79,Acorn Capital,SMB,Manufacturing,Singapore,56
+80,Kite Dynamics,Mid-Market,Media,Singapore,598
+81,Lumen Cloud,Mid-Market,Education,United States,518
+82,Sable Labs 22,Mid-Market,SaaS,Netherlands,660
+83,Flint Learning 27,Mid-Market,Logistics,Germany,511
+84,Wren Dynamics,SMB,Retail,United Kingdom,46
+85,Kite Labs,SMB,Manufacturing,Canada,62
+86,Sable Capital,Mid-Market,SaaS,United States,1545
+87,Indigo Labs 83,SMB,Manufacturing,United States,40
+88,Kite Media,SMB,Media,United Kingdom,31
+89,Ember Health,SMB,Retail,United States,42
+90,Mosaic Media,SMB,Media,Singapore,48
+91,Quill Media,SMB,Logistics,United States,61
+92,Prism Learning,Mid-Market,Logistics,Netherlands,434
+93,Prism Cloud,Mid-Market,Retail,United States,244
+94,Acorn Labs 60,Enterprise,Manufacturing,Australia,1978
+95,Vela Analytics 64,Enterprise,Manufacturing,Canada,2151
+96,Sable Learning,Mid-Market,SaaS,UAE,667
+97,Beacon Analytics,SMB,Healthcare,Germany,104
+98,Acorn Learning 93,SMB,Education,United States,21
+99,Terra Learning,Enterprise,Retail,Australia,4542
+100,Glacier Analytics,Enterprise,Fintech,United States,5521
+101,Onyx Freight,SMB,Logistics,Canada,57
+102,Unity Dynamics,SMB,Fintech,UAE,29
+103,Acorn Dynamics 23,SMB,Manufacturing,Singapore,62
+104,Unity Health,SMB,Fintech,United States,130
+105,Cinder Media 8,SMB,Retail,United States,37
+106,Nova Freight,SMB,Fintech,United Kingdom,121
+107,Quill Cloud,SMB,Logistics,Canada,90
+108,Nova Freight 4,Mid-Market,Education,United States,492
+109,Jasper Health 51,SMB,Media,UAE,12
+110,Acorn Commerce,Mid-Market,Logistics,United States,675
+111,Sable Commerce 28,SMB,Manufacturing,United States,28
+112,Ember Learning,Mid-Market,SaaS,United Kingdom,832
+113,Quill Analytics,SMB,Media,United States,155
+114,Nova Labs,SMB,Fintech,United States,134
+115,Sable Capital 66,SMB,Healthcare,Canada,47
+116,Flint Cloud,Mid-Market,Retail,United States,977
+117,Kite Capital,Enterprise,Fintech,United States,2905
+118,Terra Health,SMB,Media,United Kingdom,71
+119,Flint Health,Enterprise,Manufacturing,United States,1586
+120,Delta Freight,SMB,Retail,Australia,82
+121,Rune Health 38,SMB,Media,United States,99
+122,Nova Learning,Mid-Market,Education,UAE,554
+123,Kite Learning,SMB,Fintech,Germany,82
+124,Glacier Commerce,Mid-Market,Retail,United States,408
+125,Nova Learning 20,Enterprise,Healthcare,Australia,5299
+126,Quill Media 59,SMB,Retail,Canada,33
+127,Vela Labs,SMB,SaaS,United States,68
+128,Ember Freight 16,Mid-Market,Media,United States,193
+129,Sable Freight,Mid-Market,Media,Canada,274
+130,Nova Learning 89,Enterprise,SaaS,Canada,2893
+131,Unity Learning,SMB,Logistics,United Kingdom,91
+132,Indigo Labs 47,SMB,Education,Canada,49
+133,Terra Analytics,SMB,SaaS,Germany,65
+134,Glacier Dynamics,Mid-Market,Media,United States,547
+135,Helix Capital,Enterprise,SaaS,Netherlands,4490
+136,Nova Health,SMB,Education,Australia,95
+137,Flint Analytics 44,SMB,SaaS,Netherlands,25
+138,Onyx Analytics 12,Mid-Market,Healthcare,United Kingdom,319
+139,Indigo Labs 41,SMB,Education,United Kingdom,33
+140,Terra Cloud 59,SMB,Media,Australia,56
+141,Acorn Labs 72,Mid-Market,SaaS,United Kingdom,438
+142,Glacier Labs,SMB,SaaS,United States,36
+143,Wren Analytics,Mid-Market,Logistics,United States,299
+144,Quill Labs,SMB,Fintech,United States,55
+145,Indigo Capital,SMB,Logistics,United Kingdom,122
+146,Acorn Learning 36,Mid-Market,Fintech,Germany,911
+147,Acorn Capital 47,SMB,Retail,United Kingdom,120
+148,Kite Labs 67,SMB,Education,Canada,53
+149,Cinder Freight 69,Mid-Market,Retail,United States,529
+150,Ember Freight 58,SMB,Logistics,United States,129
+151,Mosaic Analytics,SMB,Education,UAE,52
+152,Beacon Dynamics 92,SMB,Education,Canada,43
+153,Indigo Labs 36,Mid-Market,Media,United Kingdom,777
+154,Lumen Commerce 59,Mid-Market,Fintech,Canada,666
+155,Glacier Capital,Mid-Market,Retail,Germany,1358
+156,Delta Analytics 61,SMB,Manufacturing,Netherlands,89
+157,Helix Health,Mid-Market,Manufacturing,Canada,450
+158,Quill Labs 93,Enterprise,Fintech,United States,9055
+159,Vela Capital 25,Mid-Market,SaaS,Germany,2097
+160,Flint Media,Mid-Market,Fintech,Germany,397
+161,Sable Media,SMB,SaaS,United States,48
+162,Wren Cloud,Enterprise,Logistics,United States,1708
+163,Prism Dynamics,Mid-Market,Manufacturing,Germany,367
+164,Kite Cloud 22,SMB,SaaS,Germany,27
+165,Cinder Labs,Mid-Market,Healthcare,United States,278
+166,Indigo Commerce,SMB,Healthcare,United States,154
+167,Helix Health 86,Mid-Market,Retail,United States,287
+168,Jasper Freight,SMB,Healthcare,United States,174
+169,Prism Freight,SMB,Manufacturing,United States,96
+170,Unity Dynamics 8,SMB,SaaS,Australia,42
+171,Onyx Health,SMB,Retail,United States,45
+172,Jasper Freight 68,Mid-Market,Education,United States,783
+173,Nova Commerce,Mid-Market,Media,United States,609
+174,Indigo Dynamics 20,SMB,Logistics,Canada,82
+175,Kite Cloud 69,SMB,SaaS,United States,62
+176,Prism Dynamics 17,Enterprise,Healthcare,Germany,13384
+177,Beacon Cloud 5,Mid-Market,Manufacturing,United States,574
+178,Rune Media 26,SMB,Healthcare,United States,57
+179,Indigo Commerce 82,Enterprise,Education,United States,3678
+180,Mosaic Dynamics,Mid-Market,Logistics,Netherlands,618
+181,Glacier Learning,SMB,Media,United Kingdom,41
+182,Terra Commerce,Enterprise,SaaS,United States,5889
+183,Jasper Dynamics,SMB,Manufacturing,Singapore,188
+184,Beacon Labs,Mid-Market,Retail,Australia,353
+185,Onyx Health 91,Enterprise,Education,United States,6431
+186,Wren Cloud 4,SMB,Media,United States,130
+187,Beacon Cloud 13,Mid-Market,Fintech,United Kingdom,468
+188,Wren Capital,SMB,Education,United Kingdom,82
+189,Helix Dynamics 63,SMB,SaaS,United States,51
+190,Sable Learning 98,SMB,Education,Germany,127
+191,Acorn Learning 42,Mid-Market,Healthcare,Australia,1736
+192,Quill Labs 59,Enterprise,Fintech,United States,5053
+193,Sable Commerce 94,Mid-Market,Retail,United Kingdom,1249
+194,Nova Media,SMB,Manufacturing,Canada,125
+195,Cinder Freight 53,SMB,Logistics,United States,50
+196,Jasper Cloud,SMB,Manufacturing,United Kingdom,19
+197,Terra Capital,Enterprise,SaaS,United States,2024
+198,Rune Freight,SMB,Healthcare,United States,46
+199,Mosaic Commerce 85,Mid-Market,Education,United States,725
+200,Jasper Capital 89,SMB,Manufacturing,United States,133
+201,Rune Freight 80,Mid-Market,SaaS,United States,864
+202,Beacon Commerce,SMB,Education,United Kingdom,86
+203,Prism Cloud 56,Mid-Market,Retail,United States,444
+204,Cinder Health,SMB,SaaS,United States,21
+205,Rune Labs 94,SMB,Retail,Australia,93
+206,Quill Freight,Mid-Market,Education,United States,1031
+207,Onyx Analytics 27,Mid-Market,SaaS,United Kingdom,358
+208,Cinder Health 48,Enterprise,Education,Singapore,8957
+209,Cinder Cloud,SMB,Healthcare,Singapore,28
+210,Cinder Analytics,Mid-Market,Manufacturing,Germany,915
+211,Mosaic Labs,Mid-Market,Logistics,United States,649
+212,Quill Analytics 58,SMB,Manufacturing,Singapore,95
+213,Terra Learning 78,SMB,Retail,United Kingdom,53
+214,Nova Dynamics,SMB,Fintech,Canada,40
+215,Ember Media,SMB,Logistics,United Kingdom,28
+216,Beacon Freight,Mid-Market,Education,Canada,725
+217,Beacon Media,Enterprise,Retail,Canada,2778
+218,Unity Analytics,SMB,Logistics,UAE,89
+219,Helix Capital 45,SMB,Retail,United States,48
+220,Lumen Analytics,SMB,Retail,United States,35
+221,Helix Labs,Enterprise,Manufacturing,Australia,2581
+222,Kite Analytics,Mid-Market,Manufacturing,United States,545
+223,Cinder Learning,SMB,Manufacturing,Netherlands,75
+224,Rune Commerce,SMB,Fintech,United States,30
+225,Helix Media,SMB,Manufacturing,Germany,66
+226,Unity Analytics 84,SMB,Healthcare,United States,25
+227,Vela Labs 8,SMB,Healthcare,United States,62
+228,Terra Labs 70,Mid-Market,Retail,United States,928
+229,Delta Cloud,Mid-Market,Education,United States,749
+230,Vela Dynamics,SMB,Healthcare,United States,43
+231,Helix Cloud,Enterprise,SaaS,United States,5401
+232,Terra Freight,SMB,Manufacturing,United Kingdom,94
+233,Indigo Analytics 77,SMB,SaaS,Canada,125
+234,Ember Capital,Mid-Market,Education,United Kingdom,1342
+235,Ember Labs,SMB,Retail,United Kingdom,65
+236,Jasper Freight 56,SMB,Media,United States,60
+237,Prism Health 64,SMB,Fintech,United States,30
+238,Prism Cloud 60,SMB,Manufacturing,United States,30
+239,Helix Media 15,SMB,Education,UAE,167
+240,Terra Capital 58,Mid-Market,SaaS,United States,971
+241,Acorn Cloud,Mid-Market,Healthcare,Canada,972
+242,Mosaic Dynamics 37,Mid-Market,Education,Netherlands,190
+243,Onyx Media,SMB,Education,United States,166
+244,Kite Cloud 23,SMB,Media,UAE,204
+245,Terra Commerce 92,Mid-Market,Logistics,United States,978
+246,Jasper Learning 13,Mid-Market,Manufacturing,Germany,509
+247,Onyx Freight 94,SMB,Manufacturing,United States,79
+248,Nova Learning 31,SMB,Logistics,United States,79
+249,Nova Freight 6,Mid-Market,Retail,United Kingdom,1037
+250,Cinder Health 10,Mid-Market,Retail,United States,238
+251,Nova Capital 15,Mid-Market,SaaS,United States,1568
+252,Lumen Commerce 23,Mid-Market,Healthcare,Netherlands,537
+253,Helix Capital 11,Mid-Market,Media,Canada,1568
+254,Acorn Commerce 85,Enterprise,SaaS,United States,9402
+255,Mosaic Media 11,SMB,Media,United Kingdom,84
+256,Jasper Media,SMB,SaaS,Netherlands,49
+257,Jasper Labs,SMB,Media,United States,80
+258,Mosaic Cloud 5,Mid-Market,Media,United States,578
+259,Mosaic Learning,SMB,Fintech,United States,35
+260,Beacon Capital,Mid-Market,SaaS,United States,364
+261,Jasper Labs 26,SMB,Media,Australia,150
+262,Mosaic Commerce 42,Mid-Market,Logistics,United States,1367
+263,Terra Capital 11,Mid-Market,Logistics,United States,3188
+264,Ember Analytics,Mid-Market,Education,Netherlands,342
+265,Kite Media 45,SMB,Logistics,United States,64
+266,Prism Commerce 43,SMB,SaaS,United States,51
+267,Cinder Commerce 23,SMB,Healthcare,United States,27
+268,Ember Health 92,SMB,SaaS,United States,37
+269,Vela Dynamics 62,Enterprise,Manufacturing,Singapore,7556
+270,Indigo Media,SMB,Healthcare,United States,69
+271,Onyx Health 75,Enterprise,Logistics,Australia,7008
+272,Lumen Freight,Mid-Market,Fintech,Germany,260
+273,Terra Cloud 32,SMB,Media,United States,43
+274,Ember Learning 54,Enterprise,Media,Canada,2847
+275,Vela Learning,SMB,Retail,Canada,299
+276,Delta Learning 58,SMB,Media,United States,104
+277,Lumen Cloud 51,SMB,SaaS,United States,91
+278,Cinder Freight 26,Mid-Market,Retail,United States,302
+279,Indigo Freight,Mid-Market,Logistics,UAE,713
+280,Vela Freight,SMB,Logistics,United States,151
+281,Flint Media 41,Mid-Market,Fintech,United Kingdom,667
+282,Vela Freight 51,SMB,Healthcare,United States,71
+283,Flint Health 13,Mid-Market,SaaS,Netherlands,421
+284,Lumen Dynamics,Enterprise,SaaS,Netherlands,1900
+285,Nova Capital 45,Mid-Market,Education,United Kingdom,870
+286,Delta Health 68,SMB,Manufacturing,Netherlands,39
+287,Ember Dynamics,Enterprise,Manufacturing,Australia,8739
+288,Acorn Labs 82,SMB,Logistics,UAE,95
+289,Wren Dynamics 70,SMB,SaaS,United States,36
+290,Wren Learning 30,Mid-Market,Retail,United States,311
+291,Terra Analytics 95,SMB,Logistics,Germany,51
+292,Rune Media 97,Enterprise,Fintech,United States,8029
+293,Indigo Capital 15,SMB,Logistics,Australia,43
+294,Quill Commerce,Mid-Market,Manufacturing,United States,426
+295,Ember Capital 90,SMB,Logistics,Canada,49
+296,Kite Labs 39,Mid-Market,Retail,Netherlands,856
+297,Glacier Freight,SMB,Logistics,United States,34
+298,Flint Analytics 80,Mid-Market,Healthcare,Singapore,795
+299,Nova Media 50,Mid-Market,Media,United States,421
+300,Lumen Media 4,Enterprise,Education,Singapore,5469
+301,Cinder Media 86,SMB,Healthcare,United States,28
+302,Ember Cloud,SMB,Education,Netherlands,38
+303,Onyx Dynamics 83,Enterprise,Education,United States,4327
+304,Indigo Labs 70,Mid-Market,SaaS,United States,680
+305,Quill Labs 15,Enterprise,Fintech,United Kingdom,9662
+306,Mosaic Labs 35,SMB,Manufacturing,Netherlands,74
+307,Lumen Freight 12,SMB,Healthcare,United Kingdom,50
+308,Vela Learning 8,SMB,Retail,United Kingdom,92
+309,Ember Cloud 94,Mid-Market,Healthcare,United States,888
+310,Mosaic Analytics 20,SMB,SaaS,Germany,18
+311,Cinder Commerce 30,SMB,Education,Netherlands,47
+312,Acorn Analytics,Mid-Market,Media,United Kingdom,314
+313,Lumen Dynamics 61,SMB,Logistics,United States,13
+314,Vela Learning 29,Enterprise,Healthcare,United States,7669
+315,Cinder Capital,SMB,Logistics,Canada,82
+316,Prism Analytics,Mid-Market,Retail,Canada,231
+317,Prism Commerce 4,Enterprise,Fintech,United States,5089
+318,Vela Capital 77,SMB,Logistics,Germany,89
+319,Indigo Analytics 30,Mid-Market,Education,United States,1151
+320,Vela Commerce 94,Enterprise,Healthcare,United States,2282
+321,Kite Labs 85,Mid-Market,Manufacturing,United States,568
+322,Mosaic Media 75,Mid-Market,Manufacturing,United States,659
+323,Prism Freight 37,SMB,Media,United States,78
+324,Unity Media,SMB,Manufacturing,United States,18
+325,Acorn Analytics 27,Mid-Market,Media,Canada,373
+326,Cinder Capital 57,SMB,Manufacturing,Germany,94
+327,Cinder Cloud 90,Mid-Market,SaaS,UAE,299
+328,Kite Analytics 94,SMB,Fintech,United States,116
+329,Rune Analytics,SMB,Healthcare,Netherlands,71
+330,Indigo Health,SMB,Retail,United Kingdom,32
+331,Beacon Health,Enterprise,SaaS,United States,3988
+332,Indigo Freight 78,Mid-Market,Logistics,United Kingdom,298
+333,Kite Dynamics 50,SMB,Retail,United Kingdom,38
+334,Helix Freight,SMB,Manufacturing,United Kingdom,37
+335,Beacon Cloud 19,Mid-Market,Retail,United States,345
+336,Unity Commerce,SMB,SaaS,Singapore,79
+337,Vela Media,Mid-Market,Manufacturing,Canada,292
+338,Vela Health 38,Mid-Market,Retail,United States,306
+339,Helix Commerce 48,SMB,Media,United States,127
+340,Prism Health 45,SMB,SaaS,Germany,12
+341,Beacon Freight 23,Mid-Market,Logistics,Netherlands,256
+342,Glacier Learning 75,SMB,Retail,United States,29
+343,Delta Freight 75,Enterprise,Media,Netherlands,3162
+344,Rune Health 61,SMB,Fintech,United Kingdom,40
+345,Unity Commerce 35,Mid-Market,Fintech,Australia,759
+346,Onyx Labs,Enterprise,Manufacturing,Germany,1764
+347,Delta Learning 87,SMB,Education,United States,122
+348,Helix Health 69,SMB,Media,United States,49
+349,Cinder Cloud 95,SMB,Media,United States,30
+350,Ember Capital 25,SMB,Healthcare,United States,55
+351,Ember Commerce 27,SMB,Media,United Kingdom,58
+352,Kite Health,SMB,SaaS,Germany,53
+353,Unity Learning 28,SMB,Logistics,Canada,87
+354,Kite Commerce,SMB,Retail,United Kingdom,82
+355,Acorn Health 64,Enterprise,Media,United States,5732
+356,Kite Commerce 45,SMB,Retail,United States,46
+357,Helix Media 18,SMB,Healthcare,Australia,30
+358,Ember Commerce 31,Enterprise,Fintech,United Kingdom,4715
+359,Indigo Analytics 36,Mid-Market,Manufacturing,United Kingdom,688
+360,Jasper Media 46,Mid-Market,Retail,United States,677
+361,Indigo Health 58,SMB,Education,Netherlands,61
+362,Beacon Cloud 45,SMB,Media,Canada,113
+363,Flint Media 57,Mid-Market,SaaS,United States,642
+364,Helix Health 27,SMB,Manufacturing,Canada,60
+365,Wren Freight,Mid-Market,SaaS,United States,166
+366,Ember Capital 53,Mid-Market,Education,Singapore,287
+367,Quill Learning,Enterprise,Media,Australia,3397
+368,Helix Media 43,SMB,Media,United States,36
+369,Acorn Labs 91,Mid-Market,Healthcare,Australia,493
+370,Jasper Commerce 55,Mid-Market,Healthcare,United States,856
+371,Acorn Commerce 78,Mid-Market,Logistics,United States,416
+372,Onyx Labs 37,SMB,Retail,Netherlands,49
+373,Onyx Capital,SMB,Fintech,Netherlands,45
+374,Flint Dynamics 58,Mid-Market,Logistics,United Kingdom,231
+375,Unity Dynamics 62,Mid-Market,Media,United Kingdom,767
+376,Glacier Capital 97,SMB,Education,United States,46
+377,Sable Health 65,SMB,Fintech,United States,56
+378,Sable Dynamics,SMB,Education,United States,30
+379,Jasper Capital 52,Enterprise,Retail,Germany,2536
+380,Unity Learning 78,SMB,SaaS,United States,51
+381,Quill Dynamics,SMB,SaaS,United States,85
+382,Delta Cloud 46,SMB,Fintech,United States,122
+383,Terra Media 57,SMB,Retail,Germany,39
+384,Terra Cloud 29,Enterprise,Manufacturing,United States,1813
+385,Cinder Dynamics,SMB,SaaS,United Kingdom,68
+386,Prism Commerce 96,SMB,Manufacturing,United States,28
+387,Vela Labs 65,SMB,Education,United States,119
+388,Vela Freight 76,SMB,Logistics,United Kingdom,89
+389,Unity Media 37,Enterprise,SaaS,United States,5619
+390,Helix Labs 39,Mid-Market,Fintech,Canada,408
+391,Cinder Commerce 31,SMB,Manufacturing,Germany,51
+392,Jasper Health 14,Mid-Market,Media,United States,216
+393,Onyx Freight 27,SMB,SaaS,United Kingdom,225
+394,Unity Labs 68,Enterprise,Logistics,Australia,15915
+395,Wren Freight 92,Mid-Market,Healthcare,United States,463
+396,Lumen Learning,SMB,Retail,Canada,43
+397,Quill Health 73,SMB,Media,Netherlands,52
+398,Vela Dynamics 24,SMB,Logistics,Singapore,44
+399,Unity Capital,SMB,Fintech,Australia,189
+400,Beacon Health 72,Mid-Market,SaaS,United States,1203
+401,Rune Freight 78,Mid-Market,SaaS,Germany,936
+402,Lumen Freight 3,SMB,Manufacturing,United States,134
+403,Acorn Freight,Mid-Market,SaaS,United States,492
+404,Wren Dynamics 87,Mid-Market,Healthcare,United States,763
+405,Beacon Commerce 70,Mid-Market,Media,Canada,825
+406,Jasper Labs 6,Enterprise,Media,United States,3870
+407,Nova Commerce 41,SMB,Education,United States,36
+408,Beacon Learning,Mid-Market,Healthcare,United Kingdom,307
+409,Unity Cloud,SMB,Education,Germany,178
+410,Jasper Cloud 4,SMB,Manufacturing,United States,25
+411,Ember Freight 26,Enterprise,Manufacturing,Germany,2003
+412,Wren Analytics 35,SMB,Education,United Kingdom,42
+413,Kite Capital 18,SMB,Manufacturing,United States,284
+414,Prism Cloud 12,Mid-Market,Education,United States,630
+415,Lumen Cloud 62,Mid-Market,Healthcare,Germany,904
+416,Onyx Capital 96,Mid-Market,SaaS,United States,951
+417,Vela Dynamics 97,SMB,Retail,United States,50
+418,Helix Commerce 98,Mid-Market,Healthcare,United States,836
+419,Onyx Cloud 85,SMB,Education,Canada,28
+420,Sable Cloud,Mid-Market,Education,Netherlands,292
+421,Unity Dynamics 60,Enterprise,Media,United Kingdom,1877
+422,Prism Commerce 71,Mid-Market,Retail,United States,685
+423,Beacon Analytics 51,Mid-Market,Healthcare,Netherlands,1179
+424,Flint Analytics 93,Mid-Market,Logistics,United States,686
+425,Delta Media,Enterprise,Fintech,United Kingdom,3059
+426,Indigo Learning,SMB,Logistics,United States,18
+427,Kite Media 6,Mid-Market,Logistics,United States,359
+428,Mosaic Commerce 44,Mid-Market,Education,Netherlands,160
+429,Terra Freight 23,SMB,Healthcare,United States,62
+430,Delta Media 4,SMB,Healthcare,UAE,56
+431,Glacier Dynamics 88,Mid-Market,Fintech,United States,527
+432,Nova Media 86,SMB,Retail,United States,46
+433,Jasper Media 87,SMB,SaaS,United States,50
+434,Nova Labs 94,Enterprise,Media,Netherlands,1795
+435,Unity Health 4,Mid-Market,Healthcare,United States,508
+436,Vela Health 68,Enterprise,Retail,United Kingdom,5126
+437,Ember Media 36,Enterprise,Logistics,United States,7353
+438,Onyx Dynamics 75,SMB,Retail,United States,49
+439,Sable Freight 20,SMB,SaaS,Canada,60
+440,Unity Analytics 48,SMB,Manufacturing,Singapore,66
+441,Jasper Media 4,Mid-Market,Fintech,United States,670
+442,Lumen Freight 82,Mid-Market,Manufacturing,United Kingdom,456
+443,Flint Commerce,SMB,Retail,United Kingdom,77
+444,Sable Capital 41,Mid-Market,SaaS,Canada,1080
+445,Delta Capital 15,Enterprise,Media,UAE,5210
+446,Rune Labs 8,SMB,Fintech,Germany,75
+447,Delta Health 14,Mid-Market,Healthcare,Germany,451
+448,Mosaic Analytics 70,Mid-Market,Healthcare,United States,837
+449,Helix Cloud 79,SMB,Education,United States,48
+450,Terra Labs 94,SMB,Logistics,United States,95
+451,Vela Learning 95,Enterprise,Healthcare,UAE,6106
+452,Delta Freight 74,SMB,Education,Canada,81
+453,Ember Analytics 43,SMB,Fintech,Germany,29
+454,Delta Media 21,SMB,Retail,Singapore,65
+455,Kite Commerce 54,SMB,Fintech,Canada,128
+456,Flint Learning 83,SMB,Healthcare,United Kingdom,47
+457,Flint Health 41,SMB,Media,United States,72
+458,Terra Commerce 59,SMB,Logistics,UAE,160
+459,Nova Learning 85,Mid-Market,SaaS,United States,408
+460,Nova Cloud,Mid-Market,Healthcare,Germany,304
+461,Wren Analytics 40,Mid-Market,Media,Canada,347
+462,Quill Media 92,SMB,Retail,Australia,21
+463,Unity Cloud 22,SMB,Education,United States,123
+464,Beacon Labs 3,SMB,Healthcare,United States,79
+465,Rune Learning,SMB,Manufacturing,United States,178
+466,Glacier Analytics 93,Enterprise,Media,Canada,4576
+467,Sable Media 77,SMB,Healthcare,United Kingdom,17
+468,Prism Cloud 85,Mid-Market,Media,United States,1048
+469,Kite Health 34,SMB,Manufacturing,Germany,25
+470,Indigo Freight 67,SMB,SaaS,United States,95
+471,Wren Cloud 27,SMB,SaaS,United States,22
+472,Acorn Labs 57,Mid-Market,Fintech,Australia,466
+473,Mosaic Media 61,SMB,Healthcare,United States,54
+474,Unity Freight,Mid-Market,Retail,United States,470
+475,Cinder Commerce 29,SMB,Logistics,Germany,24
+476,Unity Commerce 13,SMB,SaaS,United States,74
+477,Mosaic Labs 83,SMB,SaaS,United Kingdom,169
+478,Wren Freight 33,SMB,Healthcare,Netherlands,68
+479,Acorn Freight 59,SMB,Retail,United Kingdom,24
+480,Sable Analytics,SMB,Retail,United States,272
+481,Prism Learning 3,SMB,Fintech,Australia,27
+482,Indigo Analytics 81,Mid-Market,SaaS,United States,305
+483,Wren Capital 24,SMB,Fintech,United Kingdom,47
+484,Cinder Media 44,Mid-Market,Fintech,Germany,863
+485,Mosaic Dynamics 40,Mid-Market,Education,United States,610
+486,Prism Cloud 51,Mid-Market,Education,Canada,969
+487,Flint Learning 84,SMB,Logistics,United States,22
+488,Onyx Cloud 67,Mid-Market,Manufacturing,United States,1257
+489,Vela Learning 26,SMB,Media,United States,16
+490,Nova Freight 47,SMB,Retail,Canada,31
+491,Kite Health 97,SMB,Retail,United Kingdom,130
+492,Rune Learning 16,SMB,Logistics,Singapore,249
+493,Indigo Freight 90,Mid-Market,Healthcare,United Kingdom,463
+494,Quill Cloud 29,Mid-Market,Manufacturing,UAE,1417
+495,Delta Health 15,Mid-Market,Education,Canada,1882
+496,Beacon Freight 15,SMB,Fintech,United States,64
+497,Onyx Capital 60,SMB,Healthcare,United States,55
+498,Prism Labs 43,Enterprise,Fintech,United Kingdom,8758
+499,Terra Capital 6,Enterprise,SaaS,UAE,4217
+500,Quill Labs 49,Mid-Market,Media,Canada,611
+501,Onyx Cloud 21,Mid-Market,Education,United States,501
+502,Cinder Health 52,SMB,Retail,Singapore,118
+503,Flint Media 87,SMB,Media,Canada,64
+504,Helix Cloud 65,Enterprise,SaaS,Germany,1076
+505,Unity Dynamics 19,Enterprise,Retail,United States,2040
+506,Beacon Capital 50,Mid-Market,SaaS,United States,537
+507,Wren Cloud 30,SMB,Media,United States,52
+508,Flint Labs 26,Enterprise,Retail,United Kingdom,1031
+509,Jasper Learning 72,Mid-Market,Education,Netherlands,487
+510,Quill Dynamics 17,SMB,Education,Singapore,66
+511,Ember Health 18,SMB,Logistics,United States,59
+512,Terra Media 32,SMB,Retail,Germany,68
+513,Delta Dynamics,SMB,SaaS,Australia,54
+514,Glacier Health,SMB,Education,United States,51
+515,Jasper Capital 28,Enterprise,Media,United States,3659
+516,Acorn Labs 24,SMB,Retail,United States,38
+517,Kite Labs 88,SMB,Education,Canada,114
+518,Beacon Learning 81,SMB,Manufacturing,UAE,84
+519,Glacier Dynamics 34,Mid-Market,Media,United Kingdom,482
+520,Cinder Capital 52,SMB,Education,Australia,100
+521,Terra Cloud 39,Mid-Market,Manufacturing,United States,536
+522,Prism Labs 96,Mid-Market,Healthcare,Australia,1169
+523,Rune Dynamics,SMB,Education,Canada,29
+524,Vela Health 3,SMB,Healthcare,United Kingdom,135
+525,Acorn Health 37,SMB,Logistics,United States,36
+526,Vela Dynamics 29,Enterprise,Education,United States,2448
+527,Prism Cloud 6,SMB,Healthcare,United Kingdom,38
+528,Glacier Cloud 50,Mid-Market,SaaS,Germany,819
+529,Quill Capital,Mid-Market,Logistics,Canada,258
+530,Jasper Freight 33,SMB,Healthcare,United States,49
+531,Onyx Analytics 76,SMB,Media,United States,86
+532,Cinder Analytics 63,SMB,Manufacturing,Australia,53
+533,Beacon Freight 73,Enterprise,Healthcare,Canada,3751
+534,Unity Media 96,SMB,Manufacturing,UAE,28
+535,Jasper Commerce 50,SMB,Education,United States,114
+536,Onyx Health 19,Mid-Market,SaaS,United Kingdom,1570
+537,Quill Freight 86,Enterprise,Fintech,Germany,10329
+538,Glacier Capital 54,SMB,SaaS,Singapore,15
+539,Delta Labs,Mid-Market,Education,United States,426
+540,Indigo Learning 57,Mid-Market,Retail,Canada,513
+541,Ember Capital 17,SMB,Logistics,United States,59
+542,Beacon Media 30,SMB,Manufacturing,United States,94
+543,Mosaic Learning 85,Mid-Market,Retail,UAE,1191
+544,Prism Commerce 6,Enterprise,SaaS,United States,1389
+545,Vela Learning 20,SMB,Fintech,United States,63
+546,Glacier Dynamics 43,SMB,Healthcare,United States,40
+547,Nova Capital 30,Mid-Market,Media,Australia,642
+548,Prism Dynamics 67,SMB,Media,United Kingdom,97
+549,Delta Analytics 92,SMB,Media,Singapore,33
+550,Acorn Freight 85,Mid-Market,SaaS,Canada,382
+551,Terra Freight 83,Mid-Market,Retail,Netherlands,1227
+552,Onyx Health 18,Enterprise,Healthcare,UAE,9914
+553,Beacon Health 86,SMB,Education,Netherlands,83
+554,Onyx Cloud 82,SMB,Fintech,United States,49
+555,Delta Learning 96,Mid-Market,Media,United States,796
+556,Sable Capital 83,SMB,Logistics,United States,70
+557,Glacier Labs 65,SMB,Logistics,United States,50
+558,Lumen Learning 26,SMB,Healthcare,Germany,37
+559,Nova Cloud 95,Enterprise,Manufacturing,United States,6260
+560,Glacier Commerce 20,SMB,Logistics,United States,22
+561,Vela Media 55,SMB,Logistics,United Kingdom,75
+562,Unity Dynamics 51,Mid-Market,SaaS,United Kingdom,374
+563,Glacier Media,Mid-Market,Fintech,Germany,319
+564,Cinder Health 46,SMB,Fintech,Canada,62
+565,Mosaic Labs 47,Mid-Market,Fintech,UAE,484
+566,Helix Freight 32,Enterprise,Media,United States,4351
+567,Helix Health 78,Mid-Market,Fintech,United States,528
+568,Quill Freight 96,SMB,Education,United States,48
+569,Onyx Cloud 65,Mid-Market,Logistics,Netherlands,506
+570,Helix Labs 81,SMB,SaaS,Germany,74
+571,Helix Capital 72,SMB,Logistics,Canada,91
+572,Kite Capital 30,SMB,Manufacturing,United States,50
+573,Unity Dynamics 49,Mid-Market,Healthcare,Germany,541
+574,Rune Learning 76,Mid-Market,Retail,United States,611
+575,Mosaic Commerce 81,Enterprise,Retail,United States,1852
+576,Wren Health,Mid-Market,Retail,Singapore,1094
+577,Vela Media 63,SMB,Fintech,Canada,128
+578,Terra Labs 24,Mid-Market,Media,United States,433
+579,Helix Labs 76,Mid-Market,Fintech,Canada,916
+580,Nova Analytics,SMB,Education,UAE,61
+581,Mosaic Freight 5,Mid-Market,Fintech,United Kingdom,511
+582,Terra Commerce 24,SMB,SaaS,Canada,23
+583,Delta Freight 49,SMB,Fintech,United States,230
+584,Ember Cloud 57,Mid-Market,Education,Canada,583
+585,Quill Media 76,Mid-Market,SaaS,United States,1033
+586,Indigo Cloud,SMB,SaaS,United States,64
+587,Cinder Commerce 62,Mid-Market,Manufacturing,Netherlands,528
+588,Kite Media 92,Enterprise,Manufacturing,Netherlands,6425
+589,Quill Cloud 22,Mid-Market,Logistics,United States,506
+590,Mosaic Analytics 42,SMB,Healthcare,United States,35
+591,Unity Dynamics 18,SMB,Healthcare,Singapore,35
+592,Indigo Commerce 46,SMB,Media,United Kingdom,27
+593,Quill Dynamics 24,Enterprise,Manufacturing,United Kingdom,1556
+594,Indigo Health 78,SMB,Manufacturing,Singapore,25
+595,Wren Media,Mid-Market,Retail,United States,623
+596,Indigo Analytics 3,SMB,Manufacturing,United States,30
+597,Wren Cloud 35,SMB,Manufacturing,Germany,177
+598,Quill Analytics 47,SMB,Education,United States,63
+599,Mosaic Media 94,Enterprise,Logistics,Canada,1307
+600,Wren Media 18,SMB,SaaS,United States,78

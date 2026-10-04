@@ -1,0 +1,196 @@
+table fact_service_request
+	lineageTag: cb666b16-ff70-5c34-9238-6e3bb660737a
+
+	measure 'Total Requests' = COUNTROWS(fact_service_request)
+		formatString: #,0
+		lineageTag: 4840406c-7671-5af8-80ee-b9977db15cf2
+
+	measure 'Closed Requests' = CALCULATE([Total Requests], fact_service_request[is_closed] = TRUE())
+		formatString: #,0
+		lineageTag: ea4c82fa-6119-552d-9f22-79ad70d8dd27
+
+	measure 'Open Requests' = [Total Requests] - [Closed Requests]
+		formatString: #,0
+		lineageTag: de31503f-bdc0-5ae8-995f-c4d403e7ca12
+
+	measure 'Closure Rate' = DIVIDE([Closed Requests], [Total Requests])
+		formatString: 0.0%
+		lineageTag: 359d03ad-ac3a-59e4-a1bd-4f92c8484899
+
+	measure 'Avg Resolution Hours' = AVERAGE(fact_service_request[resolution_hours])
+		formatString: #,0.0
+		lineageTag: b128f0a8-0078-5a14-9ab5-b16fbbd8e3f4
+
+	measure 'Closed Within Due %' = DIVIDE(CALCULATE(COUNTROWS(fact_service_request), fact_service_request[closed_within_due] = TRUE()), CALCULATE(COUNTROWS(fact_service_request), NOT ISBLANK(fact_service_request[closed_within_due])))
+		formatString: 0.0%
+		lineageTag: 401397ab-a0ae-57c4-9d16-adf628bcee56
+
+	column service_request_id
+		dataType: int64
+		isHidden
+		lineageTag: 26e8e871-8f13-5fd7-b6de-0e29f04124e7
+		summarizeBy: none
+		sourceColumn: service_request_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column created_date_key
+		dataType: int64
+		isHidden
+		lineageTag: c33e1100-b350-5d92-80d2-d3a3f3946d43
+		summarizeBy: none
+		sourceColumn: created_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column closed_date_key
+		dataType: int64
+		isHidden
+		lineageTag: 7358ad85-1c6b-5f9c-80fe-25e7aa6cb615
+		summarizeBy: none
+		sourceColumn: closed_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column agency_key
+		dataType: int64
+		isHidden
+		lineageTag: 84fd0008-878e-5e9f-8413-1934a1b7a5fd
+		summarizeBy: none
+		sourceColumn: agency_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column complaint_key
+		dataType: int64
+		isHidden
+		lineageTag: 6a58bc1f-e106-55de-95a5-bc35dd8ced97
+		summarizeBy: none
+		sourceColumn: complaint_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column borough_key
+		dataType: int64
+		isHidden
+		lineageTag: 181a8554-bc6c-575e-96e4-f789cd052fff
+		summarizeBy: none
+		sourceColumn: borough_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column channel_key
+		dataType: int64
+		isHidden
+		lineageTag: 48c0414f-a859-53dd-a548-ad70270d58f3
+		summarizeBy: none
+		sourceColumn: channel_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column created_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 8a215da1-289e-51b1-b948-0c367398405e
+		summarizeBy: none
+		sourceColumn: created_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column closed_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 2085c215-29f7-51cb-849c-edc53c8d0e09
+		summarizeBy: none
+		sourceColumn: closed_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column created_hour
+		dataType: int64
+		lineageTag: 3d2e8972-20bc-55ab-b6ec-8dd7ad2c1cac
+		summarizeBy: none
+		sourceColumn: created_hour
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: f6405d8f-be40-5248-801f-53da0d1c590a
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column incident_zip
+		dataType: string
+		lineageTag: 61be6f5d-ceb6-50bf-a129-b5ffb257d686
+		summarizeBy: none
+		sourceColumn: incident_zip
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude
+		dataType: double
+		lineageTag: 6b2e3ed6-a840-58ac-a8de-b249145e0f4e
+		summarizeBy: none
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = Automatic
+
+	column longitude
+		dataType: double
+		lineageTag: 2e7b05e0-e45b-53d7-8e00-6cca0e4a9b9d
+		summarizeBy: none
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_closed
+		dataType: boolean
+		lineageTag: adb1f886-7d2c-5282-9d1b-78d304f329d4
+		summarizeBy: none
+		sourceColumn: is_closed
+
+		annotation SummarizationSetBy = Automatic
+
+	column resolution_hours
+		dataType: decimal
+		lineageTag: 7b89e667-4e12-5d78-b114-3c188078ea15
+		summarizeBy: none
+		sourceColumn: resolution_hours
+
+		annotation SummarizationSetBy = Automatic
+
+	column closed_within_due
+		dataType: boolean
+		lineageTag: a72fcc72-383f-5091-9045-18ad21f4b8ef
+		summarizeBy: none
+		sourceColumn: closed_within_due
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_dq_flag
+		dataType: boolean
+		lineageTag: 5755979e-184f-5c8d-b077-2c3ea54b7e3c
+		summarizeBy: none
+		sourceColumn: has_dq_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column loaded_at
+		dataType: dateTime
+		isHidden
+		formatString: General Date
+		lineageTag: a67dd85a-5508-5b37-b073-b2223b1a5408
+		summarizeBy: none
+		sourceColumn: loaded_at
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_service_request = entity
+		mode: directLake
+		source
+			entityName: fact_service_request
+			schemaName: gold
+			expressionSource: DatabaseQuery

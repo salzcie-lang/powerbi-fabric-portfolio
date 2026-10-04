@@ -1,0 +1,488 @@
+table _Measures
+	lineageTag: b582f3ce-9fd6-5634-b599-dc61df992f28
+
+	measure 'As Of Date' = EOMONTH ( CALCULATE ( MAX ( 'Rent Payments'[Due Date] ), REMOVEFILTERS () ), 0 )
+		formatString: dd mmm yyyy
+		displayFolder: 0. Base
+		lineageTag: 1fbe3912-fd5b-5ffc-ae89-ed8ccb4326c4
+
+	/// Last date in the selection, capped at the as-of date. Occupancy is measured on this date.
+	measure 'Snapshot Date' = MIN ( MAX ( 'Date'[Date] ), [As Of Date] )
+		formatString: dd mmm yyyy
+		displayFolder: 0. Base
+		lineageTag: 4ff47f26-e08e-5ccb-a452-9231ce224e68
+
+	measure Properties = COUNTROWS ( 'Properties' )
+		formatString: #,##0
+		displayFolder: 1. Portfolio
+		lineageTag: aab24cb1-ad6b-552a-9438-be7e2c952a28
+
+	measure Units = COUNTROWS ( Units )
+		formatString: #,##0
+		displayFolder: 1. Portfolio
+		lineageTag: 71241bb4-537f-5e10-874d-a1c39c916762
+
+	measure 'Portfolio Value' = SUM ( 'Properties'[Current Value] )
+		formatString: $#,##0
+		displayFolder: 1. Portfolio
+		lineageTag: 43d3b528-036c-50d1-9a16-6a49e40e1862
+
+	measure 'Purchase Price' = SUM ( 'Properties'[Purchase Price] )
+		formatString: $#,##0
+		displayFolder: 1. Portfolio
+		lineageTag: ed31dd97-1a18-56c4-a06e-3749d2721a98
+
+	measure 'Appreciation %' = DIVIDE ( [Portfolio Value] - [Purchase Price], [Purchase Price] )
+		formatString: 0.0%
+		displayFolder: 1. Portfolio
+		lineageTag: f9ed5bd8-07d7-532f-bdb0-8f4b900351d3
+
+	measure 'Occupied Units' =
+			VAR _d = [Snapshot Date]
+			RETURN
+			    IF (
+			        MIN ( 'Date'[Date] ) <= [As Of Date],
+			        CALCULATE ( DISTINCTCOUNT ( Leases[UnitKey] ), Leases[Start Date] <= _d, Leases[End Date] >= _d )
+			    )
+		formatString: #,##0
+		displayFolder: 2. Occupancy
+		lineageTag: 46df2997-70db-57ea-b03b-11ccaf5779d6
+
+	measure 'Occupied Units PY' =
+			VAR _d = EDATE ( [Snapshot Date], -12 )
+			RETURN
+			    IF (
+			        MIN ( 'Date'[Date] ) <= [As Of Date],
+			        CALCULATE ( DISTINCTCOUNT ( Leases[UnitKey] ), Leases[Start Date] <= _d, Leases[End Date] >= _d )
+			    )
+		formatString: #,##0
+		displayFolder: 2. Occupancy
+		lineageTag: b560aeb8-dd2c-5b48-b75e-003f768401aa
+
+	measure 'Occupancy %' = DIVIDE ( [Occupied Units], [Units] )
+		formatString: 0.0%
+		displayFolder: 2. Occupancy
+		lineageTag: 6bfd7b96-0673-5795-9c8d-e3353914b019
+
+	measure 'Occupancy % PY' = DIVIDE ( [Occupied Units PY], [Units] )
+		formatString: 0.0%
+		displayFolder: 2. Occupancy
+		lineageTag: eebf97b5-4859-5591-896b-fd591660ad11
+
+	measure 'Vacant Units' = IF ( NOT ISBLANK ( [Occupied Units] ), [Units] - [Occupied Units] )
+		formatString: #,##0
+		displayFolder: 2. Occupancy
+		lineageTag: 0cfe7bac-2512-59f7-95ce-36c0aa28ee16
+
+	/// Monthly contracted rent of leases active on the snapshot date.
+	measure 'Rent Roll' =
+			VAR _d = [Snapshot Date]
+			RETURN
+			    CALCULATE ( SUM ( Leases[Monthly Rent] ), Leases[Start Date] <= _d, Leases[End Date] >= _d )
+		formatString: $#,##0
+		displayFolder: 2. Occupancy
+		lineageTag: 73741402-40d2-5def-8c75-9571939cc4a0
+
+	measure 'Avg Rent per Unit' = DIVIDE ( [Rent Roll], [Occupied Units] )
+		formatString: $#,##0
+		displayFolder: 2. Occupancy
+		lineageTag: e3958921-6c30-5728-85f7-a34a3d056f07
+
+	/// Active leases that end within 90 days of the as-of date.
+	measure 'Expiring Leases' =
+			VAR _a = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        COUNTROWS ( Leases ),
+			        KEEPFILTERS ( Leases[Start Date] <= _a ),
+			        KEEPFILTERS ( Leases[End Date] >= _a && Leases[End Date] <= _a + 90 )
+			    )
+		formatString: #,##0
+		displayFolder: 2. Occupancy
+		lineageTag: bc569e65-1aed-542c-b5a9-6008b07d0057
+
+	measure 'Expiring Rent' =
+			VAR _a = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        SUM ( Leases[Monthly Rent] ),
+			        KEEPFILTERS ( Leases[Start Date] <= _a ),
+			        KEEPFILTERS ( Leases[End Date] >= _a && Leases[End Date] <= _a + 90 )
+			    )
+		formatString: $#,##0
+		displayFolder: 2. Occupancy
+		lineageTag: 0bb33908-ad73-59e9-9888-54015d089c53
+
+	measure 'Rent Due' = SUM ( 'Rent Payments'[Amount Due] )
+		formatString: $#,##0
+		displayFolder: 3. Collections
+		lineageTag: 793c7dc7-0902-5851-b0cb-58ffa2c99b94
+
+	measure 'Rent Collected' = SUM ( 'Rent Payments'[Amount Paid] )
+		formatString: $#,##0
+		displayFolder: 3. Collections
+		lineageTag: e3a81e19-0391-5b90-a800-173a7186143c
+
+	measure 'Outstanding Rent' = [Rent Due] - [Rent Collected]
+		formatString: $#,##0
+		displayFolder: 3. Collections
+		lineageTag: 86920d2d-0d27-5eb4-bc9c-97a1e289a0f0
+
+	measure 'Collection Rate' = DIVIDE ( [Rent Collected], [Rent Due] )
+		formatString: 0.0%
+		displayFolder: 3. Collections
+		lineageTag: f3353fc2-9a04-5976-ba4f-54df9a28482f
+
+	measure Payments = COUNTROWS ( 'Rent Payments' )
+		formatString: #,##0
+		displayFolder: 3. Collections
+		lineageTag: e7ea7e06-3f78-57a3-b2bf-19455753064a
+
+	measure 'Operating Expenses Total' = SUM ( 'Operating Expenses'[Amount] )
+		formatString: $#,##0
+		displayFolder: 4. NOI
+		lineageTag: 3f5fb286-3d82-56eb-bd3d-9b0c0d444869
+
+	/// Net operating income: rent collected less operating expenses.
+	measure NOI = [Rent Collected] - [Operating Expenses Total]
+		formatString: $#,##0
+		displayFolder: 4. NOI
+		lineageTag: eb629d1b-bdae-54b5-bec1-2c08c460bd97
+
+	measure 'NOI Margin' = DIVIDE ( [NOI], [Rent Collected] )
+		formatString: 0.0%
+		displayFolder: 4. NOI
+		lineageTag: e63a4fad-a815-5813-a55e-0759c67ccfc2
+
+	measure Requests = COUNTROWS ( 'Maintenance Requests' )
+		formatString: #,##0
+		displayFolder: 5. Maintenance
+		lineageTag: e52712e3-dd63-5dd7-a2d3-a909330780fe
+
+	measure 'Open Requests' = CALCULATE ( COUNTROWS ( 'Maintenance Requests' ), 'Maintenance Requests'[Status] = "Open" ) + 0
+		formatString: #,##0
+		displayFolder: 5. Maintenance
+		lineageTag: dcd743ea-7b55-5a3c-a6ac-756875b15f9e
+
+	measure 'Maintenance Cost' = SUM ( 'Maintenance Requests'[Cost] )
+		formatString: $#,##0
+		displayFolder: 5. Maintenance
+		lineageTag: 7399b0db-b600-5666-b5b5-93cdc704f6fe
+
+	measure 'Avg Days to Complete' =
+			AVERAGEX (
+			    FILTER ( 'Maintenance Requests', NOT ISBLANK ( 'Maintenance Requests'[Completed Date] ) ),
+			    DATEDIFF ( 'Maintenance Requests'[Opened Date], 'Maintenance Requests'[Completed Date], DAY )
+			)
+		formatString: 0.0
+		displayFolder: 5. Maintenance
+		lineageTag: 150df89b-43cb-5514-bbbb-19520fe7952b
+
+	measure 'Occupancy % Label' =
+			VAR _d = ( [Occupancy %] - [Occupancy % PY] ) * 100
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0" ) & " pts vs PY"
+		displayFolder: 8. Labels
+		lineageTag: 976a51fc-66e3-59aa-b64d-94d5e4ee4246
+
+	measure 'Occupancy % Color' =
+			VAR _d = ( [Occupancy %] - [Occupancy % PY] ) * 100
+			RETURN
+			    IF ( _d >= 0, "#3E9B6E", "#D9735B" )
+		displayFolder: 9. Formatting
+		lineageTag: 8512f5b8-5aec-58a2-ba7b-6ba08cff3159
+
+	measure 'Rent Collected PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Rent Collected],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 3. Collections
+		lineageTag: c3234add-4405-5ce3-b616-3a5f4c4741c8
+
+	measure 'Rent Collected Label' =
+			VAR _d = DIVIDE ( [Rent Collected] - [Rent Collected PY], [Rent Collected PY] )
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" ) & " vs PY"
+		displayFolder: 8. Labels
+		lineageTag: b7651d86-81a3-5908-9ad8-3306a029d4a2
+
+	measure 'Rent Collected Color' =
+			VAR _d = DIVIDE ( [Rent Collected] - [Rent Collected PY], [Rent Collected PY] )
+			RETURN
+			    IF ( _d >= 0, "#3E9B6E", "#D9735B" )
+		displayFolder: 9. Formatting
+		lineageTag: fc611968-f929-5875-9d10-af94c96767d9
+
+	measure 'Collection Rate PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Collection Rate],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: 0.0%
+		displayFolder: 3. Collections
+		lineageTag: 9010c200-c909-5cf8-b0b5-81c8f1cafacc
+
+	measure 'Collection Rate Label' =
+			VAR _d = ( [Collection Rate] - [Collection Rate PY] ) * 100
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0" ) & " pts vs PY"
+		displayFolder: 8. Labels
+		lineageTag: d94bec1f-ae87-50ff-bfc8-298931c9d79c
+
+	measure 'Collection Rate Color' =
+			VAR _d = ( [Collection Rate] - [Collection Rate PY] ) * 100
+			RETURN
+			    IF ( _d >= 0, "#3E9B6E", "#D9735B" )
+		displayFolder: 9. Formatting
+		lineageTag: 6dae1b3c-928e-567d-b13b-d0c53f50dc7c
+
+	measure 'Operating Expenses Total PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Operating Expenses Total],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 4. NOI
+		lineageTag: 93ad4534-501e-5e2a-80d5-08ef34662b58
+
+	measure 'Operating Expenses Total Label' =
+			VAR _d = DIVIDE ( [Operating Expenses Total] - [Operating Expenses Total PY], [Operating Expenses Total PY] )
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" ) & " vs PY"
+		displayFolder: 8. Labels
+		lineageTag: e62cc8eb-0948-5a28-a880-6c3c6ac79a1a
+
+	measure 'Operating Expenses Total Color' =
+			VAR _d = DIVIDE ( [Operating Expenses Total] - [Operating Expenses Total PY], [Operating Expenses Total PY] )
+			RETURN
+			    IF ( _d >= 0, "#D9735B", "#3E9B6E" )
+		displayFolder: 9. Formatting
+		lineageTag: 732b20bb-dfd4-56f9-83d5-a8feacd71281
+
+	measure 'NOI PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [NOI],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 4. NOI
+		lineageTag: 2a08617c-d86c-5e9c-b13f-1354335f8a4d
+
+	measure 'NOI Label' =
+			VAR _d = DIVIDE ( [NOI] - [NOI PY], [NOI PY] )
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" ) & " vs PY"
+		displayFolder: 8. Labels
+		lineageTag: 40656ff1-1a2f-5208-bd45-1a1df06a2976
+
+	measure 'NOI Color' =
+			VAR _d = DIVIDE ( [NOI] - [NOI PY], [NOI PY] )
+			RETURN
+			    IF ( _d >= 0, "#3E9B6E", "#D9735B" )
+		displayFolder: 9. Formatting
+		lineageTag: 66533b38-ab10-5869-855c-484994378521
+
+	measure 'NOI Margin PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [NOI Margin],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: 0.0%
+		displayFolder: 4. NOI
+		lineageTag: 3cdf5a48-8d2c-526d-8d00-479fdf415674
+
+	measure 'NOI Margin Label' =
+			VAR _d = ( [NOI Margin] - [NOI Margin PY] ) * 100
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0" ) & " pts vs PY"
+		displayFolder: 8. Labels
+		lineageTag: 52392215-9f85-5ee0-b7f0-76d5f01eac9a
+
+	measure 'NOI Margin Color' =
+			VAR _d = ( [NOI Margin] - [NOI Margin PY] ) * 100
+			RETURN
+			    IF ( _d >= 0, "#3E9B6E", "#D9735B" )
+		displayFolder: 9. Formatting
+		lineageTag: ff9d0613-3bdf-5273-9d61-c14918552a02
+
+	measure 'Maintenance Cost PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Maintenance Cost],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: $#,##0
+		displayFolder: 5. Maintenance
+		lineageTag: f3aadc37-84b2-5b09-8c05-5738e24cd8cb
+
+	measure 'Maintenance Cost Label' =
+			VAR _d = DIVIDE ( [Maintenance Cost] - [Maintenance Cost PY], [Maintenance Cost PY] )
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" ) & " vs PY"
+		displayFolder: 8. Labels
+		lineageTag: bddece73-4398-5742-bd8a-f42136390248
+
+	measure 'Maintenance Cost Color' =
+			VAR _d = DIVIDE ( [Maintenance Cost] - [Maintenance Cost PY], [Maintenance Cost PY] )
+			RETURN
+			    IF ( _d >= 0, "#D9735B", "#3E9B6E" )
+		displayFolder: 9. Formatting
+		lineageTag: 9408edf2-73fb-5c73-9f09-9fc37645d77f
+
+	measure 'Requests PY' =
+			VAR _Last = [As Of Date]
+			RETURN
+			    CALCULATE (
+			        [Requests],
+			        SAMEPERIODLASTYEAR ( 'Date'[Date] ),
+			        'Date'[Date] <= EDATE ( _Last, -12 )
+			    )
+		formatString: #,##0
+		displayFolder: 5. Maintenance
+		lineageTag: 352f4c28-6b3e-5725-9f0e-03ca203cc80b
+
+	measure 'Requests Label' =
+			VAR _d = DIVIDE ( [Requests] - [Requests PY], [Requests PY] )
+			RETURN
+			    IF ( _d >= 0, "▲ ", "▼ " ) & FORMAT ( ABS ( _d ), "0.0%" ) & " vs PY"
+		displayFolder: 8. Labels
+		lineageTag: 9f81279e-0d02-5784-b280-8111123e6ba6
+
+	measure 'Requests Color' =
+			VAR _d = DIVIDE ( [Requests] - [Requests PY], [Requests PY] )
+			RETURN
+			    IF ( _d >= 0, "#D9735B", "#3E9B6E" )
+		displayFolder: 9. Formatting
+		lineageTag: f624fcf8-6357-5f80-830f-101d0ecee9da
+
+	measure 'Portfolio Value Label' = "▲ " & FORMAT ( [Appreciation %], "0.0%" ) & " vs cost"
+		displayFolder: 8. Labels
+		lineageTag: e7456ff8-cba8-5f0c-8687-4b3dcfcd64c6
+
+	measure 'Units Label' = [Properties] & " properties"
+		displayFolder: 8. Labels
+		lineageTag: f2d7bc03-a47a-5de3-8803-d5a4e0158246
+
+	measure 'Vacant Units Label' = "of " & FORMAT ( [Units], "#,##0" ) & " units"
+		displayFolder: 8. Labels
+		lineageTag: bf791693-7e6a-57fb-b2ad-3645cb61708b
+
+	measure 'Outstanding Rent Label' = FORMAT ( DIVIDE ( [Outstanding Rent], [Rent Due] ), "0.0%" ) & " of rent due"
+		displayFolder: 8. Labels
+		lineageTag: 9bda669f-0e17-55f7-b169-739ff4b956f4
+
+	measure 'Expiring Leases Label' = FORMAT ( [Expiring Rent] / 1000, "$#,##0" ) & "K / mo at risk"
+		displayFolder: 8. Labels
+		lineageTag: 3ea99adf-8af4-5ebe-b5b4-8607d3dc93d9
+
+	measure 'Open Requests Label' = "of " & FORMAT ( [Requests], "#,##0" ) & " requests"
+		displayFolder: 8. Labels
+		lineageTag: 620b7f56-3e0f-5c09-a0ce-4174872563c5
+
+	measure 'Avg Rent per Unit Label' = "per occupied unit"
+		displayFolder: 8. Labels
+		lineageTag: 486c2dbb-27c1-5c70-a79a-28409d5b5db8
+
+	measure 'Neutral Color' = "#8C8676"
+		displayFolder: 9. Formatting
+		lineageTag: 079864c9-ace8-5a37-8512-279f5418beb7
+
+	measure 'Warning Color' = "#D9735B"
+		displayFolder: 9. Formatting
+		lineageTag: aa4c5076-9944-506f-a341-21092b08fd8a
+
+	measure 'Good Color' = "#3E9B6E"
+		displayFolder: 9. Formatting
+		lineageTag: bf910d49-6106-5185-81e1-8b57e79b4e37
+
+	measure 'Occupancy Color' = IF ( [Occupancy %] < 0.9, "#D9735B", "#2F6B4F" )
+		displayFolder: 9. Formatting
+		lineageTag: 1a83bbc7-cb69-5373-b004-0a24273d9044
+
+	measure 'Occupancy Text Color' = IF ( [Occupancy %] < 0.9, "#D9735B", "#1F2A24" )
+		displayFolder: 9. Formatting
+		lineageTag: 095c3b39-a4f3-5ba7-a59c-7c850b503aea
+
+	measure 'Collection Text Color' = IF ( [Collection Rate] < 0.93, "#D9735B", "#1F2A24" )
+		displayFolder: 9. Formatting
+		lineageTag: 1026602f-90e4-593d-bcbe-6cfe4b2a792c
+
+	/// Inline SVG progress bar for occupancy.
+	measure 'Occupancy Bar' =
+			VAR _p = [Occupancy %]
+			VAR _w = FORMAT ( ROUND ( MIN ( 1, _p ) * 100, 0 ), "0" )
+			VAR _c = IF ( _p < 0.9, "%23D9735B", "%232F6B4F" )
+			RETURN
+			    IF ( NOT ISBLANK ( _p ), "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='104' height='16'><rect x='2' y='5' width='100' height='6' rx='3' fill='%23E8E1D3'/><rect x='2' y='5' width='" & _w & "' height='6' rx='3' fill='" & _c & "'/></svg>" )
+		displayFolder: 9. Formatting
+		lineageTag: 9c613148-99ec-5cbb-af50-a10c5e3ea61d
+		dataCategory: ImageUrl
+
+	/// Inline SVG progress bar for the collection rate.
+	measure 'Collection Bar' =
+			VAR _p = [Collection Rate]
+			VAR _w = FORMAT ( ROUND ( MIN ( 1, _p ) * 100, 0 ), "0" )
+			VAR _c = IF ( _p < 0.93, "%23D9735B", "%234E9A76" )
+			RETURN
+			    IF ( NOT ISBLANK ( _p ), "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='104' height='16'><rect x='2' y='5' width='100' height='6' rx='3' fill='%23E8E1D3'/><rect x='2' y='5' width='" & _w & "' height='6' rx='3' fill='" & _c & "'/></svg>" )
+		displayFolder: 9. Formatting
+		lineageTag: 990cd0b7-4fe4-5ef1-bccf-bdbe104ffb28
+		dataCategory: ImageUrl
+
+	measure 'Map Latitude' = AVERAGE ( 'Properties'[Latitude] )
+		formatString: 0.0000
+		displayFolder: 1. Portfolio
+		lineageTag: dc81b1c3-58d6-51a5-810e-d34326a07155
+
+	measure 'Map Longitude' = AVERAGE ( 'Properties'[Longitude] )
+		formatString: 0.0000
+		displayFolder: 1. Portfolio
+		lineageTag: 20613ef9-e8d5-551c-9f03-0cf3e6f92410
+
+	/// Large photo of the selected property, or a default photo when several are selected.
+	measure 'Hero Photo' =
+			IF (
+			    HASONEVALUE ( 'Properties'[Property] ),
+			    SELECTEDVALUE ( 'Properties'[Photo Large] ),
+			    "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1040&h=760&fit=crop&q=75"
+			)
+		displayFolder: 9. Formatting
+		lineageTag: 4ebe7401-526e-54be-bb08-ecbd2b7bfaef
+		dataCategory: ImageUrl
+
+	column Placeholder
+		dataType: string
+		isHidden
+		lineageTag: db3abf1d-e323-550b-8bfa-c432b3746259
+		summarizeBy: none
+		sourceColumn: Placeholder
+
+		annotation SummarizationSetBy = User
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = #table(type table [Placeholder = text], {})
+				in
+				    Source
+
