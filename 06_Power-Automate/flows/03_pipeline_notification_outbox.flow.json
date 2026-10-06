@@ -1,0 +1,165 @@
+{
+ "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+ "contentVersion": "1.0.0.0",
+ "parameters": {
+  "$authentication": {
+   "defaultValue": {},
+   "type": "SecureObject"
+  },
+  "$connections": {
+   "defaultValue": {},
+   "type": "Object"
+  }
+ },
+ "triggers": {
+  "When_the_pipeline_writes_a_digest_file": {
+   "recurrence": {
+    "frequency": "Minute",
+    "interval": 5
+   },
+   "splitOn": "@triggerBody()?['value']",
+   "type": "OpenApiConnection",
+   "inputs": {
+    "parameters": {
+     "dataset": "https://contoso.sharepoint.com/sites/DataLanding",
+     "table": "<document-library-id>",
+     "folderPath": "Shared Documents/Landing/_Notifications/Pending"
+    },
+    "host": {
+     "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+     "connectionName": "shared_sharepointonline",
+     "operationId": "GetOnNewFileItems"
+    },
+    "authentication": "@parameters('$authentication')"
+   },
+   "conditions": [
+    {
+     "expression": "@endsWith(toLower(triggerOutputs()?['body/{FilenameWithExtension}']), '.json')"
+    }
+   ],
+   "description": "Standard connectors only, no Premium HTTP trigger. The pipeline writes one JSON digest per run into Pending; it holds no mail credentials."
+  }
+ },
+ "actions": {
+  "Get_digest_file": {
+   "runAfter": {},
+   "type": "OpenApiConnection",
+   "inputs": {
+    "parameters": {
+     "dataset": "https://contoso.sharepoint.com/sites/DataLanding",
+     "id": "@triggerOutputs()?['body/{Identifier}']",
+     "inferContentType": true
+    },
+    "host": {
+     "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+     "connectionName": "shared_sharepointonline",
+     "operationId": "GetFileContent"
+    }
+   }
+  },
+  "Digest": {
+   "runAfter": {
+    "Get_digest_file": [
+     "Succeeded"
+    ]
+   },
+   "type": "Compose",
+   "inputs": "@json(string(body('Get_digest_file')))",
+   "description": "Expected keys: runId, subject, recipients (array), htmlBody."
+  },
+  "Payload_is_valid": {
+   "type": "If",
+   "runAfter": {
+    "Digest": [
+     "Succeeded"
+    ]
+   },
+   "expression": {
+    "and": [
+     {
+      "greater": [
+       "@length(coalesce(outputs('Digest')?['recipients'], json('[]')))",
+       0
+      ]
+     },
+     {
+      "greater": [
+       "@length(coalesce(outputs('Digest')?['subject'], ''))",
+       0
+      ]
+     },
+     {
+      "greater": [
+       "@length(coalesce(outputs('Digest')?['htmlBody'], ''))",
+       0
+      ]
+     }
+    ]
+   },
+   "actions": {
+    "Send_digest_email": {
+     "runAfter": {},
+     "type": "OpenApiConnection",
+     "inputs": {
+      "parameters": {
+       "emailMessage/To": "@{join(outputs('Digest')?['recipients'], ';')}",
+       "emailMessage/Subject": "@outputs('Digest')?['subject']",
+       "emailMessage/Body": "@outputs('Digest')?['htmlBody']",
+       "emailMessage/Importance": "Normal"
+      },
+      "host": {
+       "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+       "connectionName": "shared_office365",
+       "operationId": "SendEmailV2"
+      }
+     }
+    },
+    "Move_to_Sent": {
+     "runAfter": {
+      "Send_digest_email": [
+       "Succeeded"
+      ]
+     },
+     "type": "OpenApiConnection",
+     "inputs": {
+      "parameters": {
+       "dataset": "https://contoso.sharepoint.com/sites/DataLanding",
+       "parameters/sourceFileId": "@triggerOutputs()?['body/{Identifier}']",
+       "parameters/destinationDataset": "https://contoso.sharepoint.com/sites/DataLanding",
+       "parameters/destinationFolderPath": "/Shared Documents/Landing/_Notifications/Sent",
+       "parameters/nameConflictBehavior": 1
+      },
+      "host": {
+       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+       "connectionName": "shared_sharepointonline",
+       "operationId": "MoveFileAsync"
+      }
+     },
+     "description": "The folder is the status. A file still in Pending was not sent: the run failed and can be resubmitted."
+    }
+   },
+   "else": {
+    "actions": {
+     "Move_to_Rejected": {
+      "runAfter": {},
+      "type": "OpenApiConnection",
+      "inputs": {
+       "parameters": {
+        "dataset": "https://contoso.sharepoint.com/sites/DataLanding",
+        "parameters/sourceFileId": "@triggerOutputs()?['body/{Identifier}']",
+        "parameters/destinationDataset": "https://contoso.sharepoint.com/sites/DataLanding",
+        "parameters/destinationFolderPath": "/Shared Documents/Landing/_Notifications/Rejected",
+        "parameters/nameConflictBehavior": 1
+       },
+       "host": {
+        "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+        "connectionName": "shared_sharepointonline",
+        "operationId": "MoveFileAsync"
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

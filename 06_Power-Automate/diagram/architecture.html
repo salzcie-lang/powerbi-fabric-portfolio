@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>File Intake and Notification Flows · Architecture</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  .canvas { width: 1920px; height: 1080px; padding: 36px 56px 34px; display: flex; flex-direction: column; }
+  header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 18px; }
+  .badge { font-size: 13px; padding: 6px 14px; margin-bottom: 12px; }
+  h1 { font-size: 44px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; }
+  .sub { color: var(--ink-2); font-size: 17px; margin-top: 8px; }
+  .legend { display: flex; gap: 22px; color: var(--ink-2); font-size: 13px; padding-bottom: 6px; }
+  .legend i { display: inline-block; width: 26px; height: 0; border-top: 2px solid var(--violet); vertical-align: middle; margin-right: 8px; }
+  .legend i.ctl { border-top: 2px dashed var(--ink-3); }
+  .kicker { font-size: 11.5px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-3); text-transform: uppercase; }
+
+  .grid { display: grid; grid-template-columns: 250px 44px minmax(0,1fr) 44px 300px; gap: 0; flex: 1; min-height: 0; }
+  .side { display: flex; flex-direction: column; gap: 12px; }
+  .side h2 { font-size: 18px; font-weight: 700; margin-top: 3px; }
+  .card { background: var(--panel-2); border: 1px solid var(--line); border-radius: 13px; padding: 13px 14px; }
+  .card h3 { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .card p { font-size: 13px; line-height: 1.45; color: var(--ink-2); margin-top: 6px; }
+  .ico { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: rgba(157,140,255,0.16); flex: none; }
+  .ico svg { width: 16px; height: 16px; stroke: var(--violet); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .panel.side { padding: 18px; }
+  .arrows { display: flex; flex-direction: column; justify-content: space-around; align-items: center; }
+  .arrows svg { width: 44px; height: 24px; }
+
+  .lanes { display: flex; flex-direction: column; gap: 12px; }
+  .lane { display: grid; grid-template-columns: 168px minmax(0,1fr); align-items: center; gap: 16px; padding: 12px 16px; border-color: color-mix(in srgb, var(--c) 45%, transparent);
+          background: linear-gradient(90deg, color-mix(in srgb, var(--c) 16%, transparent), color-mix(in srgb, var(--c) 4%, transparent)); flex: 1; }
+  .lane .no { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; color: var(--c); }
+  .lane .name { font-size: 16.5px; font-weight: 700; margin-top: 2px; line-height: 1.2; }
+  .lane .trig { font-size: 11.5px; color: var(--ink-3); margin-top: 5px; line-height: 1.35; }
+  .steps { display: flex; align-items: center; gap: 7px; }
+  .step { flex: 1; background: #ffffff; box-shadow: 0 2px 6px rgba(15,23,42,0.05); border: 1px solid var(--line); border-radius: 11px; padding: 8px 11px; font-size: 13px; font-weight: 600; line-height: 1.25; min-width: 0; }
+  .step small { display: block; color: var(--ink-3); font-weight: 500; font-size: 11px; margin-top: 2px; }
+  .step.t { border-color: color-mix(in srgb, var(--c) 70%, transparent); }
+  .step.t .k { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; color: var(--c); display: block; margin-bottom: 2px; }
+  .step.out { border-color: rgba(15,157,138,0.6); }
+  .step.q { border-color: rgba(217,71,95,0.55); }
+  .step.q small { color: var(--red); }
+  .chev { color: var(--c); font-size: 13px; flex: none; }
+  .fork { display: flex; flex-direction: column; gap: 6px; flex: 1.15; min-width: 0; }
+  .fork .step { flex: none; }
+  .brace { color: var(--ink-3); font-size: 11px; flex: none; writing-mode: vertical-rl; transform: rotate(180deg); letter-spacing: 0.1em; }
+
+  .ctl { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 18px; }
+  .ctl .panel { padding: 14px 18px; }
+  .ctl h4 { font-size: 16px; font-weight: 700; margin-top: 3px; }
+  .ctl p { font-size: 13.5px; color: var(--ink-2); line-height: 1.5; margin-top: 6px; }
+  .mono.tag { font-size: 11.5px; color: var(--teal); }
+  .stat { font-size: 24px; font-weight: 800; margin-top: auto; padding-top: 8px; }
+  .stat span { font-size: 12.5px; font-weight: 500; color: var(--ink-3); margin-left: 6px; }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <header>
+    <div>
+      <span class="badge">POWER AUTOMATE</span>
+      <h1>File Intake and Notification Flows</h1>
+      <div class="sub">Business files arrive by folder drop and by email; four cloud flows route them, alert the data team and send what a pipeline asks them to send</div>
+    </div>
+    <div class="legend"><span><i></i>Flow steps</span><span><i class="ctl"></i>Standard connectors only · no Premium licence</span></div>
+  </header>
+
+  <div class="grid">
+    <!-- sources -->
+    <div class="panel side">
+      <div class="kicker">1 · Sources</div>
+      <h2>Where files come from</h2>
+      <div class="card">
+        <h3><span class="ico"><svg viewBox="0 0 24 24"><path d="M7 18a5 5 0 1 1 1.5-9.8A6 6 0 0 1 20 11a3.5 3.5 0 0 1-1 7H7z"/></svg></span>OneDrive drop folder</h3>
+        <p>An analyst saves quote logs, contract logs, registrations, price lists and inventory files into one folder. Daily files keep the same name.</p>
+      </div>
+      <div class="card">
+        <h3><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 6h18v12H3zM3 7l9 6 9-6"/></svg></span>Emailed exports</h3>
+        <p>A building-management system that can only email its daily trend export as an attachment.</p>
+      </div>
+      <div class="card">
+        <h3><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span>Data pipeline</h3>
+        <p>A Fabric pipeline that needs to email a digest after each run, without holding mail credentials.</p>
+      </div>
+    </div>
+
+    <div class="arrows">
+      <svg viewBox="0 0 46 24"><path d="M4 12h34" stroke="#5b4fd6" stroke-width="2.5"/><path d="M32 5l9 7-9 7" fill="none" stroke="#5b4fd6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 46 24"><path d="M4 12h34" stroke="#5b4fd6" stroke-width="2.5"/><path d="M32 5l9 7-9 7" fill="none" stroke="#5b4fd6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 46 24"><path d="M4 12h34" stroke="#5b4fd6" stroke-width="2.5"/><path d="M32 5l9 7-9 7" fill="none" stroke="#5b4fd6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <!-- flows -->
+    <div class="lanes">
+      <div class="panel lane" style="--c:#5b4fd6">
+        <div><div class="no">FLOW 01</div><div class="name">File intake router</div><div class="trig">OneDrive · file created or modified · every 5 min</div></div>
+        <div class="steps">
+          <div class="step t"><span class="k">TRIGGER CONDITIONS</span>Skip lock files, folders, other extensions<small>no run is consumed</small></div><span class="chev">▶</span>
+          <div class="step">Route by file name<small>7 rules, contracts before quotes</small></div><span class="chev">▶</span>
+          <div class="fork">
+            <div class="step out">Copy to the matching landing folder<small>same name overwrites, versioned</small></div>
+            <div class="step q">Unknown or wrongly cased name<small>quarantine: _Inbox Unrouted</small></div>
+            <div class="step">Large sales extract<small>skip, no copy</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel lane" style="--c:#1f5eff">
+        <div><div class="no">FLOW 02</div><div class="name">Landing zone alert</div><div class="trig">SharePoint · file created or modified in the landing zone</div></div>
+        <div class="steps">
+          <div class="step t"><span class="k">TRIGGER CONDITIONS</span>Files only, not lock files, not the outbox</div><span class="chev">▶</span>
+          <div class="step">Is it quarantined?<small>path contains _Inbox Unrouted</small></div><span class="chev">▶</span>
+          <div class="step">Which refresh is needed<small>by file family</small></div><span class="chev">▶</span>
+          <div class="step out">Email the data team<small>file, folder, editor, version, next step · quarantine = high importance</small></div>
+        </div>
+      </div>
+
+      <div class="panel lane" style="--c:#d98c00">
+        <div><div class="no">FLOW 03</div><div class="name">Pipeline notification outbox</div><div class="trig">SharePoint · JSON file created in Pending</div></div>
+        <div class="steps">
+          <div class="step t"><span class="k">TRIGGER</span>Pipeline writes one digest file per run<small>runId, subject, recipients, htmlBody</small></div><span class="chev">▶</span>
+          <div class="step">Read and validate<small>recipients, subject, body present</small></div><span class="chev">▶</span>
+          <div class="fork">
+            <div class="step out">Send digest, move file to Sent</div>
+            <div class="step q">Invalid payload<small>move to Rejected</small></div>
+            <div class="step">Send failed<small>stays in Pending, run can be resubmitted</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel lane" style="--c:#0f9d8a">
+        <div><div class="no">FLOW 04</div><div class="name">Email attachment capture</div><div class="trig">Outlook · new email with subject filter and attachment</div></div>
+        <div class="steps">
+          <div class="step t"><span class="k">TRIGGER</span>Subject filter + attachment required<small>other mail never starts a run</small></div><span class="chev">▶</span>
+          <div class="step">Keep data attachments only<small>.csv and .xlsx, not inline images</small></div><span class="chev">▶</span>
+          <div class="step out">Save each to the landing zone<small>chunked transfer for large files</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrows">
+      <svg viewBox="0 0 46 24"><path d="M4 12h34" stroke="#5b4fd6" stroke-width="2.5"/><path d="M32 5l9 7-9 7" fill="none" stroke="#5b4fd6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 46 24"><path d="M4 12h34" stroke="#5b4fd6" stroke-width="2.5"/><path d="M32 5l9 7-9 7" fill="none" stroke="#5b4fd6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 46 24"><path d="M4 12h34" stroke="#5b4fd6" stroke-width="2.5"/><path d="M32 5l9 7-9 7" fill="none" stroke="#5b4fd6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <!-- destinations -->
+    <div class="panel side">
+      <div class="kicker">3 · Destinations</div>
+      <h2>Where they end up</h2>
+      <div class="card">
+        <h3><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 7h6l2 2h10v10H3z"/></svg></span>SharePoint landing zone</h3>
+        <p class="mono tag">Quotes · Contracts · Design Registrations · Price List · Inventory · Trend Exports</p>
+        <p>One folder per file family, read by dataflows and a Fabric pipeline. Quarantine and outbox folders sit beside them.</p>
+      </div>
+      <div class="card">
+        <h3><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 6h18v12H3zM3 7l9 6 9-6"/></svg></span>Data team inbox</h3>
+        <p>One email per arrival with the refresh step to run. Refreshes are not triggered automatically, because source layouts change.</p>
+      </div>
+      <div class="card">
+        <h3><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg></span>Dataflows and Power BI</h3>
+        <p>Downstream readers that expect exact names. The flows match their case rules, so a file never sits unread.</p>
+      </div>
+      <div class="stat">4<span>flows · 3 connectors · every run logged</span></div>
+    </div>
+  </div>
+
+  <div class="ctl">
+    <div class="panel">
+      <div class="kicker">Filter at the trigger</div>
+      <h4>Noise never starts a run</h4>
+      <p>Lock files, folders, wrong extensions and unrelated emails are rejected by trigger conditions, so run quota and run history stay clean.</p>
+    </div>
+    <div class="panel">
+      <div class="kicker">Match the reader</div>
+      <h4>Case policy per file family</h4>
+      <p>Most rules are case-insensitive. Inventory names are case-exact because the dataflow that reads them is. Rule order handles names that contain other names.</p>
+    </div>
+    <div class="panel">
+      <div class="kicker">Fail visibly</div>
+      <h4>Quarantine plus an alert</h4>
+      <p>A file that matches no rule is copied to <span class="mono tag">_Inbox Unrouted</span> and emailed at high importance, instead of landing where nothing reads it.</p>
+    </div>
+    <div class="panel">
+      <div class="kicker">Hand-off contract</div>
+      <h4>The folder is the status</h4>
+      <p>The pipeline holds no mail credentials and never calls a Premium endpoint. <span class="mono tag">Pending → Sent / Rejected</span> tells it what happened.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

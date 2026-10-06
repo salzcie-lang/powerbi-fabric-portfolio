@@ -8,6 +8,7 @@
   python shot.py key <Key>                          press a key (e.g. Escape)
 """
 import base64
+import os
 import json
 import sys
 import time
@@ -19,7 +20,7 @@ import websocket
 PORT = 9333
 tabs = json.load(urllib.request.urlopen(f"http://127.0.0.1:{PORT}/json"))
 tab = next(t for t in tabs if t["type"] == "page" and "fabric.microsoft.com" in t["url"] or t["type"] == "page")
-ws = websocket.create_connection(tab["webSocketDebuggerUrl"], origin=f"http://localhost:{PORT}", timeout=120)
+ws = websocket.create_connection(tab["webSocketDebuggerUrl"], suppress_origin=True, timeout=120)
 _id = 0
 
 
@@ -56,6 +57,8 @@ elif cmd == "shot":
     cdp("Page.bringToFront")
     cdp("Emulation.setDeviceMetricsOverride", width=w, height=h, deviceScaleFactor=2, mobile=False)
     time.sleep(1.5)
+    if os.environ.get("PRE_JS"):  # e.g. strip text from the page right before capture
+        js(os.environ["PRE_JS"]); time.sleep(0.4)
     data = cdp("Page.captureScreenshot", format="png")["data"]
     out = Path(sys.argv[2])
     out.parent.mkdir(parents=True, exist_ok=True)

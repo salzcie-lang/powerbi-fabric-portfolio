@@ -1,0 +1,78 @@
+{
+ "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+ "contentVersion": "1.0.0.0",
+ "parameters": {
+  "$authentication": {
+   "defaultValue": {},
+   "type": "SecureObject"
+  },
+  "$connections": {
+   "defaultValue": {},
+   "type": "Object"
+  }
+ },
+ "triggers": {
+  "When_a_report_email_arrives": {
+   "splitOn": "@triggerOutputs()?['body/value']",
+   "type": "OpenApiConnectionNotification",
+   "inputs": {
+    "parameters": {
+     "includeAttachments": true,
+     "subjectFilter": "TREND EXPORT",
+     "fetchOnlyWithAttachment": true
+    },
+    "host": {
+     "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+     "connectionName": "shared_office365",
+     "operationId": "OnNewEmailV3"
+    },
+    "authentication": "@parameters('$authentication')"
+   },
+   "description": "A source system that can only email its exports. The subject filter and attachment requirement are applied by the trigger, so other mail never starts a run."
+  }
+ },
+ "actions": {
+  "Data_attachments_only": {
+   "runAfter": {},
+   "type": "Query",
+   "inputs": {
+    "from": "@triggerOutputs()?['body/attachments']",
+    "where": "@and(not(coalesce(item()?['isInline'], false)), or(endsWith(toLower(item()?['name']), '.csv'), endsWith(toLower(item()?['name']), '.xlsx')))"
+   },
+   "description": "Drops signature images and other inline or non-data attachments."
+  },
+  "For_each_attachment": {
+   "foreach": "@body('Data_attachments_only')",
+   "runAfter": {
+    "Data_attachments_only": [
+     "Succeeded"
+    ]
+   },
+   "type": "Foreach",
+   "actions": {
+    "Create_file_in_landing_zone": {
+     "runAfter": {},
+     "type": "OpenApiConnection",
+     "inputs": {
+      "parameters": {
+       "dataset": "https://contoso.sharepoint.com/sites/DataLanding",
+       "folderPath": "/Shared Documents/Landing/Trend Exports",
+       "name": "@item()?['name']",
+       "body": "@base64ToBinary(item()?['contentBytes'])"
+      },
+      "host": {
+       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+       "connectionName": "shared_sharepointonline",
+       "operationId": "CreateFile"
+      }
+     },
+     "runtimeConfiguration": {
+      "contentTransfer": {
+       "transferMode": "Chunked"
+      }
+     }
+    }
+   }
+  }
+ }
+}

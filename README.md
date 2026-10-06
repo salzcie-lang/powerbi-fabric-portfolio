@@ -1,13 +1,13 @@
-# Salman Hussain · Power BI and Microsoft Fabric portfolio
+# Salman Hussain · Power BI, Microsoft Fabric and Power Automate portfolio
 
-Four Power BI dashboards and one Microsoft Fabric data platform, published with full source. [Hire me on Upwork](https://www.upwork.com/freelancers/~01f3df530fd92742a2)
+Four Power BI dashboards, one Microsoft Fabric data platform and a set of Power Automate flows, published with full source. [Hire me on Upwork](https://www.upwork.com/freelancers/~01f3df530fd92742a2)
 
 | | | |
 |---|---|---|
 | [![Sales Analytics](PDFs/Upwork%20Images/Sales%20Dashboard%20-%20Upwork%20Thumbnail.png)](01_Sales-Analytics) | [![CRM Pipeline](PDFs/Upwork%20Images/CRM%20Pipeline%20-%20Upwork%20Thumbnail.png)](02_CRM-Pipeline) | [![Real Estate](PDFs/Upwork%20Images/Real%20Estate%20-%20Upwork%20Thumbnail.png)](03_Real-Estate) |
 | **[01 · Sales Analytics](01_Sales-Analytics)**<br>Power BI, DAX | **[02 · CRM Pipeline](02_CRM-Pipeline)**<br>Power BI, DAX | **[03 · Real Estate](03_Real-Estate)**<br>Power BI, DAX, Azure Maps |
-| [![Finance](PDFs/Upwork%20Images/Finance%20-%20Upwork%20Thumbnail.png)](04_Finance-Operations) | [![Data Engineering](PDFs/Upwork%20Images/Data%20Engineering%20-%20Upwork%20Thumbnail.png)](05_Data-Engineering) | |
-| **[04 · Finance](04_Finance-Operations)**<br>Power BI, DAX, Deneb, SVG measures | **[05 · Data Engineering](05_Data-Engineering)**<br>Fabric: PySpark, Delta, Warehouse T-SQL, Pipelines, Direct Lake | |
+| [![Finance](PDFs/Upwork%20Images/Finance%20-%20Upwork%20Thumbnail.png)](04_Finance-Operations) | [![Data Engineering](PDFs/Upwork%20Images/Data%20Engineering%20-%20Upwork%20Thumbnail.png)](05_Data-Engineering) | [![Power Automate](PDFs/Upwork%20Images/Power%20Automate%20-%20Upwork%20Thumbnail.png)](06_Power-Automate) |
+| **[04 · Finance](04_Finance-Operations)**<br>Power BI, DAX, Deneb, SVG measures | **[05 · Data Engineering](05_Data-Engineering)**<br>Fabric: PySpark, Delta, Warehouse T-SQL, Pipelines, Direct Lake | **[06 · Power Automate](06_Power-Automate)**<br>Cloud flows: SharePoint, OneDrive, Outlook |
 
 ## Projects
 
@@ -18,8 +18,9 @@ Four Power BI dashboards and one Microsoft Fabric data platform, published with 
 | 03 | [Real Estate](03_Real-Estate) | Which properties underperform on occupancy, collections and NOI? | [PDF](PDFs/Real%20Estate.pdf) |
 | 04 | [Finance](04_Finance-Operations) | Where are we off budget, and how healthy is cash? | [PDF](PDFs/Finance%20%26%20Accounting.pdf) |
 | 05 | [Data Engineering](05_Data-Engineering) | How do raw API feeds become a trusted, daily-loaded star schema? | [PDF](05_Data-Engineering/exports/Data%20Engineering%20-%20Fabric%20Data%20Platform.pdf) |
+| 06 | [Power Automate](06_Power-Automate) | How do dropped and emailed files reach the data platform without a person in between? | [PDF](06_Power-Automate/exports/Power%20Automate%20-%20File%20Intake%20Automation.pdf) |
 
-Everything is stored as text (PBIP, TMDL, PBIR, Python, T-SQL), so each project can be read, diffed and rebuilt. Each folder has its own README.
+Everything is stored as text (PBIP, TMDL, PBIR, Python, T-SQL, flow JSON), so each project can be read, diffed and rebuilt. Each folder has its own README.
 
 ---
 
@@ -132,3 +133,16 @@ _scripts/                 data generators, model builders, layout and build scri
 - The data engineering project uses public open data from NYC Open Data and Open-Meteo.
 - Dashboard styling was inspired by Bas Dohmen's "How to Power BI" work. No assets were copied; this project is not affiliated with him.
 - No licence is attached. The code is published for viewing; message me on Upwork before reusing it.
+
+## 06 · Power Automate
+
+![Power Automate architecture](PDFs/Upwork%20Images/Power%20Automate%20-%20Page-1.png)
+
+For a data team that receives business files by folder drop and by email. Four cloud flows, standard connectors only.
+
+- A router copies each dropped file to the landing folder its name says it belongs in, quarantines unknown names and skips oversized extracts
+- An alert tells the team what arrived and which refresh to run; a capture flow saves emailed exports; an outbox flow sends a pipeline's digest without the pipeline holding mail credentials
+- Deployed and run live: 32 runs, none failed. Routing rules are mirrored by a test
+
+[Details](06_Power-Automate)
+

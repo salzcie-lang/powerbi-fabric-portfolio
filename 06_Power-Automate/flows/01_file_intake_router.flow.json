@@ -1,0 +1,118 @@
+{
+ "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+ "contentVersion": "1.0.0.0",
+ "parameters": {
+  "$authentication": {
+   "defaultValue": {},
+   "type": "SecureObject"
+  },
+  "$connections": {
+   "defaultValue": {},
+   "type": "Object"
+  }
+ },
+ "triggers": {
+  "When_a_file_is_created_or_modified_in_the_drop_folder": {
+   "recurrence": {
+    "frequency": "Minute",
+    "interval": 5
+   },
+   "splitOn": "@triggerBody()",
+   "type": "OpenApiConnection",
+   "inputs": {
+    "parameters": {
+     "folderId": "<onedrive-drop-folder-id>",
+     "includeSubfolders": true,
+     "maxFileCount": 10
+    },
+    "host": {
+     "apiId": "/providers/Microsoft.PowerApps/apis/shared_onedriveforbusiness",
+     "connectionName": "shared_onedriveforbusiness",
+     "operationId": "OnUpdatedFilesV2"
+    },
+    "authentication": "@parameters('$authentication')"
+   },
+   "conditions": [
+    {
+     "expression": "@not(startsWith(triggerOutputs()?['body/Name'], '~$'))"
+    },
+    {
+     "expression": "@equals(triggerOutputs()?['body/IsFolder'], false)"
+    },
+    {
+     "expression": "@or(endsWith(toLower(triggerOutputs()?['body/Name']), '.xlsx'), endsWith(toLower(triggerOutputs()?['body/Name']), '.xlsm'), endsWith(toLower(triggerOutputs()?['body/Name']), '.csv'))"
+    }
+   ],
+   "description": "This trigger returns a bare array, so splitOn is @triggerBody(), not ?['value']. Conditions drop lock files, folders and unsupported extensions before a run is consumed."
+  }
+ },
+ "actions": {
+  "Route_destination_folder": {
+   "runAfter": {},
+   "type": "Compose",
+   "inputs": "@if(or(contains(toLower(triggerOutputs()?['body/Name']), 'quote log customer contracts'), contains(toLower(triggerOutputs()?['body/Name']), 'customer contract log')), '/Shared Documents/Landing/Contracts', if(contains(toLower(triggerOutputs()?['body/Name']), 'quote log'), '/Shared Documents/Landing/Quotes', if(startsWith(toLower(triggerOutputs()?['body/Name']), 'design registration'), '/Shared Documents/Landing/Design Registrations', if(contains(toLower(triggerOutputs()?['body/Name']), 'price list'), '/Shared Documents/Landing/Price List', if(or(contains(triggerOutputs()?['body/Name'], 'Distributor Backlog'), contains(triggerOutputs()?['body/Name'], 'Distributor Month-End Inventory')), '/Shared Documents/Landing/Inventory', if(contains(toLower(triggerOutputs()?['body/Name']), 'ytd sales detail'), 'SKIP', '/Shared Documents/Landing/_Inbox Unrouted'))))))",
+   "description": "Order matters: contract logs are tested before 'quote log' because their names contain it. Inventory names are case-exact to match the downstream reader; wrong case is quarantined. Large sales extracts are skipped."
+  },
+  "Should_copy": {
+   "type": "If",
+   "runAfter": {
+    "Route_destination_folder": [
+     "Succeeded"
+    ]
+   },
+   "expression": {
+    "and": [
+     {
+      "not": {
+       "equals": [
+        "@outputs('Route_destination_folder')",
+        "SKIP"
+       ]
+      }
+     }
+    ]
+   },
+   "actions": {
+    "Get_file_content_from_OneDrive": {
+     "runAfter": {},
+     "type": "OpenApiConnection",
+     "inputs": {
+      "parameters": {
+       "id": "@triggerOutputs()?['body/Id']",
+       "inferContentType": true
+      },
+      "host": {
+       "apiId": "/providers/Microsoft.PowerApps/apis/shared_onedriveforbusiness",
+       "connectionName": "shared_onedriveforbusiness",
+       "operationId": "GetFileContent"
+      }
+     }
+    },
+    "Create_file_in_landing_zone": {
+     "runAfter": {
+      "Get_file_content_from_OneDrive": [
+       "Succeeded"
+      ]
+     },
+     "type": "OpenApiConnection",
+     "inputs": {
+      "parameters": {
+       "dataset": "https://contoso.sharepoint.com/sites/DataLanding",
+       "folderPath": "@outputs('Route_destination_folder')",
+       "name": "@triggerOutputs()?['body/Name']",
+       "body": "@body('Get_file_content_from_OneDrive')"
+      },
+      "host": {
+       "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+       "connectionName": "shared_sharepointonline",
+       "operationId": "CreateFile"
+      }
+     }
+    }
+   },
+   "else": {
+    "actions": {}
+   }
+  }
+ }
+}

@@ -1,0 +1,87 @@
+{
+ "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+ "contentVersion": "1.0.0.0",
+ "parameters": {
+  "$authentication": {
+   "defaultValue": {},
+   "type": "SecureObject"
+  },
+  "$connections": {
+   "defaultValue": {},
+   "type": "Object"
+  }
+ },
+ "triggers": {
+  "When_a_file_is_created_or_modified_in_the_landing_zone": {
+   "recurrence": {
+    "frequency": "Minute",
+    "interval": 5
+   },
+   "splitOn": "@triggerBody()?['value']",
+   "type": "OpenApiConnection",
+   "inputs": {
+    "parameters": {
+     "dataset": "https://contoso.sharepoint.com/sites/DataLanding",
+     "table": "<document-library-id>",
+     "folderPath": "Shared Documents/Landing"
+    },
+    "host": {
+     "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+     "connectionName": "shared_sharepointonline",
+     "operationId": "GetOnUpdatedFileItems"
+    },
+    "authentication": "@parameters('$authentication')"
+   },
+   "conditions": [
+    {
+     "expression": "@equals(triggerOutputs()?['body/{IsFolder}'], false)"
+    },
+    {
+     "expression": "@not(startsWith(triggerOutputs()?['body/{FilenameWithExtension}'], '~$'))"
+    },
+    {
+     "expression": "@not(contains(triggerOutputs()?['body/{Path}'], '_Notifications'))"
+    }
+   ],
+   "description": "The SharePoint trigger wraps its items in 'value', unlike the OneDrive trigger in flow 01."
+  }
+ },
+ "actions": {
+  "Is_unrouted": {
+   "runAfter": {},
+   "type": "Compose",
+   "inputs": "@contains(triggerOutputs()?['body/{Path}'], '_Inbox Unrouted')"
+  },
+  "Which_refresh_is_needed": {
+   "runAfter": {
+    "Is_unrouted": [
+     "Succeeded"
+    ]
+   },
+   "type": "Compose",
+   "inputs": "@if(outputs('Is_unrouted'), 'This file matched no routing rule. Check the name (inventory names are case-sensitive), rename it and drop it again.', if(contains(toLower(triggerOutputs()?['body/{FilenameWithExtension}']), 'ytd sales detail'), 'Sales file: run the sales dataflow, then refresh the Sales model.', if(or(contains(triggerOutputs()?['body/{FilenameWithExtension}'], 'Distributor Month-End Inventory'), contains(triggerOutputs()?['body/{FilenameWithExtension}'], 'Distributor Backlog')), 'Inventory or backlog file: run the inventory dataflow, then refresh the Sales model.', if(or(contains(toLower(triggerOutputs()?['body/{FilenameWithExtension}']), 'quote log'), contains(toLower(triggerOutputs()?['body/{FilenameWithExtension}']), 'price list'), contains(toLower(triggerOutputs()?['body/{FilenameWithExtension}']), 'design registration'), contains(toLower(triggerOutputs()?['body/{FilenameWithExtension}']), 'contract')), 'Quotes, price list, registrations or contracts file: run the quotes ingestion pipeline, then refresh the Quotes and Sales models.', 'No mapping for this file name. Check which dataflow reads it.'))))",
+   "description": "Tells the on-call analyst what to run next. Refreshes are deliberately not triggered automatically because source file layouts change."
+  },
+  "Send_alert_email": {
+   "runAfter": {
+    "Which_refresh_is_needed": [
+     "Succeeded"
+    ]
+   },
+   "type": "OpenApiConnection",
+   "inputs": {
+    "parameters": {
+     "emailMessage/To": "data-team@contoso.com",
+     "emailMessage/Subject": "@{if(outputs('Is_unrouted'), 'UNROUTED file', 'Landing zone upload')}: @{triggerOutputs()?['body/{FilenameWithExtension}']} (@{triggerOutputs()?['body/Editor/DisplayName']})",
+     "emailMessage/Body": "<p>A file was added or changed in the landing zone.</p><table><tr><td><b>File</b></td><td>@{triggerOutputs()?['body/{FilenameWithExtension}']}</td></tr><tr><td><b>Folder</b></td><td>@{triggerOutputs()?['body/{Path}']}</td></tr><tr><td><b>By</b></td><td>@{triggerOutputs()?['body/Editor/DisplayName']} (@{triggerOutputs()?['body/Editor/Email']})</td></tr><tr><td><b>When (UTC)</b></td><td>@{triggerOutputs()?['body/Modified']}</td></tr><tr><td><b>Version</b></td><td>@{triggerOutputs()?['body/{VersionNumber}']}</td></tr></table><p><a href=\"@{triggerOutputs()?['body/{Link}']}\">Open the file</a></p><p><b>Next step:</b> @{outputs('Which_refresh_is_needed')}</p>",
+     "emailMessage/Importance": "@{if(outputs('Is_unrouted'), 'High', 'Normal')}"
+    },
+    "host": {
+     "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+     "connectionName": "shared_office365",
+     "operationId": "SendEmailV2"
+    }
+   }
+  }
+ }
+}

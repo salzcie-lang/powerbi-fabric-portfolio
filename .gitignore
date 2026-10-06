@@ -27,3 +27,13 @@ PDFs/Data Engineering - Fabric Data Platform.pdf
 
 __pycache__/
 *.pyc
+
+# Power Automate demo deployment (tenant ids, connection names)
+06_Power-Automate/_build/env.local.json
+.flowagent/
+06_Power-Automate/_build/stats.json
+06_Power-Automate/screenshots/raw_*.png
+06_Power-Automate/screenshots/_prev_*.png
+06_Power-Automate/exports/_sheet.png
+06_Power-Automate/exports/_prev_*.png
+06_Power-Automate/diagram/_render_*
