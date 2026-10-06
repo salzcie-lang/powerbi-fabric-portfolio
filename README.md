@@ -89,6 +89,18 @@ A medallion data platform that loads NYC 311 service requests and Open-Meteo wea
 
 [Details](05_Data-Engineering)
 
+## 06 · Power Automate
+
+![Power Automate architecture](PDFs/Upwork%20Images/Power%20Automate%20-%20Page-1.png)
+
+For a data team that receives business files by folder drop and by email. Four cloud flows, standard connectors only.
+
+- A router copies each dropped file to the landing folder its name says it belongs in, quarantines unknown names and skips oversized extracts
+- An alert tells the team what arrived and which refresh to run; a capture flow saves emailed exports; an outbox flow sends a pipeline's digest without the pipeline holding mail credentials
+- Deployed and run live: 32 runs, none failed. Routing rules are mirrored by a test
+
+[Details](06_Power-Automate)
+
 ---
 
 ## How the dashboards are built
@@ -114,6 +126,7 @@ The Finance report needs the [Deneb](https://deneb-viz.github.io/) visual, and t
 |---|---|---|
 | 01 to 04 dashboards | Each report was built and rendered in Power BI Desktop against the CSV data in its `data/` folder. The images in each `screenshots/` folder are captures of those pages | Opening from a fresh clone on another machine; publishing to the Power BI service |
 | 05 Data Engineering | Deployed to a Fabric workspace and run end to end on 4 October 2026: all 7 activities succeeded, and the Gold query totals 3,014,623 requests. See [run evidence](05_Data-Engineering#run-evidence) | Redeploying into a different workspace from this repository |
+| 06 Power Automate | All four flows deployed to a Power Automate environment and run live on 5 and 6 October 2026: 32 runs, none failed, with run views and emails captured in `screenshots/`. See [checks](06_Power-Automate#checks) | Large files; a failed send in the outbox flow |
 
 ## Repository layout
 
@@ -123,6 +136,7 @@ The Finance report needs the [Deneb](https://deneb-viz.github.io/) visual, and t
 03_Real-Estate/           same structure
 04_Finance-Operations/    same structure
 05_Data-Engineering/      notebooks, sql, pipeline, semantic model, diagrams, case study
+06_Power-Automate/        flow definitions, routing test, deploy scripts, screenshots, case study
 PDFs/                     case study PDFs and page images
 _scripts/                 data generators, model builders, layout and build scripts
 ```
@@ -131,18 +145,6 @@ _scripts/                 data generators, model builders, layout and build scri
 
 - All dashboard data is synthetic and seeded. Company names such as Northwind Trading and Meridian Supply Co. are fictional.
 - The data engineering project uses public open data from NYC Open Data and Open-Meteo.
+- The Power Automate flows were tested with small placeholder files carrying production-style names; sites, folders and addresses in the definitions are placeholders.
 - Dashboard styling was inspired by Bas Dohmen's "How to Power BI" work. No assets were copied; this project is not affiliated with him.
 - No licence is attached. The code is published for viewing; message me on Upwork before reusing it.
-
-## 06 · Power Automate
-
-![Power Automate architecture](PDFs/Upwork%20Images/Power%20Automate%20-%20Page-1.png)
-
-For a data team that receives business files by folder drop and by email. Four cloud flows, standard connectors only.
-
-- A router copies each dropped file to the landing folder its name says it belongs in, quarantines unknown names and skips oversized extracts
-- An alert tells the team what arrived and which refresh to run; a capture flow saves emailed exports; an outbox flow sends a pipeline's digest without the pipeline holding mail credentials
-- Deployed and run live: 32 runs, none failed. Routing rules are mirrored by a test
-
-[Details](06_Power-Automate)
-
